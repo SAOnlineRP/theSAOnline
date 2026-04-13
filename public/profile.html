@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'MyCustomFont';
+      src: url('https://drive.google.com/uc?id=1blyfOzy6S5cyLeDpgQZKWEGAT8fKKnH9') format('woff'); /* Change FILE_ID */
+    }
+    body, * {
+      font-family: "Oxanium", sans-serif !important;
+    }
+
+    body {
+      background-color: #e6e6e6;
+    }
+
+    .row.h-80 {
+      min-height: 100vh; /* Full viewport height for row container */
+    }
+
+    .col-12.col-lg-4 {
+      height: 100%; /* Full height for each column */
+    }
+    .col-lg-4 .img-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%; /* Make sure content fills the column */
+    }
+
+    .img-profile {
+      max-width: 50%;
+      /* height: auto; */
+      /* max-height: 80%; /* Ensure image doesn't overflow */
+      object-fit: cover;
+      margin-bottom: 10px; /* Space between image and text */
+    }
+
+    .img-sr {
+      max-width: 50%;
+      /* height: auto; */
+      /* max-height: 80%; /* Ensure image doesn't overflow */
+      object-fit: cover;
+      margin-bottom: 10px; /* Space between image and text */
+    }
+
+    .img-equipments {
+      width: 100%;
+      height: 100%;
+    }
+
+    .slanted-box {
+      width: 80px;
+      padding: 5px;
+      background-color: #4a4a4a; /* Dark gray background */
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%); /* Creates the slanted right edge */
+    }
+
+    .title-box {
+      width: 80px;
+      padding: 5px;
+      background-color: #4a4a4a; /* Dark gray background */
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* Basic card styles */
+    .card {
+        width: 100%; /* Make card full width */
+        max-width: 300px; /* Max width for larger screens */
+        height: 200px !important;
+        perspective: 1000px;
+        border: none; /* No border */
+        box-shadow: none; /* No shadow */
+    }
+
+    .card-inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+    }
+
+    /* Front of the card */
+    .card-front {
+      /* background-color: #343a40; */
+      background-color: #e6e6e6 !important;
+    }
+
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Back of the card */
+    .card-back {
+      background-color: #e6e6e6 !important;
+      color: black;
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    #dua-dua .row {
+      height: 100%; /* Ensures the row fills the entire column */
+    }
+
+    #dua-dua img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain; /* Ensures the image covers the container proportionally */
+    }
+
+    .card-info {
+      display: flex;
+      height: 300px;
+      justify-content: center;
+      align-items: center;
+      background-color: #e6e6e6 !important;
+    }
+
+    .modal-content {
+      background-color: #2c3e50; /* Dark gray background */
+      color: white;              /* Text color */
+      border-radius: 10px;        /* Optional rounded corners */
+    }
+
+    /* Customize the header */
+    .modal-header {
+      background-color: #1abc9c; /* Teal header */
+      color: white;
+    }
+
+    /* Customize the footer */
+    .modal-footer {
+      background-color: #34495e; /* Darker footer */
+    }
+
+    /* Full-page overlay */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent */
+      backdrop-filter: blur(10px); /* Blurry effect */
+      display: none; /* Hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    /* Loader (Spinner) */
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .img-sr {
+        max-width: 100%;
+      }
+
+      .card-front img{
+        width: unset;
+      }
+
+      #title-player{
+        margin-top: 40px !important;
+      }
+    }
+
+    .notification-container {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .bell-icon {
+      cursor: pointer;
+      font-size: 24px;
+      position: relative;
+    }
+
+    .badge {
+      position: absolute;
+      top: -5px;
+      right: -10px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      margin-top: 10px;
+      background-color: white;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
+      border-radius: 6px;
+      width: 200px;
+      overflow: hidden;
+    }
+
+    .dropdown-header {
+      padding: 10px;
+      font-weight: bold;
+      background-color: #f7f7f7;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .dropdown ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dropdown li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .dropdown li:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown li:hover {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+    <button class="w3-button w3-xlarge" style="background-color: rgb(233, 237, 246); position: fixed; z-index: 1;" onclick="w3_open()">☰</button>
+    <div id="loading-overlay">
+      <div class="loader"></div>
+    </div>
+    <div class="notification-container">
+      <div class="bell-icon" id="bell">
+        🔔
+        <span class="badge" id="badge">3</span>
+      </div>
+      <div class="dropdown" id="dropdown">
+        <div class="dropdown-header">Weekly Task</div>
+        <ul>
+          <li>Masuk Dungeon min. 10 kali</li>
+          <li>Beli 15 Item di Merchant</li>
+          <li>Gacha 10x</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container text-center">
+      <div class="row h-20">
+        <h1 id="title-player" style="text-align: center; margin-top: 30px !important; font-size: 35px"><b>CHARACTER PROFILE</b></h1>
+      </div>
+      <hr>
+      <div class="row h-80">
+        <div class="col-12 col-lg-4" id="col-satu">
+          <div class="row row-info" id="satu-satu">
+            <div class="img-content">
+              <div>
+                <button class="btn btn-primary" id="check-room" onclick="editProfile()">EDIT EQUIPMENTS</button>
+                <a class="btn btn-secondary" href="">DATABASE PLAYER</a>
+              </div>
+              <br>
+              <img class="img-profile" src="https://lh3.googleusercontent.com/d/1VsZ_ZDrXko8czjMA5YiM-1eP2B3sYv3T" alt="Player Photo" />
+              <h3><span><img src="https://lh3.googleusercontent.com/d/1Rlq8wt2POTUgeMeFiAPsSruWIPeO5_20" width="30" height="30" style="" alt="Icon Col"></span>COL : <span>1,000,000</span></h3>
+              <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-center">EDIT EQUIPMENTS</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form id="myForm" onsubmit="handleSubmit(event)">
+                        <div class="row">
+                          <h3 style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; text-align: left">WEAPONS</h3>
+                        </div>
+                        <div class="row">
+                          <select class="form-select" aria-label="Default select example" id="weapon" onchange="tampilkanWeapon()" style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal;">
+                            <option value="">Select Your Weapon</option>
+                            <option value="Weapon1">Weapon 1</option>
+                            <option value="Weapon2">Weapon 2</option>
+                          </select>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h3 style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; text-align: left">ARMOR</h3>
+                        </div>
+                        <div class="row">
+                          <select id="armor-top" class="form-select" aria-label="Default select example" onchange="tampilkanEquipment('armor-top')" style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal;">
+                            <option value="">Select Your Top</option>
+                            <option value="Armor Top 1">Armor Top 1</option>
+                            <option value="Armor Top 2">Armor Top 2</option>
+                          </select>
+                          <select id="armor-lower" class="form-select" aria-label="Default select example" onchange="tampilkanEquipment('armor-lower')" style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal;">
+                            <option value="">Select Your Bottom</option>
+                            <option value="Armor Lower 1">Armor Lower 1</option>
+                            <option value="Armor Lower 2">Armor Lower 2</option>
+                          </select>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h3 style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; text-align: left">SHIELD</h3>
+                        </div>
+                        <div class="row">
+                          <select id="shield" class="form-select" aria-label="Default select example" onchange="tampilkanEquipment('shield')" style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal;">
+                            <option value="">Select Your Shield</option>
+                            <option value="Shield 1">Shield 1</option>
+                            <option value="Shield 2">Shield 2</option>
+                          </select>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h3 style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; text-align: left">SKILL RECORDS</h3>
+                        </div>
+                        <div class="row">
+                          <select id="pilihan1" class="form-select" aria-label="Default select example" onchange="tampilkanSR1()" style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal;">
+                            <option value="">Select Your First Skill</option>
+                            <option value="SR1">Skill Record 1</option>
+                            <option value="SR2">Skill Record 2</option>
+                          </select>
+                          <select id="pilihan2" class="form-select" aria-label="Default select example" onchange="tampilkanSR2()" style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal;">
+                            <option value="">Select Your Second Skill</option>
+                            <option value="SR1">Skill Record 1</option>
+                            <option value="SR2">Skill Record 2</option>
+                          </select>
+                        </div>
+                        <br>
+                        <div class="row">
+                          <button type="submit">Submit</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row row-info" id="satu-dua">
+            <div class="slanted-box">
+              Name
+            </div>
+            <p style="text-align: right">Aleyna Z</p>
+            <div class="slanted-box">
+              ID Player
+            </div>
+            <p style="text-align: right">12345</p>
+            <div class="slanted-box">
+              Username
+            </div>
+            <p style="text-align: right">aleynaz</p>
+            <div class="slanted-box">
+              Faceclaim
+            </div>
+            <p style="text-align: right">Aleyna Z</p>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4" id="col-dua">
+          <div class="row row-info" id="dua-satu">
+            <div class="slanted-box">
+              Status
+            </div>
+            <p style="display: flex; justify-content: space-between;">
+                <span>Total Power:</span>
+                <span id="tp-player">100000</span>
+            </p>
+            <p style="display: flex; justify-content: space-between;">
+                <span>Level:</span>
+                <span id="level-pl">10</span>
+            </p>
+
+            <div id="status-hp" style="flex-direction: column; height: unset">
+              <p style="display: flex; justify-content: space-between;">
+                  <span>Max HP:</span>
+                  <span id="maxhp-pl">1000</span>
+              </p>
+              <div class="progress progress-bar progress-bar-striped" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div id="status-attack" style="flex-direction: column; height: unset">
+              <p style="display: flex; justify-content: space-between;">
+                  <span>Attack:</span>
+                  <span id="attack-pl">500</span>
+              </p>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <div id="status-defense" style="flex-direction: column; height: unset; padding-bottom:10px">
+              <p style="display: flex; justify-content: space-between;">
+                  <span>Defense:</span>
+                  <span id="defense-pl">500</span>
+              </p>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <div class="slanted-box">
+              Weapon Type
+            </div>
+            <p style="text-align: right">Sword</p>
+          </div>
+          <div class="row row-info" id="dua-dua">
+            <div class="title-box">
+              Equipments
+            </div>
+            <div class="row">
+              <div class="col-6 col-sm-6 text-dark">
+                <div class="card card-info" onclick="flipCard(this)">
+                  <div class="card-inner">
+                    <div class="card-front">
+                      <img class="img-equipments" id="weaponImg" src="https://lh3.googleusercontent.com/d/18OyM3jkN6thzG9gP9jyyUddyld2K8s4S" alt="Card Front Image" />
+                    </div>
+                    <div class="card-back">
+                      <p><b>WEAPON</b></p>
+                      <p>Name : <span id="weaponName">Weapon 1</span></p>
+                      <p>Level : <span id="weaponLevel">1</span></p>
+                      <p>Total Attack : <span id="weaponAttack">100</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-sm-6 text-dark">
+                <div class="card card-info" onclick="flipCard(this)">
+                  <div class="card-inner">
+                    <div class="card-front">
+                      <img class="img-equipments"id="shieldImg" src="https://lh3.googleusercontent.com/d/1A2j0GiL29cgQ4wRz55xj05lI529k64zO" alt="Card Front Image" />
+                    </div>
+                    <div class="card-back">
+                      <p><b>SHIELD</b></p>
+                      <p>Name : <span id="shieldName">Shield 1</span></p>
+                      <p>Level : <span id="shieldLevel">1</span></p>
+                      <p>Total Defense : <span id="shieldDefense">50</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-6 col-sm-6 text-dark">
+                  <div class="card card-info" onclick="flipCard(this)">
+                    <div class="card-inner">
+                      <div class="card-front">
+                        <img class="img-equipments"id="topImg" src="https://lh3.googleusercontent.com/d/1_YFXyD22orHtsjBOoOkNa-D7HwzL2ejy" alt="Card Front Image" />
+                      </div>
+                      <div class="card-back">
+                        <p><b>ARMOR TOP</b></p>
+                        <p>Name : <span id="topName">Armor Top 1</span></p>
+                        <p>Level : <span id="topLevel">1</span></p>
+                        <p>Total Defense : <span id="topDefense">75</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-sm-6 text-dark">
+                  <div class="card card-info" onclick="flipCard(this)">
+                    <div class="card-inner">
+                      <div class="card-front">
+                        <img class="img-equipments" id="lowerImg" src="https://lh3.googleusercontent.com/d/1QHE6_1gshCtsc5kOdhA_UykfOPBo0slK" alt="Card Front Image" />
+                      </div>
+                      <div class="card-back">
+                        <p><b>ARMOR LOWER</b></p>
+                        <p>Name : <span id="lowerName">Armor Lower 1</span></p>
+                        <p>Level : <span id="lowerLevel">1</span></p>
+                        <p>Total Defense : <span id="lowerDefense">60</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-12 col-lg-4" id="col-tiga" style="padding-top: 15px">
+          <div class="title-box">
+            Skill Records
+          </div>
+          <div class="row row-info card-info" id="tiga-satu">
+            <div class="card card-info" onclick="flipCard(this)">
+                <div class="card-inner">
+                    <div class="card-front" >
+                        <img class="img-sr" id="sr1Img" src="https://lh3.googleusercontent.com/d/1W2cEJFYPpj0oqNA8D8-OioPIAcxZ9gFU" alt="Card Front Image" />
+                    </div>
+                    <div class="card-back" >
+                        <p><span id="sr1Name"><b>Skill Record 1</b></span></p>
+                        <p>Level : <span id="sr1Level">1</span></p>
+                        <p>MP Cost : <span id="sr1MpCost">50</span></p>
+                        <p>Total Attack : <span id="sr1Attack">200</span></p>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="row row-info card-info" id="tiga-dua">
+            <div class="card card-info" onclick="flipCard(this)">
+                <div class="card-inner">
+                    <div class="card-front" >
+                        <img  class="img-sr" id="sr2Img" src="https://lh3.googleusercontent.com/d/11FdDj6bzu1w5XoUNyMTkqqpwYQcIKhsp" alt="Card Front Image" />
+                    </div>
+                    <div class="card-back" >
+                        <p><span id="sr2Name"><b>Skill Record 2</b></span></p>
+                        <p>Level : <span id="sr2Level">1</span></p>
+                        <p>MP Cost : <span id="sr2MpCost">50</span></p>
+                        <p>Total Attack : <span id="sr2Attack">200</span></p>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('.selectpicker').selectpicker();
+      });
+
+      const bell = document.getElementById("bell");
+      const dropdown = document.getElementById("dropdown");
+
+      bell.addEventListener("click", () => {
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      });
+
+      // Optional: Klik di luar menutup dropdown
+      document.addEventListener("click", (e) => {
+        if (!bell.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.style.display = "none";
+        }
+      });
+      function adjustLayout() {
+        var elements = document.getElementsByClassName('row-info');
+        const colSatu = document.getElementById('col-satu');
+        const colDua = document.getElementById('col-dua');
+        const colTiga = document.getElementById('col-tiga');
+
+        if (window.innerWidth < 768) {
+            // Check if newDiv already exists
+            let existingDiv = colSatu.querySelector('.row');
+            let existingDiv1 = colDua.querySelector('.row');
+            let existingDiv2 = colTiga.querySelector('.row');
+            
+            if (!existingDiv) { // Only create a newDiv if it doesn't already exist
+                const newDiv = document.createElement('div');
+                newDiv.className = 'row';
+                const iniDiv1 = document.getElementById('satu-satu');
+                const iniDiv2 = document.getElementById('satu-dua');
+
+                newDiv.appendChild(iniDiv1);
+                newDiv.appendChild(iniDiv2);
+                colSatu.appendChild(newDiv);
+            }
+
+            if (!existingDiv1) { // Only create a newDiv if it doesn't already exist
+                const newDiv1 = document.createElement('div');
+                newDiv1.className = 'row';
+                const duaDiv1 = document.getElementById('dua-satu');
+                const duaDiv2 = document.getElementById('dua-dua');
+
+                newDiv1.appendChild(duaDiv1);
+                newDiv1.appendChild(duaDiv2);
+                colDua.appendChild(newDiv1);
+            }
+
+            if (!existingDiv2) { // Only create a newDiv if it doesn't already exist
+                const newDiv2 = document.createElement('div');
+                newDiv2.className = 'row';
+                const tigaDiv1 = document.getElementById('tiga-satu');
+                const tigaDiv2 = document.getElementById('tiga-dua');
+
+                newDiv2.appendChild(tigaDiv1);
+                newDiv2.appendChild(tigaDiv2);
+                colTiga.appendChild(newDiv2);
+            }
+            
+            for (var i = 0; i < elements.length; i++) {
+                // console.log(elements[i]); 
+                elements[i].classList.remove('row');
+                elements[i].classList.add('col');
+            }
+        } else {
+            for (var i = 0; i < elements.length; i++) {
+                // console.log(elements[i]); 
+                elements[i].classList.add('row');
+                elements[i].classList.remove('col');
+            }
+        }
+      }
+
+      window.addEventListener('resize', adjustLayout);
+      window.addEventListener('load', adjustLayout);
+
+      function flipCard(card) {
+        card.querySelector(".card-inner").classList.toggle("is-flipped");
+      }
+      
+      const totalP = document.getElementById("tp-player");
+      const att = document.getElementById("attack-pl");
+      const def = document.getElementById("defense-pl");
+      const levelPL = parseInt(document.getElementById("level-pl").innerHTML);
+      const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+
+      function editProfile(){
+        editModal.show();
+      }
+      function tampilkanSR1() {
+        document.getElementById("loading-overlay").style.display = "flex";
+        var pilihan1 = document.getElementById("pilihan1").value;
+        var pilihan2 = document.getElementById("pilihan2").value;
+        var hasil1 = document.getElementById("sr1Name");
+        var hasil2 = document.getElementById("sr2Name");
+        if(hasil2.textContent == pilihan1){
+          document.getElementById("pilihan1").value = "";
+          alert("Maaf, tidak bisa memilih skill record yang sama")
+          document.getElementById("loading-overlay").style.display = "none";
+        } else {
+          alert("Bisa memilih Skill Record ini")
+          document.getElementById("loading-overlay").style.display = "none";
+        }
+      }
+
+      function tampilkanSR2() {
+        document.getElementById("loading-overlay").style.display = "flex";
+        var pilihan1 = document.getElementById("pilihan1").value;
+        var pilihan2 = document.getElementById("pilihan2").value;
+        var hasil1 = document.getElementById("sr1Name");
+        var hasil2 = document.getElementById("sr2Name");
+        console.log(hasil1.textContent)
+        console.log(pilihan2)
+        console.log(hasil1.textContent == pilihan2)
+        if(hasil1.textContent == pilihan2){
+          document.getElementById("pilihan2").value = "";
+          alert("Maaf, tidak bisa memilih skill record yang sama")
+          document.getElementById("loading-overlay").style.display = "none";
+        } else {
+          alert("Bisa memilih Skill Record ini")
+          document.getElementById("loading-overlay").style.display = "none";
+        }
+      }
+
+      function tampilkanWeapon() {
+        document.getElementById("loading-overlay").style.display = "flex";
+        const pilihan = document.getElementById('weapon').value;
+        google.script.run.withSuccessHandler(data => {
+          console.log("diluar if")
+          if (levelPL >= data){
+            console.log("masuk if");
+            alert("Bisa memilih senjata ini");
+          } else {
+            alert("Tidak bisa digunakan! Minimal level karakter untuk senjata adalah " + String(data));
+            document.getElementById("weapon").selectedIndex = 0;
+          }
+          document.getElementById("loading-overlay").style.display = "none";
+        }).withFailureHandler(er => {
+          alert("failed");
+          document.getElementById("loading-overlay").style.display = "none";
+        }).getLvlWeapon(pilihan);
+      }
+
+      function tampilkanEquipment(tipe) {
+        document.getElementById("loading-overlay").style.display = "flex";
+        console.log(tipe);
+        const pilihan = document.getElementById(tipe).value;
+        console.log(pilihan);
+        google.script.run.withSuccessHandler(data => {
+          if (levelPL >= data){
+            alert("Bisa memilih perlengkapan ini");
+          } else {
+            alert("Tidak bisa digunakan! Minimal level karakter untuk perlengkapan adalah " + String(data));
+            document.getElementById(tipe).selectedIndex = 0;
+          }
+           document.getElementById("loading-overlay").style.display = "none";
+        }).withFailureHandler(er => {
+          alert("failed");
+           document.getElementById("loading-overlay").style.display = "none";
+        }).getLvlEquipment(pilihan);
+      }
+
+      function handleSubmit(event) {
+        event.preventDefault(); // Prevent page reload
+
+        document.getElementById("loading-overlay").style.display = "flex";
+
+        const select1Value = document.getElementById('weapon').value;
+        const select2Value = document.getElementById('armor-top').value;
+        const select3Value = document.getElementById('armor-lower').value;
+        const select4Value = document.getElementById('shield').value;
+        const select5Value = document.getElementById('pilihan1').value;
+        const select6Value = document.getElementById('pilihan2').value;
+
+        // Array kosong untuk menampung nilai yang valid
+        const selectedValues = [];
+
+        selectedValues.push(select1Value);
+        selectedValues.push(select2Value);
+        selectedValues.push(select3Value);
+        selectedValues.push(select4Value);
+        selectedValues.push(select5Value);
+        selectedValues.push(select6Value);
+
+        // Log nilai yang ditambahkan ke dalam array
+        console.log(selectedValues);
+        const jsonString = JSON.stringify(selectedValues);
+        console.log(jsonString);
+        google.script.run.withSuccessHandler(data => {
+          console.log(data);
+          var res = JSON.parse(data);
+          // hasil.innerHTML = pilihan;
+          totalP.innerHTML = res[0];
+          att.innerHTML = res[1];
+          def.innerHTML = res[2];
+          console.log(res);
+          if(res[5] == ""){
+            // pass change weapon
+            console.log("pass change 1");
+          } else {
+            console.log("ganti 1");
+            document.getElementById("weaponImg").src = res[4];
+            document.getElementById("weaponName").innerHTML = res[5];
+            document.getElementById("weaponLevel").innerHTML = res[6];
+            document.getElementById("weaponAttack").innerHTML = res[7];
+          } 
+
+          if(res[9] == ""){
+            // pass change shield
+            console.log("pass change 2");
+          } else {
+            console.log("ganti 2");
+            document.getElementById("shieldImg").src = res[8];
+            document.getElementById("shieldName").innerHTML = res[9];
+            document.getElementById("shieldLevel").innerHTML = res[10];
+            document.getElementById("shieldDefense").innerHTML = res[11];
+          }
+
+          if(res[13] == ""){
+            // pass change top
+            console.log("pass change 3");
+          } else {
+            console.log("ganti 3");
+            document.getElementById("topImg").src = res[12];
+            document.getElementById("topName").innerHTML = res[13];
+            document.getElementById("topLevel").innerHTML = res[14];
+            document.getElementById("topDefense").innerHTML = res[15];
+          }
+          
+          if(res[17] == ""){
+            // pass change lower
+            console.log("pass change 4");
+          } else {
+            console.log("ganti 4");
+            document.getElementById("lowerImg").src = res[16];
+            document.getElementById("lowerName").innerHTML = res[17];
+            document.getElementById("lowerLevel").innerHTML = res[18];
+            document.getElementById("lowerDefense").innerHTML = res[19];
+          }
+
+          if(res[21] == ""){
+            // pass change sr1
+            console.log("pass change 5");
+          } else {  
+            console.log("ganti 5");
+            document.getElementById("sr1Img").src = res[20];
+            document.getElementById("sr1Name").innerHTML = res[21];
+            document.getElementById("sr1Level").innerHTML = res[22];
+            document.getElementById("sr1MpCost").innerHTML = res[23];
+            document.getElementById("sr1Attack").innerHTML = res[24];
+          }
+
+          if(res[26] == ""){
+            // pass change  sr2
+            console.log("pass change 6");
+          } else {
+            console.log("ganti 6");
+            document.getElementById("sr2Img").src = res[25];
+            document.getElementById("sr2Name").innerHTML = res[26];
+            document.getElementById("sr2Level").innerHTML = res[27];
+            document.getElementById("sr2MpCost").innerHTML = res[28];
+            document.getElementById("sr2Attack").innerHTML = res[29];
+          }
+
+          document.getElementById("loading-overlay").style.display = "none";
+        }).withFailureHandler(er => {
+          alert("failed");
+          document.getElementById("loading-overlay").style.display = "none";
+        }).setEquipmentPlayer(jsonString);
+
+        
+        // editModal.hide();
+      }
+    </script>
+</body>
+</html>
