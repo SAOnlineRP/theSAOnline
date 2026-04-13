@@ -3,12 +3,17 @@ html, body {
   overflow: auto !important;
 }
 
+@font-face {
+  font-family: 'SAOUI-Bold';
+  src: url('/fonts/SAOUI-Bold.ttf') format('truetype');
+}
+
 body {
     margin: 0;
     background-image: url("../img/eidolon.png");
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: 'Press Start 2P', cursive !important;
+    font-family: 'SAOUI-Bold', cursive !important;
 }
 
 #loading-overlay {
@@ -57,7 +62,7 @@ body {
 }
 
 .profile-title {
-    font-family: "UnifrakturCook", cursive;
+    font-family: "SAOUI-Bold", cursive;
     font-size: 100px; 
     color: white;
     padding: 0;
