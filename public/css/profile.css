@@ -5,7 +5,7 @@ html, body {
 
 @font-face {
   font-family: 'SAOUI-Bold';
-  src: url('/fonts/SAOUI-Bold.ttf') format('truetype');
+  src: url('../fonts/SAOUITT-Bold.ttf') format('truetype');
 }
 
 body {
