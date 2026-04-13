@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <base target="_top">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  </head>
+  <style>
+    body {
+      background-image: url('https://lh3.googleusercontent.com/d/1MMjIZxA-eLHt6IGgZG2dbRb12x5LPbGv');
+    }
+    .gallery-item {
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .gallery-img {
+      width: 50%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .gallery-container {
+      display: none;
+    }
+
+    p {
+      color: white;
+    }
+
+    /* Full-page overlay */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent */
+      backdrop-filter: blur(10px); /* Blurry effect */
+      display: none; /* Hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    /* Loader (Spinner) */
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .sticky-footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      text-align: center;
+      padding: 10px;
+    }
+
+    .itemQuantity {
+      width: 50px;
+    }
+
+    .infoItem p {
+      margin-bottom: 2px; 
+      font-size:15px;
+    }
+
+    @media (max-width: 768px) {
+      .infoItem p {
+        margin-bottom: 0px;
+        font-size: 10px;
+      }
+    }
+  </style>
+  <script>
+      function showGallery() {
+          var selectedType = document.getElementById("itemType").value;
+          var galleries = document.querySelectorAll(".gallery-container");
+          galleries.forEach(gallery => gallery.style.display = "none");
+          if (selectedType) {
+              document.getElementById(selectedType).style.display = "block";
+          }
+      }
+
+      function clearSelection() {
+          document.getElementById("itemType").value = "";
+          var galleries = document.querySelectorAll(".gallery-container");
+          galleries.forEach(gallery => gallery.style.display = "none");
+      }
+  </script>
+  <body>
+    <button class="w3-button w3-xlarge" style="background-color: rgb(233, 237, 246); position: fixed; z-index: 1;" onclick="w3_open()">☰</button>
+    <div id="loading-overlay">
+      <div class="loader"></div>
+    </div>
+    <div class="container" style="margin-bottom: 100px">
+        <div class="row h-20 text-center">
+          <h1 style="text-align: center; margin-top: 10px !important; font-size: 35px; color: white"><b>MERCHANT - PEMBELIAN</b></h1>
+        </div>
+        <div class="row h-80" style="color: white;">
+          <div class="row text-center" style="color: white">
+            <h3> Total Col Player : <span><img src="https://lh3.googleusercontent.com/d/1Rlq8wt2POTUgeMeFiAPsSruWIPeO5_20" width="30" height="30" style="" alt="Icon Col"></span><span id="col-player" style="font-weight: 600">1,000,000</span></h3>
+          </div>
+          <form id="merchant-form">
+            <div class="mb-3">
+              <div class="form-group">
+                <label for="itemType" class="form-label" style="color: white">JENIS BARANG : </label>
+                <select id="itemType" name="typeItem" class="form-select" onchange="showGallery()">
+                    <option value="" selected hidden>Pilih Jenis</option>
+                      <option value="ITEMS">Items</option>
+                      <option value="WEAPONS-SWORD">Weapons - Sword</option>
+                      <option value="WEAPONS-RAPIER">Weapons - Rapier</option>
+                      <option value="WEAPONS-CLUB">Weapons - Club</option>
+                      <option value="WEAPONS-SPEAR">Weapons - Spear</option>
+                      <option value="WEAPONS-AXE">Weapons - Axe</option>
+                      <option value="WEAPONS-DAGGER">Weapons - Dagger</option>
+                      <option value="WEAPONS-BOW">Weapons - Bow</option>
+                      <option value="EQUIPMENTS-SHIELD">Equipments - Shield</option>
+                      <option value="EQUIPMENTS-TOP">Equipments - Armor Top</option>
+                      <option value="EQUIPMENTS-LOWER">Equipments - Armor Lower</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="ITEMS" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="/img/orb1.png" alt="Foto 1" class="gallery-img">
+                            <p>ORB 1</p>
+                            <p>(100)</p>
+                            <input type="checkbox" class="itemCheckbox" name="orb1" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" class="form-control mt-2" placeholder="0">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="/img/orb2.png" alt="Foto 1" class="gallery-img">
+                            <p>ORB 2</p>
+                            <p>(100)</p>
+                            <input type="checkbox" class="itemCheckbox" name="orb2" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" class="form-control mt-2" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="WEAPONS-SWORD" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/1agILIMbW5612o1abhNKgUtXFeZVZB5hC" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Kamuy</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Attack Weapon:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="kamuy" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" class="form-control mt-2" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="WEAPONS-RAPIER" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/18OyM3jkN6thzG9gP9jyyUddyld2K8s4S" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Arc Angel</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Attack Weapon:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="arc_angel" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="WEAPONS-CLUB" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Club</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Attack Weapon:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="club" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="WEAPONS-SPEAR" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Spear</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Attack Weapon:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="spear" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="WEAPONS-AXE" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Axe</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Attack Weapon:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="axe" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div> 
+                </div>
+            </div>
+
+            <div id="WEAPONS-DAGGER" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Dagger</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Attack Weapon:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="dagger" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="WEAPONS-BOW" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Bow</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Attack Weapon:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="bow" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="EQUIPMENTS-SHIELD" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                   <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Shield</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Defense Equipment:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="shield" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="EQUIPMENTS-TOP" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Armor Top</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Defense Equipment:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="armor-top" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="EQUIPMENTS-LOWER" class="gallery-container">
+                <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+                    <div class="col">
+                        <div class="gallery-item">
+                            <img src="https://lh3.googleusercontent.com/d/14N-Znez2aqq_MTyUiOGR-fO24kGsu0ct" alt="Foto 1" class="gallery-img">
+                            <div class="infoItem">
+                              <p>Armor Lower</p>
+                              <p>Minimal Lvl Player:&nbsp<span><b>60</b></span></p>
+                              <p>Defense Equipment:&nbsp<span><b>100</b></span></p>
+                            </div>
+                            <input type="checkbox" class="itemCheckbox" name="armor-lower" style="color: white">
+                            <input type="number" class="itemQuantity" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </form>
+          <br>
+          <div class="row d-none" id="success-message">
+            <div class="cell-12">
+              <p>Terima kasih telah membeli di Merchant!</p>
+              <p>List Item yang dibeli:</p>
+              <div id="item-buyed">
+              </div>
+              <button class="btn btn-success" id="back-to-form">Beli lagi?</button>
+              <a href="" style="color: black !important; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; background-color: white; padding: 5px; border: 1px solid black;">MY DATABASE</a>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="sticky-footer" id="btn-buy">
+      <div class="form-group button-form" style="padding-bottom: 10px">
+        <button class="button info btn btn-light" onclick="checkPrice()">Cek Total Harga</button>
+        <button class="button success btn btn-primary" id="submit-data" disabled>Beli Barang</button>
+        <button class="button btn btn-danger" onclick="clearSelection()">Cancel</button>
+      </div>
+      <p style="display: inline">Total Harga : <span id="total">0</span> COL</p>
+    </div>
+    <script src="https://cdn.korzh.com/metroui/v4/js/metro.min.js"></script>
+    <script>
+      function checkPrice(){
+        document.getElementById("loading-overlay").style.display = "flex";
+        var type = document.getElementById("itemType").value;
+        var selectedItems = [];
+        var nameInputs = document.getElementsByClassName("itemCheckbox");
+        var quantityInputs = document.getElementsByClassName("itemQuantity");
+        for (var i = 0; i < quantityInputs.length; i++) {
+          var quantity = parseInt(quantityInputs[i].value);
+          if (quantity > 0) {
+              // var itemName = nameInputs[i].childNodes[0].name; 
+              var itemName = nameInputs[i].getAttribute("name");
+              console.log(nameInputs[i]);
+              selectedItems.push({name: itemName, quantity: quantity});
+          }
+        }
+        const jsonString = JSON.stringify(selectedItems);
+        console.log(jsonString);
+        google.script.run.withSuccessHandler(data => {
+          const parsedData = JSON.parse(data)
+          var totalPos = (parsedData.length)-1
+          document.getElementById("total").innerHTML = parsedData[totalPos].total
+          document.getElementById("submit-data").disabled = false
+          document.getElementById("loading-overlay").style.display = "none";
+        }).withFailureHandler(er => {
+          document.getElementById("loading-overlay").style.display = "none";
+          alert("failed")
+        }).totalPrice(type, jsonString)
+      }
+
+      const merchantForm = document.getElementById("merchant-form")
+      const submitForm = document.getElementById("submit-data")
+      const successMessage = document.getElementById("success-message")
+      const backToForm = document.getElementById("back-to-form")
+      const cleanForm = document.getElementById("clean-value")
+      const btnBuy = document.getElementById("btn-buy")
+
+      // merchantForm.addEventListener("submit", submitData)
+
+      submitForm.addEventListener("click", function(e) {
+        e.preventDefault();
+        resetValidationStyling();
+        var totalHarga = parseInt(document.getElementById("total").innerHTML);
+        var totalCol = parseInt((document.getElementById("col-player").innerHTML).replace(/,/g, ''));
+        if (merchantForm.checkValidity()) {
+          if (totalHarga <= totalCol){
+          let text = "Sudah yakin untuk membeli?!\nJika iya, tekan OK.";
+            if (confirm(text) == true) {
+              document.getElementById("loading-overlay").style.display = "flex";
+              merchantForm.classList.add("d-none")
+              var itemType = document.getElementById("itemType").value;
+              var selectedItems = [];
+              var nameInputs = document.getElementsByClassName("itemCheckbox");
+              var quantityInputs = document.getElementsByClassName("itemQuantity");
+              for (var i = 0; i < quantityInputs.length; i++) {
+                  var quantity = parseInt(quantityInputs[i].value);
+                  if (quantity > 0) {
+                      var itemName = nameInputs[i].getAttribute("name");
+                      selectedItems.push({name: itemName, quantity: quantity});
+                  }
+              }
+              const jsonString = JSON.stringify(selectedItems);
+              google.script.run.withSuccessHandler(data => {
+                const result = JSON.parse(data);
+                console.log(data);
+                console.log(result);
+                console.log(result[result.length-1][0]);
+                console.log(result[0].name);
+                document.getElementById("col-player").innerHTML = result[result.length-1][0].toLocaleString('en-US');
+                let div = document.getElementById("item-buyed");
+                let totalHarga = 0;
+                for (let i = 0; i <result.length-1; i++) {
+                  let p = document.createElement("p"); // Create a new paragraph element
+                  p.textContent = result[i].name + "(" + result[i].quantity + ") dengan total harga " + result[i].price; // Set text content
+                  div.appendChild(p); // Append the paragraph inside the div
+                  totalHarga += parseInt(result[i].price);
+                }
+                let p1 = document.createElement("p");
+                p1.textContent = "Pengeluaran Total = " + totalHarga;
+                div.appendChild(p1)
+                successMessage.classList.remove("d-none")
+                btnBuy.classList.add("d-none")
+                document.getElementById("loading-overlay").style.display = "none";
+              }).withFailureHandler(er => {
+                document.getElementById("loading-overlay").style.display = "none";
+                alert("failed")
+              }).acceptData(itemType, jsonString);
+            } else {
+              document.getElementById("loading-overlay").style.display = "none";
+              // pass
+            }
+          } else {
+            alert("Col-mu tidak mencukupi!");
+          }
+        } else {
+          highlightInvalidFields();
+        }
+      })
+
+      backToForm.addEventListener("click", () => {
+        merchantForm.reset()
+        // Hide all checkboxes and labels
+        clearSelection()
+        document.getElementById("item-buyed").innerHTML = "";
+
+        // Show the default option in the select element
+        var selectElement = document.getElementById("itemType");
+        
+        var desiredOptionValue = "";
+        selectElement.value = desiredOptionValue;
+
+        resetValidationStyling()
+        document.getElementById("total").textContent = "0";
+        document.getElementById("submit-data").disabled = true;
+        merchantForm.classList.remove("d-none")
+        successMessage.classList.add("d-none")
+        btnBuy.classList.remove("d-none")
+      })
+
+       function resetValidationStyling() {
+        // Remove previous validation styling
+        var invalidInputs = document.querySelectorAll(":invalid");
+        invalidInputs.forEach(function(input) {
+          input.classList.remove("invalid");
+        });
+      }
+
+      function highlightInvalidFields() {
+        // Add styling to invalid fields
+        var invalidInputs = document.querySelectorAll("input[required]");
+        invalidInputs.forEach(function(input) {
+          input.classList.add("invalid");
+        });
+      }
+    </script>
+  </body>
+</html>
