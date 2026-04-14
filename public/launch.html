@@ -9,13 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     body {
-        min-height: 100vh;
+       
         font-family: 'Orbitron', sans-serif;
         background:
             radial-gradient(circle at top, #11375d 0%, #07142d 45%, #020813 100%);
         overflow: hidden;
         color: #bffcff;
-        position: relative;
+        display: flex;
+        justify-content: center; /* horizontal */
+        align-items: center;     /* vertical */
+        height: 100vh;           /* tinggi full layar */
+        margin: 0;
     }
     .stars-container {
         position: absolute;
@@ -45,37 +49,37 @@
         opacity: 0.6;
     }
 
-        .star-layer:nth-child(3) {
+    .star-layer:nth-child(3) {
         transform: translateZ(-200px);
         animation: star-drift 250s linear infinite;
         opacity: 0.4;
-        }
+    }
 
-        @keyframes star-drift {
+    @keyframes star-drift {
         0% {
             transform: translateZ(-50px) translateY(0);
         }
         100% {
             transform: translateZ(-50px) translateY(100%);
         }
-        }
+    }
 
-        .star {
+    .star {
         position: absolute;
         background: white;
         border-radius: 50%;
         filter: blur(1px);
-        }
+    }
 
-        .star-layer::before,
-        .star-layer::after {
+    .star-layer::before,
+    .star-layer::after {
         content: "";
         position: absolute;
         width: 100%;
         height: 100%;
-        }
+    }
 
-        .star-layer:nth-child(1)::before {
+    .star-layer:nth-child(1)::before {
         background-image: radial-gradient(1px 1px at 10% 10%, white 100%, transparent),
             radial-gradient(1px 1px at 20% 20%, white 100%, transparent),
             radial-gradient(2px 2px at 30% 30%, white 100%, transparent),
@@ -86,9 +90,9 @@
             radial-gradient(1px 1px at 80% 80%, white 100%, transparent),
             radial-gradient(2px 2px at 90% 90%, white 100%, transparent),
             radial-gradient(1px 1px at 15% 85%, white 100%, transparent);
-        }
+    }
 
-        .nebula {
+    .nebula {
         position: absolute;
         width: 120%;
         height: 120%;
@@ -112,9 +116,9 @@
         filter: blur(30px);
         opacity: 0.5;
         animation: nebula-shift 30s infinite alternate ease-in-out;
-        }
+    }
 
-        @keyframes nebula-shift {
+    @keyframes nebula-shift {
         0% {
             transform: scale(1) rotate(0deg);
             opacity: 0.3;
@@ -126,9 +130,9 @@
             transform: scale(1.2) rotate(5deg);
             opacity: 0.4;
         }
-        }
+ }
 
-        .grid-plane {
+    .grid-plane {
         position: absolute;
         width: 200%;
         height: 200%;
@@ -144,25 +148,25 @@
         transform-origin: center;
         animation: grid-move 20s linear infinite;
         opacity: 0.3;
-        }
+    }
 
-        @keyframes grid-move {
+    @keyframes grid-move {
         0% {
             transform: perspective(500px) rotateX(60deg) translateY(0);
         }
         100% {
             transform: perspective(500px) rotateX(60deg) translateY(40px);
         }
-        }
+    }
 
-        .button-container {
+    .button-container {
         position: relative;
         perspective: 1000px;
         transform-style: preserve-3d;
         z-index: 10;
-        }
+    }
 
-        .holo-button {
+    .holo-button {
         position: relative;
         width: 280px;
         height: 80px;
@@ -182,9 +186,9 @@
         outline: none;
         z-index: 5;
         border-radius: 2px;
-        }
+    }
 
-        .holo-button::before {
+    .holo-button::before {
         content: "";
         position: absolute;
         top: 2px;
@@ -199,9 +203,9 @@
         );
         z-index: -1;
         border-radius: 1px;
-        }
+    }
 
-        .button-border {
+    .button-border {
         position: absolute;
         top: 0;
         left: 0;
@@ -209,10 +213,10 @@
         height: 100%;
         pointer-events: none;
         z-index: 2;
-        }
+    }
 
-        .button-border::before,
-        .button-border::after {
+    .button-border::before,
+    .button-border::after {
         content: "";
         position: absolute;
         width: 100%;
@@ -220,21 +224,21 @@
         border: 2px solid transparent;
         box-shadow: 0 0 10px rgba(0, 221, 255, 0.7);
         animation: border-flow 3s infinite;
-        }
+    }
 
-        .button-border::before {
+    .button-border::before {
         border-top-color: rgba(0, 221, 255, 0.8);
         border-left-color: rgba(0, 221, 255, 0.8);
         filter: drop-shadow(0 0 5px rgba(0, 221, 255, 0.7));
-        }
+    }
 
-        .button-border::after {
+    .button-border::after {
         border-bottom-color: rgba(255, 0, 222, 0.8);
         border-right-color: rgba(255, 0, 222, 0.8);
         filter: drop-shadow(0 0 5px rgba(255, 0, 222, 0.7));
-        }
+    }
 
-        @keyframes border-flow {
+    @keyframes border-flow {
         0%,
         100% {
             transform: scale(1);
@@ -244,9 +248,9 @@
             transform: scale(1.03);
             opacity: 0.8;
         }
-        }
+    }
 
-        .holo-glow {
+    .holo-glow {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -263,9 +267,9 @@
         opacity: 0.7;
         filter: blur(10px);
         animation: glow-pulse 3s infinite alternate;
-        }
+    }
 
-        @keyframes glow-pulse {
+    @keyframes glow-pulse {
         0% {
             opacity: 0.4;
             filter: blur(10px) brightness(0.8);
@@ -274,10 +278,10 @@
             opacity: 0.7;
             filter: blur(15px) brightness(1.2);
         }
-        }
+    }
 
         /* Световые линии */
-        .holo-lines {
+    .holo-lines {
         position: absolute;
         top: 0;
         left: 0;
@@ -286,22 +290,22 @@
         overflow: hidden;
         pointer-events: none;
         z-index: 2;
-        }
+    }
 
-        .holo-line {
+    .holo-line {
         position: absolute;
         background: rgba(0, 221, 255, 0.5);
         filter: blur(1px);
-        }
+    }
 
-        .holo-line:nth-child(1) {
+    .holo-line:nth-child(1) {
         top: 0;
         left: 30px;
         width: 1.5px;
         height: 100%;
         animation: line-pulse 2s infinite alternate;
         animation-delay: -0.5s;
-        }
+    }
 
         .holo-line:nth-child(2) {
         top: 0;
