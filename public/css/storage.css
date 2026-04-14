@@ -2,12 +2,69 @@ html, body {
     height: 100vh;
     overflow: hidden;
 }
+
+@font-face {
+  font-family: 'SAOUI';
+  src: url('../fonts/SAOUI-Regular.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUI';
+  src: url('../fonts/SAOUI-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUITT';
+  src: url('../fonts/SAOUITT-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUITT';
+  src: url('../fonts/SAOUITT-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcome';
+  src: url('../fonts/SAOWelcome-Regular.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcome';
+  src: url('../fonts/SAOWelcome-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcomeTT';
+  src: url('../fonts/SAOWelcomeTT-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcomeTT';
+  src: url('../fonts/SAOWelcomeTT-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
     margin: 0;
-    background-image: url("../img/eidolon.png");
+    background-image: url("../img/welcome.png");
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'SAOUI', cursive !important;
     color: #fff;
 }
 .container {
@@ -17,9 +74,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  background-color: #362f2c;
-  border: 4px solid #d4af4d;
+  margin-bottom: 10px;
+  background-color: #215b7a;
+  border: 4px solid white;
   border-radius: 30px;
   padding: 10px;
 }
@@ -34,19 +91,19 @@ body {
     margin-right: 10px;
 }
 .player-name {
-    font-size: 15px;
+    font-size: 25px;
     line-height: 1.4;
 }
 .col-player{
-    font-size: 15px;
+    font-size: 25px;
     line-height: 1.4;
     text-align: right;
 }
 .page-title {
-    font-size: 28px;
-    background: #d0b06a;
-    color: #362f2c;
-    padding: 10px 20px;
+    font-size: 45px;
+    background: white;
+    color: #000;
+    padding: 0px 20px;
     border: 2px solid #000;
     border-radius: 20px;
 }
@@ -60,16 +117,17 @@ body {
 }
 .nav-link-storage {
   text-decoration: none;
-  padding: 10px 20px;
+  padding: 0px 20px;
   display: inline-block;
-  background: #333;
+  background: #215b7a;
   color: #fff;
   border-radius: 5px;
   border: 2px solid transparent;
   transition: all 0.2s ease;
+  font-size: 25px;
 }
 .nav-link-storage.active {
-    background: #d4af4d;
+    background: white;
     color: #000;
     border: 2px solid #fff;
     transform: translateY(-8px); /* naik ke atas */
@@ -77,17 +135,17 @@ body {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .tab-content {
-  background: #333;
-  border: 4px solid #d4af4d;
+  background: #215b7a;
+  border: 4px solid white;
   padding: 20px 40px;
   border-radius: 30px;
   overflow-y: auto;
-  height: 70vh;
+  height: 65vh;
 }
 
 .tab-info {
     text-align: center;
-    font-size: 14px;
+    font-size: 25px;
     margin-bottom: 15px;
     font-weight: bold;
 }
@@ -135,7 +193,7 @@ body {
     align-items: center;
     flex-direction: row;
     gap: 10px;
-    background: #d4af4d;
+    background: white;
     padding: 15px;
     border-radius: 30px;
     color: #362f2c;
@@ -172,8 +230,8 @@ body {
 }
 
 .right-buttons .capacity {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 22px;
+    font-family: 'SAOUI', cursive;
+    font-size: 25px;
     padding: 6px 10px;
     border: 2px solid #0000;
     border-radius: 40px;

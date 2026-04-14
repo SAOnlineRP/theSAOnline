@@ -4,16 +4,67 @@ html, body {
 }
 
 @font-face {
-  font-family: 'SAOUI-Bold';
+  font-family: 'SAOUI';
+  src: url('../fonts/SAOUI-Regular.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUI';
+  src: url('../fonts/SAOUI-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUITT';
+  src: url('../fonts/SAOUITT-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUITT';
   src: url('../fonts/SAOUITT-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcome';
+  src: url('../fonts/SAOWelcome-Regular.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcome';
+  src: url('../fonts/SAOWelcome-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcomeTT';
+  src: url('../fonts/SAOWelcomeTT-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcomeTT';
+  src: url('../fonts/SAOWelcomeTT-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
 }
 
 body {
     margin: 0;
-    background-image: url("../img/eidolon.png");
+    background-image: url("../img/welcome.png");
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: 'SAOUI-Bold', cursive !important;
+    font-family: 'SAOUI', cursive !important;
 }
 
 #loading-overlay {
@@ -62,8 +113,9 @@ body {
 }
 
 .profile-title {
-    font-family: "SAOUI-Bold", cursive;
-    font-size: 100px; 
+    font-family: "SAOWelcomeTT", sans-serif;
+    font-weight: 700;
+    font-size: 60px; 
     color: white;
     padding: 0;
     margin: 0;
@@ -72,11 +124,11 @@ body {
 
 .avatar-section {
     display: flex;
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     align-items: center;
-    background: #362f2c;
-    border: 4px solid #d4af4d;
+    background: #215b7a;
+    border: 4px solid white;
     border-radius: 30px;
     /* box-shadow: 4px 4px 0 #d4af4d; */
     margin: 0 auto;
@@ -87,7 +139,7 @@ body {
     grid-template-columns: 1fr 1fr; /* dua kolom dengan lebar sama */
     gap: 5px; /* jarak antar item (opsional) */
     width: 100%; /* atau max-width: 500px, sesuai kebutuhan */
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
     place-items: center;
 }
 
@@ -112,6 +164,7 @@ body {
     padding: 1rem;
     text-align: center;
     color: white;
+    font-size: 20px;
 }
 
 .avatar {
@@ -124,27 +177,28 @@ body {
 }
 
 .level {
-    padding: 10px;
+    /* padding: 10px; */
     font-size: 20px;
     text-align: right;
     color: white;
 }
 
 .name {
-    padding: 20px 10px;
-    background: #362f2c;
-    border: 4px solid #d4af4d;
+    padding: 0px 10px;
+    background: #215b7a;
+    border: 4px solid white;
     border-radius: 30px;
     /* box-shadow: 2px 2px 0 #d4af4d; */
-    font-size: 20px;
+   
+    font-size: 30px;
     text-align: center;
     color: white;
     text-wrap: nowrap;
 }
 
 .stat-section {
-    background: #362f2c;
-    border: 4px solid #d4af4d;
+    background: #215b7a;
+    border: 4px solid white;
     border-radius: 30px;
     padding: 10px;
     /* box-shadow: 4px 4px 0 black; */
@@ -153,20 +207,22 @@ body {
 }
 
 .stat-title {
-    background: #d4af4d;
+    background: white;
     text-align: center;
     padding: 6px;
     border-radius: 30px;
     margin-bottom: 12px;
-    font-size: 20px;
+    font-size: 30px;
     color: black;
+    font-weight: 700;
+    letter-spacing: 5px;
 }
 
 .stat-row {
     display: flex;
     justify-content: space-between;
-    padding: 15px 0;
-    font-size: 17px;
+    /* padding: 15px 0; */
+    font-size: 25px;
 }
 
 .stat-row span:first-child {
@@ -176,8 +232,8 @@ body {
 .box-pixel {
     margin-top: 14px;
     padding: 8px;
-    background: #362f2c;
-    border: 4px solid #d4af4d;
+    background: #215b7a;
+    border: 4px solid white;
     border-radius: 30px;
     text-align: center;
     /* box-shadow: 2px 2px 0 black; */
@@ -186,25 +242,26 @@ body {
 }
 
 .wequip-box {
-margin-top: 14px;
-    padding: 8px;
-    background: #d4af4d;
-    border: 4px solid black;
+    margin-top: 14px;
+    padding: 0px 8px;
+    background: #215b7a;
+    border: 4px solid white;    
     border-radius: 30px;
     text-align: center;
     /* box-shadow: 2px 2px 0 black; */
-    font-size: 20px;
+    font-size: 30px;
+    color: white;
 }
 
 .wequip-box-edit {
-margin-top: 14px;
-    padding: 8px;
+    margin-top: 14px;
+    padding: 0px8px;
     background: #2995c1;
     border: 4px solid black;
     border-radius: 30px;
     text-align: center;
     box-shadow: 2px 2px 0 black;
-    font-size: 20px;
+    font-size: 30px;
     cursor: pointer;
 }
 
@@ -212,8 +269,8 @@ margin-top: 14px;
     padding: 4px;
     height:150px;
     width: 150px;
-    background: #362f2c;
-    border: 4px solid #d4af4d;
+    background: #215b7a;
+    border: 4px solid white;
     border-radius: 30px;
     /* box-shadow: 2px 2px 0 black; */
     font-size: 20px;
@@ -223,8 +280,8 @@ margin-top: 14px;
 .box-equip {
     height:90px;
     width: 90px;
-    background: #362f2c;
-    border: 4px solid #d4af4d;
+    background: #215b7a;
+    border: 4px solid white;
     /* box-shadow: 2px 2px 0 black; */
     font-size: 20px;
     text-align: center;
