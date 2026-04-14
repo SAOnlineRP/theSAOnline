@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wave Grid Canvas</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #0a3047, #07131f);
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    function drawGrid(time) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const spacing = 40;
+      const cols = Math.floor(canvas.width / spacing) + 4;
+      const rows = 18;
+      const horizon = canvas.height * 0.85;
+
+      ctx.strokeStyle = "rgba(100, 220, 255, 0.22)";
+      ctx.lineWidth = 1;
+
+      // horizontal lines
+      for (let row = 0; row < rows; row++) {
+        ctx.beginPath();
+        for (let col = 0; col < cols; col++) {
+          const x = (col - 2) * spacing;
+          const depth = row / rows;
+          const yBase = horizon + depth * depth * canvas.height * 0.7;
+
+          const wave = Math.sin(col * 0.55 + time * 0.0015 + row * 0.3) * 18;
+          const y = yBase + wave;
+
+          if (col === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // vertical lines
+      for (let col = 0; col < cols; col++) {
+        ctx.beginPath();
+        for (let row = 0; row < rows; row++) {
+          const xBase = (col - 2) * spacing;
+          const depth = row / rows;
+          const y = horizon + depth * depth * canvas.height * 0.7;
+
+          const waveY = Math.sin(col * 0.55 + time * 0.0015 + row * 0.3) * 18;
+          const curveX = Math.sin(row * 0.4 + time * 0.001) * 8;
+
+          const x = xBase + curveX;
+          if (row === 0) ctx.moveTo(x, y + waveY);
+          else ctx.lineTo(x, y + waveY);
+        }
+        ctx.stroke();
+      }
+    }
+
+    function animate(time) {
+      drawGrid(time);
+      requestAnimationFrame(animate);
+    }
+
+    animate(0);
+  </script>
+</body>
+</html>
