@@ -27,13 +27,52 @@
         overflow: hidden;
     }
 
-    .game-screen .img-character {
-      position: relative;
-      top: 10%;
-      width: auto;
-      height: 140%;
-      object-fit: cover;
-      z-index: 1;
+    .img-character {
+        position: relative;
+        top: 10%;
+        height: 100%;
+    }
+
+    .img-character img {
+        width: auto;
+        height: 200%;
+        object-fit: cover;
+    }
+
+    .img-character img {
+        transition: transform 0.2s ease;
+    }
+
+    .img-character:active img {
+        transform: scale(0.95); /* efek ditekan */
+    }
+
+    .img-character.active img {
+        transform: scale(1.1); /* efek setelah klik */
+    }
+
+    .text-character {
+        position: absolute;
+        top: 60%;
+        left: 20%;
+        transform: translate(-50%, -40%); /* agak naik dikit */
+        text-wrap: wrap;
+        width: 30%;
+        color: white;
+        font-size: 24px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 12px 20px;
+        border-radius: 8px;
+
+        opacity: 0;              /* awalnya invisible */
+        pointer-events: none;    /* biar gak bisa diklik */
+        transition: 0.3s ease;   /* animasi */
+    }
+
+    /* saat aktif */
+    .text-character.show {
+        opacity: 1;
+        transform: translate(-50%, -50%); /* turun dikit (smooth) */
     }
 
     /* TOP LEFT PROFILE */
@@ -253,7 +292,14 @@
         width: auto;
         height: 140%;
         object-fit: cover;
-    }
+        }
+
+        .text-character {
+            top: 50%;
+            left: 40%;
+            width: 50%;
+            font-size: 14px;
+        }
 
       .top-left {
         transform: scale(0.9);
@@ -313,8 +359,11 @@
       <div class="icon">📋</div>
       <div class="icon">🎁</div>
     </div>
-    <div class="img-character">
+    <div class="img-character" onclick="showText(this)">
         <img src="/img/character_sao.png" alt="Avatar"/>
+    </div>
+    <div class="text-character" id="character_box">
+        <p>You stole this world and its people. You are a king of thieves, alone upon a stolen throne.</p>
     </div>
     <!-- MENU -->
     <div class="menu-panel">
@@ -332,5 +381,11 @@
       </div>
     </div>
   </div>
+  <script>
+    function showText(el) {
+        const textBox = document.getElementById("character_box");
+        textBox.classList.toggle("show");
+    }
+  </script>
 </body>
 </html>
