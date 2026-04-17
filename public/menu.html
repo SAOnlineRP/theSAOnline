@@ -18,28 +18,22 @@
     }
 
     .game-screen {
-      max-width: 100%;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      background: url("background.jpg") center center / cover no-repeat;
+      height: 100vh;              /* patok ke tinggi layar */
+        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+        max-width: 100%;
+        margin: 0 auto;
+
+        position: relative;
+        overflow: hidden;
     }
 
-    /* overlay gelap tipis */
-    .game-screen::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.12);
-      pointer-events: none;
-    }
-
-    .game-screen img {
+    .game-screen .img-character {
       position: relative;
-      left: 15%;
       top: 10%;
       width: auto;
       height: 140%;
       object-fit: cover;
+      z-index: 1;
     }
 
     /* TOP LEFT PROFILE */
@@ -248,6 +242,19 @@
         min-height: 100vh;
       }
 
+      .game-screen .img-character {
+        height: 100%;
+      }
+
+      .img-character img {
+        position: relative;
+        left: 25%;
+        top: 5%;
+        width: auto;
+        height: 140%;
+        object-fit: cover;
+    }
+
       .top-left {
         transform: scale(0.9);
         transform-origin: top left;
@@ -306,8 +313,9 @@
       <div class="icon">📋</div>
       <div class="icon">🎁</div>
     </div>
-    <img src="/img/character_sao.png" alt="Avatar"/>
-    
+    <div class="img-character">
+        <img src="/img/character_sao.png" alt="Avatar"/>
+    </div>
     <!-- MENU -->
     <div class="menu-panel">
       <div class="quest-title">QUEST</div>
