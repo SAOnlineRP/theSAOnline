@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Character UI Wireframe</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #dcdcdc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .screen {
+      height: 100vh;              /* patok ke tinggi layar */
+        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+        max-width: 100%;
+        margin: 0 auto;
+      background: #e7e7e7;
+      border: 1px solid #999;
+      padding: 10px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .top-left,
+    .top-center,
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-btn {
+      font-size: 60px;
+      color: #000;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .currency-box {
+      min-width: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 40px;
+      color: #222;
+    }
+
+    .coin {
+      color: #b58500;
+      font-size: 40px;
+    }
+
+    .gem {
+      color: #7f82ff;
+      font-size: 40px;
+      margin-top: -10px;
+    }
+
+    /* MAIN */
+    .content {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding-top: 20px;
+    }
+
+    /* CHARACTER SECTION */
+    .character-area {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .character-img {
+      width: 250px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .character-img img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .tags {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      display: flex;
+      align-items: center;
+      height: 20px;
+      min-width: 72px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .tag .badge-icon {
+      width: 22px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 4px;
+      font-size: 12px;
+    }
+
+    .tag.spirit {
+      background: #7a5aa0;
+    }
+
+    .tag.spirit .badge-icon {
+      background: #3d1f58;
+      border-radius: 50%;
+    }
+
+    .tag.newbie {
+      background: #cfae41;
+      color: #111;
+    }
+
+    .tag.newbie .badge-icon {
+      background: #6b1c1c;
+      color: #fff;
+      clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    }
+
+    /* INFO BOX */
+    .info-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      justify-content: center;
+    }
+
+    .name-box {
+      width: 150px;
+      height: 60px;
+      background: #cfcfcf;
+      padding: 4px 8px;
+      font-size: 20px;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .weapon-box {
+      width: 60px;
+      height: 60px;
+      background: #d8d8d8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: #d6b22a;
+    }
+
+    /* EQUIPMENT */
+    .equipment {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .equip-card {
+      width: 100px;
+      height: 100px;
+      background: #d2d2d2;
+      border: 1px solid #8f8f8f;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .equip-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .equip-icon {
+      position: absolute;
+      left: 2px;
+      bottom: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(120,120,120,0.9);
+      color: white;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* STATS */
+    .stats-box {
+      width: 300px;
+      height: 230px;
+      background: #7c7c7c;
+      padding: 10px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .radar {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .radar svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .stat-label {
+      position: absolute;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .label-atk { top: 0px; left: 50%; transform: translateX(-50%); }
+    .label-hp { top: 42px; left: 2px; }
+    .label-mp { bottom: 30px; left: 2px; }
+    .label-def { top: 42px; right: 2px; }
+    .label-crit { bottom: 30px; right: 0px; }
+    .label-cdmg { bottom: 2px; left: 50%; transform: translateX(-50%); }
+
+    /* BOTTOM CARDS */
+    .bottom-cards {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .char-card {
+      width: 125px;
+      height: 180px;
+      background: #bfbfbf;
+      border: 1px solid #7d7d7d;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .char-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 20px;
+      background: rgba(60,60,60,0.9);
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      gap: 2px;
+      font-size: 16px;
+      color: gold;
+    }
+
+    .edit-icon {
+        margin-top: -20px;
+      font-size: 50px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="top-bar">
+      <div class="top-left">
+        <div class="icon-btn">↩</div>
+        <div class="icon-btn">🏠</div>
+      </div>
+
+      <div class="top-center">
+        <div class="currency-box">
+          <span class="coin">🪙</span>
+          <span>10000</span>
+        </div>
+        <div class="currency-box">
+          <span class="gem">💎</span>
+          <span>50</span>
+        </div>
+      </div>
+
+      <div class="top-right">
+        <div class="edit-icon">✎</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- LEFT -->
+      <div class="left-panel">
+        <div class="character-area">
+          <div class="character-img">
+            <img src="https://via.placeholder.com/82x82.png?text=Kirito" alt="Kirito">
+          </div>
+
+          <div class="tags">
+            <div class="tag spirit">
+              <div class="badge-icon">🔥</div>
+              <span>SPIRIT</span>
+            </div>
+            <div class="tag newbie">
+              <div class="badge-icon"></div>
+              <span>NEWBIE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="name-box">
+            <div>Kirito</div>
+            <div>ID :</div>
+          </div>
+          <div class="weapon-box">⚔</div>
+        </div>
+
+        <div class="equipment">
+          <div class="equip-card">
+            <img src="https://via.placeholder.com/64x64.png?text=Armor" alt="Armor">
+            <div class="equip-icon">⛨</div>
+          </div>
+
+          <div class="equip-card">
+            <img src="https://via.placeholder.com/64x64.png?text=Pants" alt="Pants">
+            <div class="equip-icon">⛨</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right-panel">
+        <div class="stats-box">
+          <div class="radar">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <polygon
+                points="50,10 80,25 80,75 50,90 20,75 20,25"
+                fill="#d8d8d8"
+                stroke="none"
+              />
+            </svg>
+
+            <div class="stat-label label-atk">ATK</div>
+            <div class="stat-label label-hp">HP</div>
+            <div class="stat-label label-mp">MP</div>
+            <div class="stat-label label-def">DEF</div>
+            <div class="stat-label label-crit">Crit%</div>
+            <div class="stat-label label-cdmg">CritDMG</div>
+          </div>
+        </div>
+
+        <div class="bottom-cards">
+          <div class="char-card">
+            <img src="https://via.placeholder.com/72x78.png?text=Card+1" alt="Card 1">
+            <div class="card-bottom">★ ★ ★ ★ ☆</div>
+          </div>
+
+          <div class="char-card">
+            <img src="https://via.placeholder.com/72x78.png?text=Card+2" alt="Card 2">
+            <div class="card-bottom">★ ★ ★ ★ ★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

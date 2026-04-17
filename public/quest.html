@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quest UI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .container {
+      height: 100vh;              /* patok ke tinggi layar */
+        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+        max-width: 100%;
+        margin: 0 auto;
+
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .topbar-left {
+      display: flex;
+      gap: 18px;
+      color: #000;
+      align-items: center;
+    }
+
+    .topbar-left button {
+      border: none;
+      background: none;
+      font-size: 40px;
+      cursor: pointer;
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 14px;
+    }
+
+    .currency-box {
+      min-width: 100px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 24px;
+      color: #222;
+      padding: 0 12px;
+    }
+
+    /* main content */
+    .content {
+      display: flex;
+      gap: 20px;
+    }
+
+    .left-panel {
+      width: 35%;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      justify-content: center;
+    }
+
+    .tab {
+      padding: 10px 18px;
+      background: #8b8fa9;
+      color: #111;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .tab.active {
+        transform: scale(0.95); /* efek ditekan */
+        background: #000a5a;
+        color: #fff;
+    }
+
+    .story-card {
+      width: 100%;
+      height: 120px;
+      background: #8b8fa9;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: black;
+      font-size: 20px;
+      transition: transform 0.2s ease;
+    }
+    .story-card.active {
+        transform: scale(0.95); /* efek ditekan */
+        color: white;
+        background: #000a5a;
+    }
+
+    .story-card.active {
+        transform: scale(1); /* efek setelah klik */
+    }
+
+    .right-panel {
+      flex: 1;
+      background: #000a5a;
+      min-height: 388px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px 14px 12px;
+    }
+
+    .quest-title {
+      font-size: 34px;
+      margin-bottom: 14px;
+    }
+
+    .quest-desc {
+      font-size: 18px;
+      line-height: 1.5;
+      max-width: 95%;
+    }
+
+    .bottom-section {
+      margin-top: 20px;
+    }
+
+    .divider {
+      height: 10px;
+      background: #d9d9d9;
+      margin-bottom: 10px;
+    }
+
+    .rewards-label {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .rewards {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+    .enter-btn-container {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .enter-btn {
+      align-self: flex-end;
+      background: #d9d9d9;
+      color: #222;
+      border: none;
+      padding: 12px 26px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        width: 100%;
+      }
+
+      .right-panel {
+        min-height: 320px;
+      }
+
+      .quest-title {
+        font-size: 28px;
+      }
+
+      .quest-desc {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button>↩</button>
+        <button>⌂</button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="currency-box">🪙 10000</div>
+        <div class="currency-box">💧 50</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="left-panel">
+        <div class="tabs">
+            <button class="tab active" onclick="changeTab('story', this)">Story</button>
+            <button class="tab" onclick="changeTab('daily', this)">Daily</button>
+            <button class="tab" onclick="changeTab('event', this)">Event</button>
+        </div>
+
+        <div id="cardContainer">
+            <div class="story-card active">The Beginning</div>
+            <div class="story-card">The Journey Begins</div>
+            <div class="story-card">More Stories Coming Soon!</div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div>
+            <div class="quest-title" id="questTitle">The Beginning</div>
+            <div class="quest-desc" id="questDesc">
+            Mulai petualangan pertamamu di Aincrad dan pelajari dasar pertarungan.
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="divider"></div>
+            <div class="rewards-label">Rewards</div>
+            <div class="rewards">
+            <span id="rewardGold">🪙 10000</span>
+            <span id="rewardEnergy">💧 50</span>
+            </div>
+            <div class="enter-btn-container">
+            <button class="enter-btn" id="enterBtn">Enter Story</button>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+  <script>
+    window.onload = () => {
+        renderCards(currentTab);
+        updateRightContent(data[currentTab][0]);
+    };
+    
+    var data = {
+        story: [
+        {
+            title: "The Beginning",
+            desc: "Mulai petualangan pertamamu di Aincrad dan pelajari dasar pertarungan.",
+            gold: "🪙 10000",
+            energy: "💧 50",
+            button: "Enter Story",
+            action: "story1.html"
+        },
+        {
+            title: "The Journey Begins",
+            desc: "Lanjutkan perjalanan ke area berikutnya dan hadapi monster yang lebih kuat.",
+            gold: "🪙 12000",
+            energy: "💧 60",
+            button: "Enter Story",
+            action: "story2.html"
+        },
+        {
+            title: "More Stories Coming Soon!",
+            desc: "Chapter berikutnya belum tersedia. Nantikan update selanjutnya.",
+            gold: "🪙 0",
+            energy: "💧 0",
+            button: "Coming Soon",
+            action: "story3.html"
+        }
+        ],
+        daily: [
+        {
+            title: "Kill 10 Monsters",
+            desc: "Kalahkan 10 monster hari ini untuk mendapatkan hadiah harian.",
+            gold: "🪙 2000",
+            energy: "💧 10",
+            button: "Enter Daily",
+            action: "daily1.html"
+        },
+        {
+            title: "Collect 5 Herbs",
+            desc: "Kumpulkan 5 herbs dari field untuk kebutuhan crafting.",
+            gold: "🪙 1500",
+            energy: "💧 8",
+            button: "Enter Daily",
+            action: "daily2.html"
+        },
+        {
+            title: "Login Reward",
+            desc: "Login hari ini dan ambil bonus reward harianmu.",
+            gold: "🪙 500",
+            energy: "💧 5",
+            button: "Claim Reward",
+            action: "daily3.html"
+        }
+        ],
+        event: [
+        {
+            title: "Boss Raid Event",
+            desc: "Ikuti raid boss terbatas dan dapatkan item langka.",
+            gold: "🪙 5000",
+            energy: "💧 25",
+            button: "Join Event",
+            action: "event1.html"
+        },
+        {
+            title: "Limited Dungeon",
+            desc: "Masuki dungeon spesial event sebelum waktunya habis.",
+            gold: "🪙 7000",
+            energy: "💧 30",
+            button: "Join Event",
+            action: "event2.html"
+        },
+        {
+            title: "Special Login Bonus",
+            desc: "Bonus login spesial event tersedia untuk waktu terbatas.",
+            gold: "🪙 3000",
+            energy: "💧 15",
+            button: "Claim Bonus",
+            action: "event3.html"
+        }
+        ]
+    };
+
+    let currentTab = "story";
+
+    function changeTab(type, el) {
+        currentTab = type;
+
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        el.classList.add("active");
+
+        renderCards(type);
+
+        updateRightContent(data[type][0]);
+    } 
+
+    function renderCards(type) {
+        const container = document.getElementById("cardContainer");
+        container.innerHTML = "";
+
+        data[type].forEach((item, index) => {
+            const div = document.createElement("div");
+            div.className = "story-card";
+            if (index === 0) div.classList.add("active");
+
+            div.innerText = item.title;
+            div.onclick = () => selectCard(div, item);
+
+            container.appendChild(div);
+        });
+    }
+
+    function selectCard(cardEl, item) {
+        document.querySelectorAll(".story-card").forEach(card => card.classList.remove("active"));
+        cardEl.classList.add("active");
+
+        updateRightContent(item);
+    }
+
+    function updateRightContent(item) {
+        document.getElementById("questTitle").innerText = item.title;
+        document.getElementById("questDesc").innerText = item.desc;
+        document.getElementById("rewardGold").innerText = item.gold;
+        document.getElementById("rewardEnergy").innerText = item.energy;
+
+        const btn = document.getElementById("enterBtn");
+        btn.innerText = item.button;
+
+        // ⬇️ INI YANG PENTING
+        btn.onclick = () => {
+            window.location.href = item.action;
+        };
+    }
+
+  </script>
+</body>
+</html>

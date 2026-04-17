@@ -28,6 +28,7 @@
     }
 
     .img-character {
+        width: 50%;
         position: relative;
         top: 10%;
         height: 100%;
@@ -367,11 +368,11 @@
     </div>
     <!-- MENU -->
     <div class="menu-panel">
-      <div class="quest-title">QUEST</div>
+      <div class="quest-title" onclick="goToQuest()">QUEST</div>
 
       <div class="menu-grid">
-        <div class="menu-btn active">PARTY</div>
-        <div class="menu-btn">SUMMON</div>
+        <div class="menu-btn" onclick="goToParty()">PARTY</div>
+        <div class="menu-btn" onclick="goToSummon()">SUMMON</div>
       </div>
 
       <div class="bottom-grid">
@@ -385,6 +386,16 @@
     function showText(el) {
         const textBox = document.getElementById("character_box");
         textBox.classList.toggle("show");
+    }
+
+    function goToQuest() {
+        window.location.href = "quest.html";
+    }
+    function goToParty() {
+        window.location.href = "party.html";
+    }
+    function goToSummon() {
+        window.location.href = "summon.html";
     }
   </script>
 </body>
