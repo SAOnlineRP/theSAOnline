@@ -339,7 +339,7 @@
   <div class="game-screen">
     <!-- TOP LEFT -->
     <div class="top-left">
-      <div class="avatar-box">
+      <div class="avatar-box" onclick="goToProfile()">
         <img src="kirito-avatar.png" alt="Kirito Avatar">
       </div>
 
@@ -356,7 +356,7 @@
 
     <!-- TOP RIGHT -->
     <div class="top-right">
-      <div class="icon">👥</div>
+      <div class="icon" onclick="goToFriends()">👥</div>
       <div class="icon">📋</div>
       <div class="icon">🎁</div>
     </div>
@@ -396,6 +396,12 @@
     }
     function goToSummon() {
         window.location.href = "summon.html";
+    }
+    function goToFriends() {
+        window.location.href = "friends.html";
+    }
+    function goToProfile() {
+        window.location.href = "user_profile.html";
     }
   </script>
 </body>

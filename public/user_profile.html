@@ -305,8 +305,8 @@
   <div class="screen">
     <div class="top-bar">
       <div class="top-left">
-        <div class="icon-btn">↩</div>
-        <div class="icon-btn">🏠</div>
+        <div class="icon-btn" onclick="goBack()">↩</div>
+        <div class="icon-btn" onclick="goHome()">🏠</div>
       </div>
 
       <div class="top-center">
@@ -401,5 +401,14 @@
       </div>
     </div>
   </div>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function goHome() {
+      window.location.href = "menu.html";
+    }
+  </script>
 </body>
 </html>

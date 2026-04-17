@@ -289,8 +289,8 @@
 <body>
   <div class="game-ui">
     <div class="top-bar">
-      <button>↩</button>
-      <button>🏠</button>
+      <button onclick="goBack()">↩</button>
+      <button onclick="goHome()">🏠</button>
     </div>
 
     <div class="content-row">
@@ -395,5 +395,13 @@
       <button class="save-btn">SAVE</button>
     </div>
   </div>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+    function goHome() {
+      window.location.href = "menu.html";
+    }
+  </script>
 </body>
 </html>

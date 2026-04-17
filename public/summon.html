@@ -3,10 +3,180 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAO Summon UI</title>
+  <title>Gacha Wireframe</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      
+      min-height: 100vh;
+    }
+
+    .screen {
+      height: 100vh;              /* patok ke tinggi layar */
+        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+        max-width: 100%;
+        margin: 0 auto;
+
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* top icons */
+    .top-left {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      display: flex;
+      gap: 14px;
+      font-size: 50px;
+    }
+
+    .top-left .icon {
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* top currency */
+    .top-right {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      display: flex;
+      gap: 12px;
+      padding-right: 0;
+    }
+
+    .currency-box {
+      min-width: 100px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 40px;
+    }
+
+    /* left menu */
+    .left-panel {
+      position: absolute;
+      left: 42px;
+      top: 100px;
+      width: 200px;
+      height: 450px;
+      background: #6d6d6d;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .menu-btn {
+      width: 150px;
+      min-height: 80px;
+      background: #d9d9d9;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      padding: 6px;
+      text-align: center;
+    }
+
+    /* info text */
+    .guarantee-box {
+      position: absolute;
+      top: 200px;
+      right: 18px;
+      background: #d9d9d9;
+      padding: 8px 10px;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    /* summon buttons */
+    .bottom-actions {
+      position: absolute;
+      right: 26px;
+      bottom: 40px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .summon-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .summon-btn {
+      width: 150px;
+      min-height: 70px;
+      background: #d9d9d9;
+      border: none;
+      font-size: 25px;
+      cursor: pointer;
+      text-align: center;
+      padding: 6px;
+    }
+
+    .cost {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Summon UI</h1>
-    <p>This is the summon page. Here you can manage your summons and their abilities.
+  <div class="screen">
+    <div class="top-left">
+      <div class="icon" onclick="goBack()">↩</div>
+      <div class="icon" onclick="goHome()">⌂</div>
+    </div>
+
+    <div class="top-right">
+      <div class="currency-box">🪙 10000</div>
+      <div class="currency-box">🧪 50</div>
+    </div>
+
+    <div class="left-panel">
+      <button class="menu-btn">Special<br>Summon</button>
+      <button class="menu-btn">Regular<br>Summon</button>
+    </div>
+
+    <div class="guarantee-box">
+      Get guaranteed partner<br>
+      every 10 summons!
+    </div>
+
+    <div class="bottom-actions">
+      <div class="summon-group">
+        <button class="summon-btn">Single<br>Summon</button>
+        <div class="cost">🧪 250</div>
+      </div>
+
+      <div class="summon-group">
+        <button class="summon-btn">Summon<br>4x</button>
+        <div class="cost">🧪 2000</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function goHome() {
+      window.location.href = "menu.html";
+    }
+    </script>
 </body>
 </html>
