@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAO Menu UI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #111;
+    }
+
+    .game-screen {
+      width: 1000px;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: url("background.jpg") center center / cover no-repeat;
+    }
+
+    /* overlay gelap tipis */
+    .game-screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.12);
+      pointer-events: none;
+    }
+
+    /* TOP LEFT PROFILE */
+    .top-left {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+      align-items: flex-start;
+    }
+
+    .avatar-box,
+    .info-box,
+    .gold-box {
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      min-height: 56px;
+    }
+
+    .avatar-box {
+      width: 52px;
+      height: 56px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .avatar-box img {
+      width: 42px;
+      height: 42px;
+      object-fit: cover;
+    }
+
+    .info-box {
+      padding: 6px 10px;
+      min-width: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .info-box .name {
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+
+    .info-box .lvl {
+      font-size: 17px;
+      margin-top: 4px;
+    }
+
+    .gold-box {
+      padding: 6px 12px;
+      min-width: 95px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      font-size: 18px;
+    }
+
+    .gold-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gold-icon {
+      font-size: 18px;
+    }
+
+    /* TOP RIGHT ICONS */
+    .top-right {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 20px;
+      z-index: 2;
+      color: #111;
+      font-size: 34px;
+      align-items: center;
+    }
+
+    .top-right .icon {
+      width: 36px;
+      text-align: center;
+      cursor: pointer;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,0.25));
+    }
+
+    /* MAIN MENU PANEL */
+    .menu-panel {
+      position: absolute;
+      right: 55px;
+      top: 145px;
+      width: 430px;
+      z-index: 2;
+      color: #fff;
+    }
+
+    .quest-title {
+      background: rgba(20, 20, 20, 0.65);
+      padding: 18px 24px;
+      font-size: 60px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-align: center;
+      margin-bottom: 0px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 100px;
+      gap: 0;
+      margin-bottom: 0px;
+    }
+
+    .menu-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(0, 0, 0, 0.35);
+      position: relative;
+    }
+
+    .menu-btn.active {
+      background: rgba(40, 40, 40, 0.45);
+      outline: 2px solid #18b8ff;
+      outline-offset: -2px;
+      box-shadow: inset 0 0 0 1px rgba(24, 184, 255, 0.4);
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 110px;
+      gap: 0;
+    }
+
+    .small-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px;
+      font-size: 21px;
+      text-transform: uppercase;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.18);
+      line-height: 1.15;
+    }
+
+    .small-btn.dark {
+      background: rgba(120, 120, 120, 0.18);
+    }
+
+    .small-btn.light {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    @media (max-width: 900px) {
+      .menu-panel {
+        right: 20px;
+        top: 130px;
+        width: 360px;
+      }
+
+      .quest-title {
+        font-size: 46px;
+      }
+
+      .menu-btn {
+        font-size: 24px;
+      }
+
+      .small-btn {
+        font-size: 18px;
+      }
+
+      .info-box .name {
+        font-size: 20px;
+      }
+
+      .info-box .lvl,
+      .gold-box {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .game-screen {
+        aspect-ratio: auto;
+        min-height: 100vh;
+      }
+
+      .top-left {
+        transform: scale(0.9);
+        transform-origin: top left;
+      }
+
+      .top-right {
+        transform: scale(0.85);
+        transform-origin: top right;
+        gap: 12px;
+      }
+
+      .menu-panel {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 220px;
+        width: calc(100% - 30px);
+      }
+
+      .quest-title {
+        font-size: 40px;
+      }
+
+      .menu-grid {
+        grid-template-rows: 70px;
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-screen">
+    <!-- TOP LEFT -->
+    <div class="top-left">
+      <div class="avatar-box">
+        <img src="kirito-avatar.png" alt="Kirito Avatar">
+      </div>
+
+      <div class="info-box">
+        <div class="name">KIRITO</div>
+        <div class="lvl">Lvl. 100</div>
+      </div>
+
+      <div class="gold-box">
+        <div class="gold-row"><span class="gold-icon">🪙</span><span>10000</span></div>
+        <div class="gold-row"><span class="gold-icon">🪙</span><span>50</span></div>
+      </div>
+    </div>
+
+    <!-- TOP RIGHT -->
+    <div class="top-right">
+      <div class="icon">👥</div>
+      <div class="icon">📋</div>
+      <div class="icon">🎁</div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-panel">
+      <div class="quest-title">QUEST</div>
+
+      <div class="menu-grid">
+        <div class="menu-btn active">PARTY</div>
+        <div class="menu-btn">SUMMON</div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="small-btn light">MARKET<br>PLACE</div>
+        <div class="small-btn dark">BLACK<br>SMITH</div>
+        <div class="small-btn dark">STORAGE</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
