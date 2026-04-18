@@ -98,6 +98,12 @@
         color: #fff;
     }
 
+    .tabs-two {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+    }
+
     .story-card {
       width: 100%;
       height: 120px;
@@ -179,25 +185,103 @@
       cursor: pointer;
     }
 
-    @media (max-width: 768px) {
+     @media (max-width: 640px) {
+      .container {
+        aspect-ratio: 9 / 16;
+        min-height: 100vh;
+        width: unset;
+      }
+
       .content {
         flex-direction: column;
+      }
+
+      .topbar-left button {
+        font-size: 20px;
+      }
+
+      .topbar-left button img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .topbar-right {
+        gap: 0px;
+      }
+
+      .currency-box {
+        font-size: 18px;
+        padding: 0 8px;
+        min-width: 70px;
       }
 
       .left-panel {
         width: 100%;
       }
 
+      .tab {
+        font-size: 14px;
+        padding: 8px 14px;
+      }
+
+      .story-card {
+        height: 50px;
+        font-size: 12px;
+        padding: 5px;
+      }
+
       .right-panel {
-        min-height: 320px;
+        min-height: 280px;
       }
 
       .quest-title {
-        font-size: 28px;
+        font-size: 15px;
       }
 
       .quest-desc {
-        font-size: 16px;
+        font-size: 12px;
+        max-width: 100%;
+      }
+
+      .tabs-two {
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+
+        justify-content: flex-start;
+        padding-inline: 25%;
+        scroll-padding-inline: 50%;
+      }
+
+      .tabs-two::-webkit-scrollbar {
+        width: 10px;
+        height: 8px;
+      }
+
+      .tabs-two::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0);
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+
+      .story-card {
+        flex: 0 0 100px; /* lebar card biar bisa geser horizontal */
+        scroll-snap-align: center;
+        margin-bottom: 0;
+      }
+
+      .rewards {
+        font-size: 14px;
+      }
+
+      .enter-btn {
+        font-size: 14px;
+        padding: 8px 14px;
       }
     }
   </style>
@@ -224,7 +308,7 @@
             <button class="tab" onclick="changeTab('event', this)">Event</button>
         </div>
 
-        <div id="cardContainer">
+        <div class="tabs-two" id="cardContainer">
             <div class="story-card active">The Beginning</div>
             <div class="story-card">The Journey Begins</div>
             <div class="story-card">More Stories Coming Soon!</div>
