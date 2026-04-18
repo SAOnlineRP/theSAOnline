@@ -68,45 +68,54 @@ body {
     color: #fff;
 }
 .container {
-  padding: 20px;
+  height: 100vh;              /* patok ke tinggi layar */
+    width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+    max-width: 100%;
+    margin: 0 auto;
+
+    position: relative;
+    overflow: hidden;
 }
-.top-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  background-color: #215b7a;
-  border: 4px solid white;
-  border-radius: 30px;
-  padding: 10px;
+
+ /* top bar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
-.info-player {
+
+.topbar-left {
+    display: flex;
+    gap: 18px;
+    color: #000;
+    align-items: center;
+}
+
+.topbar-left button {
+    border: none;
+    background: none;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.topbar-right {
+    display: flex;
+    gap: 14px;
+}
+
+.currency-box {
+    min-width: 100px;
+    height: 40px;
     display: flex;
     align-items: center;
-    flex-direction: row !important;
+    justify-content: center;
+    gap: 6px;
+    font-size: 24px;
+    color: #222;
+    padding: 0 12px;
 }
-.avatar {
-    width: 60px;
-    height: 60px;
-    margin-right: 10px;
-}
-.player-name {
-    font-size: 25px;
-    line-height: 1.4;
-}
-.col-player{
-    font-size: 25px;
-    line-height: 1.4;
-    text-align: right;
-}
-.page-title {
-    font-size: 45px;
-    background: white;
-    color: #000;
-    padding: 0px 20px;
-    border: 2px solid #000;
-    border-radius: 20px;
-}
+
 .nav-tabs {
   list-style: none;
   padding: 0;
@@ -143,6 +152,26 @@ body {
   height: 65vh;
 }
 
+.tab-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.tab-content::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+/**
+.tab-content::-webkit-scrollbar {
+      display: none;
+}
+.tab-content {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+    **/
+
 .tab-info {
     text-align: center;
     font-size: 25px;
@@ -172,13 +201,7 @@ body {
   display: flex;
   flex-direction: column;
 }
-.tab-content::-webkit-scrollbar {
-      display: none;
-}
-.tab-content {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+
 
 .wequip-list {
     display: flex;

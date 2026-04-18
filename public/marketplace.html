@@ -13,16 +13,16 @@
 <body>
     <div id="navbar-placeholder" style="position: absolute; z-index: 999;"></div>
   <div class="container">
-    <div class="top-container">
-        <div class="info-player">
-            <div><img src="/img/avatar.png" alt="avatar" class="avatar"></div>
-            <div class="player-name">ARJUNA_99<br><span>LV. 100</span></div>
-        </div>
-        <div class="page-title">MARKETPLACE</div>
-        <div class="col-player">
-            <div class="coin">🪙 10,000,000</div>
-            <div class="gem">💎 2,000,000,000</div>
-        </div>
+    <div class="topbar">
+      <div class="topbar-left">
+        <button onclick="goBack()"><img src="/img/back.png" style="background: white; width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home.png" style="background: white; width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="currency-box" style="color: white;">🪙 10000</div>
+        <div class="currency-box" style="color: white;">💎 50</div>
+      </div>
     </div>
     <div class="market-container">
         <div class="nav-tab-wrapper d-flex justify-content-between align-items-center">
@@ -38,9 +38,7 @@
                 </li>
             </ul>
              <div class="right-buttons d-flex gap-2">
-                <button class="btn btn-sm btn-success text-btn button-market">Buy</button>
-                <button class="btn btn-sm btn-danger text-btn button-market">Cancel</button>
-                <button class="btn btn-sm btn-info text-btn button-market">My Storage</button>
+                <button class="btn btn-sm btn-info text-btn button-market" style="color: black !important;">My Storage</button>
                 <button class="btn btn-sm btn-cart" style="background-color: #362f2c;" onclick="openPopup()"><i class="bi bi-cart button-market"></i></button>
             </div>
         </div>
@@ -381,7 +379,6 @@
                 <h4>ITEMS</h4>
                 <p>List of items available in the marketplace.</p>
             </div>
-            <img src="/img/icon-scroll-down.png" class="scroll-arrow" id="scrollArrow" alt="scroll indicator" />
         </div>
     </div>
     <!-- Pop Up Keranjang -->
@@ -422,6 +419,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
   <script type="text/javascript">
+    function goBack() {
+      window.history.back();
+    }
+
+    function goHome() {
+      window.location.href = "menu.html";
+    }
     function switchTab(event) {
         event.preventDefault();
         // Remove active class from all nav links

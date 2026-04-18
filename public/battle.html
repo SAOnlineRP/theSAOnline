@@ -13,168 +13,174 @@
     }
 
     body {
-        margin: 0;
-        font-family: Arial;
-        background: #eee;
-        }
+      min-height: 100vh;
+    }
 
-        .game-screen {
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        }
+    .game-screen {
+      height: 100vh;              /* patok ke tinggi layar */
+        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+        max-width: 100%;
+        margin: 0 auto;
+
+        position: relative;
+        overflow: hidden;
+    }
 
         /* TOP BAR */
-        .top-bar {
+      .top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        }
+        margin-top: 15px;
+      }
 
-        .left-icons {
-        font-size: 32px;
+      .left-icons {
+        font-size: 40px;
         display: flex;
         gap: 15px;
-        }
+      }
 
-        .turn-area {
+      .turn-area {
         display: flex;
         align-items: center;
         gap: 20px;
-        }
+      }
 
-        .turn {
+      .turn {
         text-align: center;
-        font-size: 18px;
-        }
+        font-size: 35px;
+      }
 
-        .next {
+      .next {
         display: flex;
         align-items: center;
         gap: 8px;
-        }
+      }
 
-        .square {
-        width: 40px;
-        height: 40px;
+      .square {
+        width: 60px;
+        height: 60px;
         background: #ccc;
         border: 1px solid #333;
-        }
+      }
 
-        .queue {
+      .queue {
         display: flex;
         border: 1px solid #333;
-        }
+      }
 
-        .queue div {
+      .queue div {
         width: 60px;
-        height: 40px;
+        height: 60px;
         background: #ccc;
         border-right: 1px solid #333;
-        }
+      }
 
-        .queue div:last-child {
+      .queue div:last-child {
         border-right: none;
-        }
+      }
 
-        /* MAIN 3 COLUMN */
-        .main-layout {
+      /* MAIN 3 COLUMN */
+      .main-layout {
         display: flex;
         justify-content: space-between;
         gap: 20px;
-        }
+      }
 
-        /* SIDEBAR */
-        .sidebar {
+      /* SIDEBAR */
+      .sidebar {
         width: 180px;
         display: flex;
         flex-direction: column;
         gap: 10px;
-        }
+      }
 
-        .label {
+      .label {
         font-size: 14px;
-        }
+      }
 
-        .bar {
+      .bar {
         height: 25px;
         background: #ccc;
-        }
+      }
 
-        /* CENTER */
-        .center-area {
+      /* CENTER */
+      .center-area {
         flex: 1;
         display: flex;
         justify-content: center;
-        }
+      }
 
-        .enemy-area {
+      .enemy-area {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        }
+      }
 
-        .enemy-photo {
-        width: 200px;
-        height: 180px;
+      .enemy-photo {
+        width: 300px;
+        height: 300px;
         background: #ccc;
         display: flex;
         align-items: center;
         justify-content: center;
-        }
+      }
 
-        .enemy-info {
-        width: 180px;
+      .enemy-info {
+        width: 300px;
         height: 20px;
         background: #ccc;
-        }
+      }
 
-        /* BOTTOM */
-        .bottom-bar {
+      /* BOTTOM */
+      .bottom-bar {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
-        }
+        position: relative;
+        bottom: -60px;
+      }
 
-        .player {
+      .player {
         display: flex;
         gap: 10px;
-        }
+      }
 
-        .status {
+      .status {
         background: gray;
         padding: 5px;
-        }
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .status-bar {
+      .status-bar {
         width: 80px;
         height: 10px;
         background: white;
         margin-top: 3px;
-        }
+      }
 
-        .actions {
+      .actions {
         text-align: center;
-        }
+      }
 
-        .buttons {
+      .buttons {
         display: flex;
         gap: 10px;
-        }
+      }
 
-        button {
+      button {
         padding: 10px;
         background: #ccc;
         border: none;
         cursor: pointer;
-        }
+        height: 60px;
+      }
 
-        .action-left {
+      .action-left {
         font-size: 14px;
-        }
+      }
   </style>
 </head>
 <body>
@@ -183,8 +189,8 @@
   <!-- TOP BAR -->
   <div class="top-bar">
     <div class="left-icons">
-      <span>↶</span>
-      <span>🏠</span>
+      <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
     </div>
 
     <div class="turn-area">
@@ -234,15 +240,14 @@
   <!-- BOTTOM -->
   <div class="bottom-bar">
     <div class="player">
-      <span>🧍</span>
+      <span><img src="/img/avatar.img" style="width:50px; height: 50px;"></span>
       <div class="status">
-        <div>HP <div class="status-bar"></div></div>
-        <div>MP <div class="status-bar"></div></div>
+        <div style="display: flex; gap: 10px"><span>HP</span> <div class="status-bar"></div></div>
+        <div style="display: flex; gap: 10px"><span>MP</span> <div class="status-bar"></div></div>
       </div>
     </div>
 
     <div class="actions">
-      <div class="turn-num">8</div>
       <div class="buttons">
         <button>Basic Attack</button>
         <button>Skill Player</button>
@@ -253,7 +258,15 @@
 
     <div class="action-left">Actions Left : 1</div>
   </div>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
 
+    function goHome() {
+      window.location.href = "menu.html";
+    }
+  </script>
 </div>
 </body>
 </html>

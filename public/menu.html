@@ -350,7 +350,7 @@
 
       <div class="gold-box">
         <div class="gold-row"><span class="gold-icon">🪙</span><span>10000</span></div>
-        <div class="gold-row"><span class="gold-icon">🪙</span><span>50</span></div>
+        <div class="gold-row"><span class="gold-icon">💎</span><span>50</span></div>
       </div>
     </div>
 
@@ -376,9 +376,9 @@
       </div>
 
       <div class="bottom-grid">
-        <div class="small-btn light">MARKET<br>PLACE</div>
+        <div class="small-btn light" onclick="goToMarketPlace()">MARKET<br>PLACE</div>
         <div class="small-btn dark">BLACK<br>SMITH</div>
-        <div class="small-btn dark">STORAGE</div>
+        <div class="small-btn dark" onclick="goToStorage()">STORAGE</div>
       </div>
     </div>
   </div>
@@ -402,6 +402,12 @@
     }
     function goToProfile() {
         window.location.href = "user_profile.html";
+    }
+    function goToStorage() {
+      window.location.href = "storage.html";
+    }
+    function goToMarketPlace() {
+      window.location.href = "marketplace.html";
     }
   </script>
 </body>

@@ -31,14 +31,14 @@
       display: flex;
       gap: 14px;
       margin-bottom: 6px;
-      font-size: 30px;
+      font-size: 40px;
     }
 
     .top-bar button {
       border: none;
       background: transparent;
       cursor: pointer;
-      font-size: 30px;
+      font-size: 40px;
       line-height: 1;
     }
 
@@ -47,6 +47,7 @@
       display: flex;
       gap: 16px;
       align-items: flex-start;
+      justify-content: center;
     }
 
     .column {
@@ -59,7 +60,8 @@
       font-size: 28px;
       color: #111;
       margin-left: 6px;
-      text-transform: lowercase;
+      display: flex;
+      justify-content: space-between;
     }
 
     /* main panels */
@@ -80,7 +82,7 @@
 
     /* party members */
     .members-panel {
-      width: 450px;
+      width: 430px;
       display: flex;
       gap: 10px;
     }
@@ -197,7 +199,7 @@
 
     /* equipments */
     .equipments-panel {
-      width: 200px;
+      width: 190px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -238,7 +240,6 @@
 
     /* bottom row */
     .bottom-row {
-      margin-top: 14px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -249,14 +250,15 @@
     }
 
     .weapon-panel {
-      width: 125px;
+      width: 280px;
       background: #8f8f8f;
       padding: 8px;
       position: relative;
     }
 
     .weapon-box {
-      height: 40px;
+      height: 80px;
+      width: 240px;
       background: #efefef;
       border: 1px solid #bbb;
       display: flex;
@@ -289,16 +291,15 @@
 <body>
   <div class="game-ui">
     <div class="top-bar">
-      <button onclick="goBack()">↩</button>
-      <button onclick="goHome()">🏠</button>
+      <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+      <button onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
     </div>
 
     <div class="content-row">
       <!-- Party Members -->
       <div class="column">
-        <div class="title">party members</div>
+        <div class="title"><span>Party Members</span><span>✎</span></div>
         <div class="panel members-panel">
-          <div class="edit-icon">✎</div>
 
           <div class="member-card">
             <div class="member-name">Aleyna</div>
@@ -336,7 +337,7 @@
 
       <!-- Partners -->
       <div class="column">
-        <div class="title">partners<span>✎</span></div>
+        <div class="title"><span>Partners</span><span>✎</span></div>
         <div class="panel partners-panel">
           
 
@@ -364,9 +365,8 @@
 
       <!-- Equipments -->
       <div class="column">
-        <div class="title">equipments</div>
+        <div class="title"><span>Equipments</span><span>✎</span></div>
         <div class="panel equipments-panel">
-          <div class="edit-icon">✎</div>
 
           <div class="equip-card">
             <img src="https://via.placeholder.com/90x70" alt="Armor Top">

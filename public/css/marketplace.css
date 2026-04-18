@@ -2,54 +2,120 @@ html, body {
     height: 100vh;
     overflow: hidden;
 }
+
+@font-face {
+  font-family: 'SAOUI';
+  src: url('../fonts/SAOUI-Regular.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUI';
+  src: url('../fonts/SAOUI-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUITT';
+  src: url('../fonts/SAOUITT-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOUITT';
+  src: url('../fonts/SAOUITT-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcome';
+  src: url('../fonts/SAOWelcome-Regular.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcome';
+  src: url('../fonts/SAOWelcome-Bold.otf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcomeTT';
+  src: url('../fonts/SAOWelcomeTT-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SAOWelcomeTT';
+  src: url('../fonts/SAOWelcomeTT-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
     margin: 0;
-    background-image: url("../img/eidolon.png");
+    background-image: url("../img/welcome.png");
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'SAOUI', cursive !important;
     color: #fff;
 }
 .container {
-  padding: 20px;
+  height: 100vh;              /* patok ke tinggi layar */
+    width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+    max-width: 100%;
+    margin: 0 auto;
+
+    position: relative;
+    overflow: hidden;
 }
-.top-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  background-color: #362f2c;
-  border: 4px solid #d4af4d;
-  border-radius: 30px;
-  padding: 10px;
+
+/* top bar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
-.info-player {
+
+.topbar-left {
+    display: flex;
+    gap: 18px;
+    color: #000;
+    align-items: center;
+}
+
+.topbar-left button {
+    border: none;
+    background: none;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.topbar-right {
+    display: flex;
+    gap: 14px;
+}
+
+.currency-box {
+    min-width: 100px;
+    height: 40px;
     display: flex;
     align-items: center;
-    flex-direction: row !important;
+    justify-content: center;
+    gap: 6px;
+    font-size: 24px;
+    color: #222;
+    padding: 0 12px;
 }
-.avatar {
-    width: 60px;
-    height: 60px;
-    margin-right: 10px;
-}
-.player-name {
-    font-size: 15px;
-    line-height: 1.4;
-}
-.col-player{
-    font-size: 15px;
-    line-height: 1.4;
-    text-align: right;
-}
-.page-title {
-    font-size: 28px;
-    background: #d0b06a;
-    color: #362f2c;
-    padding: 10px 20px;
-    border: 2px solid #000;
-    border-radius: 20px;
-}
+
 .nav-tabs {
   list-style: none;
   padding: 0;
@@ -62,14 +128,15 @@ body {
   text-decoration: none;
   padding: 10px 20px;
   display: inline-block;
-  background: #333;
+  background: #215b7a;
   color: #fff;
   border-radius: 5px;
   border: 2px solid transparent;
   transition: all 0.2s ease;
+  font-size: 25px;
 }
 .nav-link-market.active {
-    background: #d4af4d;
+    background: white;
     color: #000;
     border: 2px solid #fff;
     transform: translateY(-8px); /* naik ke atas */
@@ -77,12 +144,23 @@ body {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .tab-content {
-  background: #333;
-  border: 4px solid #d4af4d;
+  background: #215b7a;
+  border: 4px solid white;
   padding: 10px 20px;
   border-radius: 30px;
   overflow-y: auto;
   height: 70vh;
+}
+
+.tab-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.tab-content::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .scroll-arrow {
@@ -102,13 +180,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-.tab-content::-webkit-scrollbar {
-      display: none;
-}
-.tab-content {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
 
 .wequip-list {
     display: flex;
@@ -122,7 +193,7 @@ body {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    background: #d4af4d;
+    background: white;
     padding: 8px;
     border-radius: 10px;
     color: #362f2c;
@@ -142,7 +213,7 @@ body {
     font-size: 15px;
 }
 .item-name{
-    font-size: 15px;
+    font-size: 20px;
     text-decoration: underline;
 }
 .item-desc{
@@ -163,18 +234,19 @@ body {
     width: 24px;
     height: 24px;
     font-size: 14px;
-    background: #d0b06a;
-    border: 2px solid #000;
+    background: #215b7a;
+    border: 2px solid white;
     cursor: pointer;
     border-radius: 50px;
+    color: white;
 }
 
 .qty-input {
     width: 40px;
     height: 24px;
     text-align: center;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 10px;
+    font-family: 'SAOUI', cursive !important;
+    font-size: 12px;
     background: #fff;
     border: 2px solid #000;
     margin: 0 5px;
@@ -193,13 +265,12 @@ body {
 }
 
 .add-btn{
-    background: #362f2c;
+    background: #215b7a;
     color: white;
     padding: 5px;
 }
 .right-buttons .btn {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 10px;
+    font-family: 'SAOUI', cursive !important;
     padding: 6px 10px;
     border: 2px solid #362f2c;
     border-radius: 10px;
@@ -208,7 +279,7 @@ body {
 
 .button-market{
     color: white !important; 
-    font-size: 20px !important;
+    font-size: 25px !important;
 }
 
  /* Popup overlay */
@@ -229,8 +300,8 @@ body {
     top: 60%;
     right: 8%;
     transform: translateY(-50%);
-    background-color: #333;
-    border: 4px solid #d4af4d;
+    background-color: #215b7a;
+    border: 4px solid white;
     border-radius: 30px;
     color: white;
     padding: 20px;
