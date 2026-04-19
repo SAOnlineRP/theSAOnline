@@ -83,8 +83,8 @@
     }
 
     .character-img {
-      width: 250px;
-      height: 250px;
+      width: 200px;
+      height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -154,7 +154,7 @@
 
     .name-box {
       width: 150px;
-      height: 60px;
+      height: 100%;
       background: #cfcfcf;
       padding: 4px 8px;
       font-size: 20px;
@@ -214,12 +214,18 @@
 
     /* STATS */
     .stats-box {
-      width: 300px;
-      height: 230px;
-      background: #7c7c7c;
-      padding: 10px;
+      width: 200px;
+      height: 200px;
+      padding: 14px;
       margin-bottom: 12px;
       position: relative;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at center, rgba(70, 90, 130, 0.35), rgba(18, 20, 28, 0.96));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+        inset 0 0 18px rgba(255,255,255,0.04),
+        0 10px 28px rgba(0,0,0,0.35);
     }
 
     .radar {
@@ -234,18 +240,58 @@
       display: block;
     }
 
+    .ring {
+      fill: none;
+      stroke: rgba(255,255,255,0.12);
+      stroke-width: 1.5;
+    }
+
+    .axis-line {
+      stroke: rgba(255,255,255,0.10);
+      stroke-width: 1.2;
+    }
+
+    .stat-shape {
+      fill: rgba(78, 226, 255, 0.22);
+      stroke: rgba(78, 226, 255, 0.95);
+      stroke-width: 2.5;
+      animation: pulseRadar 2.2s ease-in-out infinite;
+    }
+
+    .node {
+      fill: #8af4ff;
+      stroke: white;
+      stroke-width: 1.4;
+    }
+
     .stat-label {
       position: absolute;
       font-size: 12px;
-      color: #fff;
+      font-weight: bold;
+      color: #f3fbff;
+      letter-spacing: 0.4px;
+      text-shadow: 0 0 8px rgba(78, 226, 255, 0.35);
     }
 
-    .label-atk { top: 0px; left: 50%; transform: translateX(-50%); }
-    .label-hp { top: 42px; left: 2px; }
-    .label-mp { bottom: 30px; left: 2px; }
-    .label-def { top: 42px; right: 2px; }
-    .label-crit { bottom: 30px; right: 0px; }
-    .label-cdmg { bottom: 2px; left: 50%; transform: translateX(-50%); }
+    .label-atk  { top: 2px; left: 50%; transform: translateX(-50%); }
+    .label-def  { top: 52px; right: 10px; }
+    .label-crit { bottom: 38px; right: 4px; }
+    .label-cdmg { bottom: 4px; left: 50%; transform: translateX(-50%); }
+    .label-mp   { bottom: 38px; left: 10px; }
+    .label-hp   { top: 52px; left: 10px; }
+
+    @keyframes pulseRadar {
+      0%, 100% {
+        opacity: 0.92;
+        transform: scale(1);
+        transform-origin: center;
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.02);
+        transform-origin: center;
+      }
+    }
 
     /* BOTTOM CARDS */
     .bottom-cards {
@@ -283,6 +329,70 @@
       font-size: 16px;
       color: gold;
     }
+    
+    @media (max-width: 640px) {
+      .screen {
+        aspect-ratio: 9 / 16;
+        min-height: 100vh;
+        width: unset;
+      }
+
+      .content {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 20px;
+      }
+
+      .topbar-left {
+        margin: 15px;
+      }
+
+      .topbar-left button {
+        font-size: 20px;
+      }
+
+      .topbar-left button img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .topbar-right {
+        gap: 0px;
+      }
+
+      .currency-box {
+        font-size: 18px;
+        padding: 0 8px;
+        min-width: 70px;
+      }
+
+      .character-img {
+        width: 100px;
+        height: 100px;
+      }
+
+      .character-img img{
+        width: auto;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .name-box {
+        font-size: 14px;
+      }
+
+      .weapon-box {
+        width: 40px;
+        height: 40px;
+        font-size: 40px;
+      }
+
+      .equip-card {
+        width: 60px;
+        height: 60px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -308,31 +418,74 @@
     <div class="content">
       <!-- LEFT -->
       <div class="left-panel">
-        <div class="character-area">
-          <div class="character-img">
-            <img src="/img/kirito.png" alt="Kirito">
+        <div>
+          <div class="character-area">
+            <div class="character-img">
+              <img src="/img/kirito.png" alt="Kirito">
+            </div>
+
+            <div class="tags">
+              <div class="tag spirit">
+                <div class="badge-icon">🔥</div>
+                <span>SPIRIT</span>
+              </div>
+              <div class="tag newbie">
+                <div class="badge-icon"></div>
+                <span>NEWBIE</span>
+              </div>
+            </div>
           </div>
 
-          <div class="tags">
-            <div class="tag spirit">
-              <div class="badge-icon">🔥</div>
-              <span>SPIRIT</span>
+          <div class="info-row">
+            <div class="name-box">
+              <div>Kirito</div>
+              <div>ID :</div>
             </div>
-            <div class="tag newbie">
-              <div class="badge-icon"></div>
-              <span>NEWBIE</span>
-            </div>
+            <div class="weapon-box">⚔</div>
           </div>
         </div>
+        <div class="stats-box">
+          <div class="radar">
+            <svg id="radarChart" viewBox="0 0 300 300">
+              <defs>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
 
-        <div class="info-row">
-          <div class="name-box">
-            <div>Kirito</div>
-            <div>ID :</div>
+              <!-- ring/grid -->
+              <polygon class="ring" id="ring4"></polygon>
+              <polygon class="ring" id="ring3"></polygon>
+              <polygon class="ring" id="ring2"></polygon>
+              <polygon class="ring" id="ring1"></polygon>
+
+              <!-- axis -->
+              <g id="axisLines"></g>
+
+              <!-- stat fill -->
+              <polygon id="statShape" class="stat-shape" filter="url(#glow)"></polygon>
+
+              <!-- nodes -->
+              <g id="nodes"></g>
+            </svg>
+
+            <div class="stat-label label-atk">ATK</div>
+            <div class="stat-label label-def">DEF</div>
+            <div class="stat-label label-crit">Crit%</div>
+            <div class="stat-label label-cdmg">CritDMG</div>
+            <div class="stat-label label-mp">MP</div>
+            <div class="stat-label label-hp">HP</div>
           </div>
-          <div class="weapon-box">⚔</div>
         </div>
+        
+      </div>
 
+      <!-- RIGHT -->
+      <div class="right-panel">
         <div class="equipment">
           <div class="equip-card">
             <img src="/img/eq-1.png" alt="Armor">
@@ -344,28 +497,7 @@
             <div class="equip-icon">⛨</div>
           </div>
         </div>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="right-panel">
-        <div class="stats-box">
-          <div class="radar">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              <polygon
-                points="50,10 80,25 80,75 50,90 20,75 20,25"
-                fill="#d8d8d8"
-                stroke="none"
-              />
-            </svg>
-
-            <div class="stat-label label-atk">ATK</div>
-            <div class="stat-label label-hp">HP</div>
-            <div class="stat-label label-mp">MP</div>
-            <div class="stat-label label-def">DEF</div>
-            <div class="stat-label label-crit">Crit%</div>
-            <div class="stat-label label-cdmg">CritDMG</div>
-          </div>
-        </div>
+        
 
         <div class="bottom-cards">
           <div class="char-card">
@@ -389,6 +521,114 @@
     function goHome() {
       window.location.href = "menu.html";
     }
+
+    const radarStats = {
+      atk: 85,
+      def: 70,
+      crit: 60,
+      cdmg: 75,
+      mp: 50,
+      hp: 90
+    };
+
+    const radarOrder = ["atk", "def", "crit", "cdmg", "mp", "hp"];
+
+    function getPolygonPoints(cx, cy, radius, count, scale = 1) {
+      const points = [];
+      const angleStep = (Math.PI * 2) / count;
+      const startAngle = -Math.PI / 2;
+
+      for (let i = 0; i < count; i++) {
+        const angle = startAngle + i * angleStep;
+        const x = cx + Math.cos(angle) * radius * scale;
+        const y = cy + Math.sin(angle) * radius * scale;
+        points.push(`${x},${y}`);
+      }
+
+      return points.join(" ");
+    }
+
+    function getStatPoints(cx, cy, radius, stats, order) {
+      const points = [];
+      const angleStep = (Math.PI * 2) / order.length;
+      const startAngle = -Math.PI / 2;
+
+      for (let i = 0; i < order.length; i++) {
+        const key = order[i];
+        const value = Math.max(0, Math.min(100, stats[key])) / 100;
+        const angle = startAngle + i * angleStep;
+        const x = cx + Math.cos(angle) * radius * value;
+        const y = cy + Math.sin(angle) * radius * value;
+        points.push({ x, y });
+      }
+
+      return points;
+    }
+
+    function drawRadar(stats) {
+      const cx = 150;
+      const cy = 150;
+      const radius = 110;
+      const count = radarOrder.length;
+
+      document.getElementById("ring4").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 1));
+      document.getElementById("ring3").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 0.75));
+      document.getElementById("ring2").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 0.5));
+      document.getElementById("ring1").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 0.25));
+
+      const axisGroup = document.getElementById("axisLines");
+      axisGroup.innerHTML = "";
+
+      const angleStep = (Math.PI * 2) / count;
+      const startAngle = -Math.PI / 2;
+
+      for (let i = 0; i < count; i++) {
+        const angle = startAngle + i * angleStep;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", cx);
+        line.setAttribute("y1", cy);
+        line.setAttribute("x2", x);
+        line.setAttribute("y2", y);
+        line.setAttribute("class", "axis-line");
+        axisGroup.appendChild(line);
+      }
+
+      const statPoints = getStatPoints(cx, cy, radius, stats, radarOrder);
+      const statShape = document.getElementById("statShape");
+      statShape.setAttribute(
+        "points",
+        statPoints.map(point => `${point.x},${point.y}`).join(" ")
+      );
+
+      const nodesGroup = document.getElementById("nodes");
+      nodesGroup.innerHTML = "";
+
+      statPoints.forEach(point => {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", point.x);
+        circle.setAttribute("cy", point.y);
+        circle.setAttribute("r", 4.5);
+        circle.setAttribute("class", "node");
+        nodesGroup.appendChild(circle);
+      });
+    }
+
+    drawRadar(radarStats);
+
+    // contoh update stat nanti kalau mau diganti
+    // setTimeout(() => {
+    //   drawRadar({
+    //     atk: 95,
+    //     def: 55,
+    //     crit: 80,
+    //     cdmg: 88,
+    //     mp: 65,
+    //     hp: 72
+    //   });
+    // }, 2000);
   </script>
 </body>
 </html>
