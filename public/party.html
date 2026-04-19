@@ -286,6 +286,94 @@
     .save-btn:hover {
       background: #bfbfbf;
     }
+
+    /* mobile */
+    @media (max-width: 768px) {
+      .game-ui {
+        aspect-ratio: 9 / 16;
+        min-height: 100vh;
+        width: unset;
+      }
+
+      .content-row {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      /* Party Members tetap lebar besar */
+      .content-row > .column:nth-child(1) {
+        width: calc(100% - 140px);
+      }
+
+      .members-panel {
+        width: 100%;
+        gap: 8px;
+      }
+
+      .member-card {
+        width: calc(50% - 4px);
+        height: auto;
+      }
+
+      /* Partners di samping party */
+      .content-row > .column:nth-child(2) {
+        width: 128px;
+      }
+
+      .partners-panel {
+        width: 100%;
+      }
+
+      .partner-image {
+        height: 100px;
+      }
+
+      /* Equipments turun ke bawah full row */
+      .content-row > .column:nth-child(3) {
+        width: 100%;
+      }
+
+      .equipments-panel {
+        width: 100%;
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .equip-card {
+        width: calc(50% - 5px);
+        height: 140px;
+      }
+
+      /* Weapon ada di bawah equipments */
+      .bottom-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .weapon-section {
+        width: 100%;
+      }
+
+      .weapon-panel {
+        width: 100%;
+      }
+
+      .weapon-box {
+        width: 100%;
+      }
+
+      .save-btn {
+        width: 100%;
+        height: 56px;
+      }
+
+      .title {
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
 <body>
