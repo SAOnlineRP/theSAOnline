@@ -100,7 +100,7 @@
 
     .tabs-two {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       gap: 14px;
     }
 
@@ -194,6 +194,9 @@
 
       .content {
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 20px;
       }
 
       .topbar-left button {
@@ -244,6 +247,7 @@
       }
 
       .tabs-two {
+        flex-direction: row;
         background-color: rgba(0, 0, 0, 0.5);
         padding: 10px;
         border-radius: 8px;
