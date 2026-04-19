@@ -13,7 +13,6 @@
     }
 
     body {
-      background: #dcdcdc;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,11 +21,10 @@
 
     .screen {
       height: 100vh;              /* patok ke tinggi layar */
-        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
-        max-width: 100%;
-        margin: 0 auto;
-      background: #e7e7e7;
-      border: 1px solid #999;
+      width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+      max-width: 100%;
+      margin: 0 auto;
+
       padding: 10px 14px;
       position: relative;
       overflow: hidden;
@@ -41,18 +39,10 @@
     }
 
     .top-left,
-    .top-center,
     .top-right {
       display: flex;
       align-items: center;
       gap: 14px;
-    }
-
-    .icon-btn {
-      font-size: 60px;
-      color: #000;
-      cursor: pointer;
-      line-height: 1;
     }
 
     .currency-box {
@@ -293,23 +283,17 @@
       font-size: 16px;
       color: gold;
     }
-
-    .edit-icon {
-        margin-top: -20px;
-      font-size: 50px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
   <div class="screen">
     <div class="top-bar">
       <div class="top-left">
-        <div class="icon-btn" onclick="goBack()">↩</div>
-        <div class="icon-btn" onclick="goHome()">🏠</div>
+        <div class="icon-btn" onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></div>
+        <div class="icon-btn" onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></div>
       </div>
 
-      <div class="top-center">
+      <div class="top-right">
         <div class="currency-box">
           <span class="coin">🪙</span>
           <span>10000</span>
@@ -319,10 +303,6 @@
           <span>50</span>
         </div>
       </div>
-
-      <div class="top-right">
-        <div class="edit-icon">✎</div>
-      </div>
     </div>
 
     <div class="content">
@@ -330,7 +310,7 @@
       <div class="left-panel">
         <div class="character-area">
           <div class="character-img">
-            <img src="https://via.placeholder.com/82x82.png?text=Kirito" alt="Kirito">
+            <img src="/img/kirito.png" alt="Kirito">
           </div>
 
           <div class="tags">
@@ -355,12 +335,12 @@
 
         <div class="equipment">
           <div class="equip-card">
-            <img src="https://via.placeholder.com/64x64.png?text=Armor" alt="Armor">
+            <img src="/img/eq-1.png" alt="Armor">
             <div class="equip-icon">⛨</div>
           </div>
 
           <div class="equip-card">
-            <img src="https://via.placeholder.com/64x64.png?text=Pants" alt="Pants">
+            <img src="/img/eq-2.png" alt="Pants">
             <div class="equip-icon">⛨</div>
           </div>
         </div>
@@ -389,12 +369,12 @@
 
         <div class="bottom-cards">
           <div class="char-card">
-            <img src="https://via.placeholder.com/72x78.png?text=Card+1" alt="Card 1">
+            <img src="/img/sr-1.png" alt="Card 1">
             <div class="card-bottom">★ ★ ★ ★ ☆</div>
           </div>
 
           <div class="char-card">
-            <img src="https://via.placeholder.com/72x78.png?text=Card+2" alt="Card 2">
+            <img src="/img/sr-2.png" alt="Card 2">
             <div class="card-bottom">★ ★ ★ ★ ★</div>
           </div>
         </div>
