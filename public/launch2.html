@@ -738,29 +738,29 @@
     }
 
     @media (max-width: 480px) {
-        body {
-            min-height: 100dvh;
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100dvh;
             overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+        .star-layer,
+        .grid-plane,
+        .nebula,
+        .hexagon,
+        .wave-bar {
+            will-change: transform, opacity;
         }
         .grid-plane {
             width: 120%;
             height: 120%;
             top: -10%;
             left: -10%;
-            background-size: 20px 20px;
-            transform: perspective(300px) rotateX(50deg);
-            opacity: 0.2;
-            animation: grid-move 40s linear infinite; /* lebih slow */
+            animation: grid-move 40s linear infinite; /* lebih slow = lebih ringan */
         }
-        .nebula {
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            filter: blur(15px);
-            opacity: 0.25;
-            animation: nebula-shift 60s infinite alternate ease-in-out;
-        }
+        .nebula { width: 100%; height: 100%; top: 0; left: 0; filter: blur(15px); opacity: 0.25; animation: nebula-shift 60s infinite alternate ease-in-out; }
         .holo-button {
             width: 90%;
             max-width: 400px;
@@ -771,11 +771,18 @@
             font-size: 20px;
             padding-top: 0px;
         }
-        .grid-plane,
-        .nebula,
-        .stars-container {
-            max-height: 100%;
-            overflow: hidden;
+
+        @keyframes star-drift {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(50%); /* dari 100% → 50% */
+            }
+        }
+
+        .button-hexagons {
+            display: none; /* ini juga berat */
         }
     }
   </style>
