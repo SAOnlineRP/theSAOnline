@@ -8,6 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100dvh;
+    }
     body {
        
         font-family: 'Orbitron', sans-serif;
@@ -18,7 +24,7 @@
         display: flex;
         justify-content: center; /* horizontal */
         align-items: center;     /* vertical */
-        height: 100vh;           /* tinggi full layar */
+        height: 100dvh;          /* tinggi full layar */
         margin: 0;
     }
     .stars-container {
@@ -732,6 +738,10 @@
     }
 
     @media (max-width: 480px) {
+        body {
+            min-height: 100dvh;
+            overflow: hidden;
+        }
         .grid-plane {
             width: 120%;
             height: 120%;
@@ -760,6 +770,12 @@
         .button-text {
             font-size: 20px;
             padding-top: 0px;
+        }
+        .grid-plane,
+        .nebula,
+        .stars-container {
+            max-height: 100%;
+            overflow: hidden;
         }
     }
   </style>
