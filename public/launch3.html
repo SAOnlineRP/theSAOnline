@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SAO Cinematic Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: black;
+    color: #00eaff;
+    overflow: hidden;
+}
+
+/* ===== LINK START SCREEN ===== */
+.link-start {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    letter-spacing: 8px;
+    text-shadow: 0 0 30px #00eaff;
+    z-index: 999;
+    animation: fadeOut 1.5s forwards;
+    animation-delay: 2s;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; visibility: hidden; }
+}
+
+/* FLASH EFFECT */
+.flash {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #00eaff;
+    opacity: 0;
+    z-index: 998;
+    animation: flash 0.5s ease;
+    animation-delay: 1.8s;
+}
+
+@keyframes flash {
+    0% { opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+/* HUD LINES */
+.hud {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.hud::before,
+.hud::after {
+    content: "";
+    position: absolute;
+    border: 1px solid #00eaff;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    opacity: 0;
+    animation: hudAppear 1s forwards;
+    animation-delay: 2.2s;
+}
+
+.hud::after {
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    animation-delay: 2.5s;
+}
+
+@keyframes hudAppear {
+    to { opacity: 1; }
+}
+
+/* CONTAINER */
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: showUI 1s forwards;
+    animation-delay: 3s;
+}
+
+@keyframes showUI {
+    to { opacity: 1; }
+}
+
+/* PANEL */
+.panel {
+    width: 420px;
+    padding: 40px;
+    border: 1px solid #00eaff;
+    box-shadow: 0 0 40px #00eaff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* STATUS TEXT */
+.status {
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #00eaff;
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background: transparent;
+    border: 1px solid #00eaff;
+    color: #00eaff;
+    text-align: center;
+}
+
+/* BUTTON */
+button {
+    margin-top: 10px;
+    padding: 10px 25px;
+    background: transparent;
+    border: 1px solid #00eaff;
+    color: #00eaff;
+    cursor: pointer;
+}
+
+/* SCAN */
+.scan {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #00eaff;
+    top: -10px;
+    animation: scan 1s linear forwards;
+}
+
+@keyframes scan {
+    from { top: -10px; }
+    to { top: 100%; }
+}
+
+/* DATA STREAM */
+.stream {
+    position: absolute;
+    font-size: 10px;
+    opacity: 0.3;
+    animation: streamMove 2s linear infinite;
+}
+
+@keyframes streamMove {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(20px); }
+}
+
+/* SUCCESS */
+.success {
+    box-shadow: 0 0 60px #00eaff, inset 0 0 20px #00eaff;
+}
+
+/* FADE OUT */
+.fade {
+    animation: fadeOut2 1s forwards;
+}
+
+@keyframes fadeOut2 {
+    to { opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="link-start">LINK START</div>
+<div class="flash"></div>
+<div class="hud"></div>
+
+<div class="container">
+    <form class="panel" onsubmit="login(event)">
+        <div id="status" class="status">INITIALIZING...</div>
+
+        <input type="text" id="user" placeholder="USERNAME" required>
+        <input type="password" id="pass" placeholder="PASSWORD" required>
+
+        <button type="submit">ENTER</button>
+    </form>
+</div>
+
+<script>
+setTimeout(() => {
+    document.getElementById("status").textContent = "SYSTEM READY";
+}, 3500);
+
+function login(e) {
+    e.preventDefault();
+
+    const u = user.value;
+    const p = pass.value;
+    const status = document.getElementById("status");
+    const panel = document.querySelector(".panel");
+
+    // scan effect
+    const scan = document.createElement("div");
+    scan.className = "scan";
+    panel.appendChild(scan);
+
+    // fake data stream
+    for (let i = 0; i < 10; i++) {
+        let s = document.createElement("div");
+        s.className = "stream";
+        s.style.left = Math.random()*100 + "%";
+        s.textContent = Math.random().toString(2).slice(2,8);
+        panel.appendChild(s);
+    }
+
+    if (u === "admin" && p === "1234") {
+
+        status.textContent = "CONNECTING...";
+
+        setTimeout(()=> status.textContent="AUTHENTICATING...",800);
+        setTimeout(()=> {
+            status.textContent="ACCESS GRANTED";
+            panel.classList.add("success");
+        },1600);
+
+        setTimeout(()=> status.textContent="WELCOME, PLAYER",2300);
+
+        setTimeout(()=>{
+            document.body.classList.add("fade");
+            setTimeout(()=> location.href="dashboard.html",1000);
+        },3200);
+
+    } else {
+        status.textContent = "ACCESS DENIED";
+    }
+}
+</script>
+
+</body>
+</html>
