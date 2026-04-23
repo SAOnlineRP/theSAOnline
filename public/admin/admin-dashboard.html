@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-body">
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="sidebar-top">
+        <h2>Admin CMS</h2>
+        <p>THE SAONLINE</p>
+      </div>
+
+      <nav class="sidebar-menu">
+        <button class="menu-item active" data-section="overview">Overview</button>
+        <button class="menu-item" data-section="characters">Characters</button>
+        <button class="menu-item" data-section="items">Items</button>
+        <button class="menu-item" data-section="gacha">Gacha Banner</button>
+        <button class="menu-item" data-section="users">Users</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button id="logoutBtn" class="admin-btn danger-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div>
+          <h1 id="pageTitle">Overview</h1>
+          <p>Kelola data game dari dashboard admin.</p>
+        </div>
+        <div class="admin-user-box">
+          <span>Admin</span>
+        </div>
+      </header>
+
+      <section id="overview" class="content-section active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Total Characters</h3>
+            <p id="totalCharacters">12</p>
+          </div>
+          <div class="stat-card">
+            <h3>Total Items</h3>
+            <p id="totalItems">56</p>
+          </div>
+          <div class="stat-card">
+            <h3>Active Banner</h3>
+            <p id="activeBanner">3</p>
+          </div>
+          <div class="stat-card">
+            <h3>Total Users</h3>
+            <p id="totalUsers">128</p>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h3>Welcome</h3>
+          <p>
+            Ini adalah dashboard admin untuk mengatur character, item, banner, dan user.
+          </p>
+        </div>
+      </section>
+
+      <section id="characters" class="content-section">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Characters</h3>
+            <button class="admin-btn primary-btn">+ Add Character</button>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Rarity</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Kirito</td>
+                  <td>Attacker</td>
+                  <td>5★</td>
+                  <td>
+                    <button class="table-btn edit">Edit</button>
+                    <button class="table-btn delete">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Asuna</td>
+                  <td>Support</td>
+                  <td>5★</td>
+                  <td>
+                    <button class="table-btn edit">Edit</button>
+                    <button class="table-btn delete">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="items" class="content-section">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Items</h3>
+            <button class="admin-btn primary-btn">+ Add Item</button>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Item Name</th>
+                  <th>Type</th>
+                  <th>Rarity</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Elucidator</td>
+                  <td>Weapon</td>
+                  <td>5★</td>
+                  <td>
+                    <button class="table-btn edit">Edit</button>
+                    <button class="table-btn delete">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Healing Potion</td>
+                  <td>Consumable</td>
+                  <td>2★</td>
+                  <td>
+                    <button class="table-btn edit">Edit</button>
+                    <button class="table-btn delete">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="gacha" class="content-section">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Gacha Banner</h3>
+            <button class="admin-btn primary-btn">+ Add Banner</button>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Banner Name</th>
+                  <th>Status</th>
+                  <th>Rate Up</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Moonlight Sword Banner</td>
+                  <td>Active</td>
+                  <td>Kirito</td>
+                  <td>
+                    <button class="table-btn edit">Edit</button>
+                    <button class="table-btn delete">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="users" class="content-section">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Users</h3>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>player1</td>
+                  <td>player1@mail.com</td>
+                  <td>User</td>
+                  <td>
+                    <button class="table-btn edit">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>admin</td>
+                  <td>admin@mail.com</td>
+                  <td>Admin</td>
+                  <td>
+                    <button class="table-btn edit">View</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/admin-dashboard.js"></script>
+</body>
+</html>
