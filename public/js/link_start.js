@@ -1,3 +1,5 @@
+import { supabase } from "/js/supabaseClient.js";
+
 const linkStartBtn = document.getElementById("linkStartBtn");
 const startContainer = document.getElementById("startContainer");
 const loginModal = document.getElementById("loginModal");
@@ -35,49 +37,58 @@ function resetLoginUI() {
 }
 
 async function handleLogin(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
 
-    loginStatus.textContent = "";
-    loginStatus.className = "login-status";
-    loginPanel.classList.remove("shake");
+  loginStatus.textContent = "";
+  loginStatus.className = "login-status";
+  loginPanel.classList.remove("shake");
 
-    // demo login
-    if (username === "admin" && password === "1234") {
-    saoOverlay.classList.add("active");
-    saoText.textContent = "LINK START";
+  const email = `${username}@game.local`;
 
-    await wait(700);
-    saoText.textContent = "AUTHENTICATING";
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    await wait(900);
-    saoText.textContent = "ACCESS GRANTED";
-    loginStatus.textContent = "LOGIN SUCCESS";
-    loginStatus.classList.add("success");
-    loginPanel.classList.add("sao-success");
-
-    await wait(800);
-    saoText.textContent = "WELCOME, PLAYER";
-
-    await wait(900);
-    document.body.style.transition = "opacity 0.8s ease";
-    document.body.style.opacity = "0";
-
-    setTimeout(() => {
-        window.location.href = "menu.html";
-    }, 800);
-    } else {
+  if (error) {
     saoText.textContent = "ACCESS DENIED";
     loginStatus.textContent = "USERNAME / PASSWORD INVALID";
     loginStatus.classList.add("error");
     loginPanel.classList.add("shake");
 
     setTimeout(() => {
-        loginPanel.classList.remove("shake");
+      loginPanel.classList.remove("shake");
     }, 450);
-    }
+
+    return;
+  }
+
+  // Kalau sukses, Supabase otomatis simpan session di browser
+  saoOverlay.classList.add("active");
+  saoText.textContent = "LINK START";
+
+  await wait(700);
+  saoText.textContent = "AUTHENTICATING";
+
+  await wait(900);
+  saoText.textContent = "ACCESS GRANTED";
+  loginStatus.textContent = "LOGIN SUCCESS";
+  loginStatus.classList.add("success");
+  loginPanel.classList.add("sao-success");
+
+  await wait(800);
+  saoText.textContent = "WELCOME, PLAYER";
+
+  await wait(900);
+  document.body.style.transition = "opacity 0.8s ease";
+  document.body.style.opacity = "0";
+
+  setTimeout(() => {
+    window.location.href = "menu2.html";
+  }, 800);
 }
 
 function wait(ms) {

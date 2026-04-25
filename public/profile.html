@@ -119,6 +119,10 @@
         function goHome() {
             window.location.href = "menu.html";
         }
+
+        window.goBack = goBack;
+        window.goHome = goHome;
+
         const radarStats = {
             atk: 85,
             def: 70,
@@ -224,7 +228,7 @@
             return;
         }
 
-        const res = await fetch("/api/player_profiles", {
+        const res = await fetch("/api/profile", {
             headers: {
             Authorization: `Bearer ${session.access_token}`,
             },
@@ -240,7 +244,7 @@
         const profile = result.data;
 
         document.getElementById("player-name").innerHTML = `
-            <span>${profile.nickname}</span>
+            <span>${profile.name}</span>
             <span class="level">Lv. ${profile.level}</span>
         `;
         }
