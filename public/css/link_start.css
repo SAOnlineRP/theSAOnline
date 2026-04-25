@@ -168,8 +168,8 @@ input {
 
 .hexagon {
     position: absolute;
-    width: 30px;
-    height: 17.32px;
+     width: 60px;      /* dari 30px → 60px */
+    height: 34.64px;
     background: transparent;
     border: 1.5px solid rgba(0, 221, 255, 0.3);
     transform: rotate(30deg);
@@ -671,5 +671,10 @@ input {
 
     .button-hexagons {
     display: none;
+    }
+
+    .bg-image{
+        top: 35%;
+        width: min(400px, 350vw);
     }
 }

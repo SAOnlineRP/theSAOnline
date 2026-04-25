@@ -11,48 +11,83 @@
     <link rel="stylesheet" href="/css/profile.css">
 </head>
 <body>
-    <div id="navbar-placeholder" style="position: absolute; z-index: 999;"></div>
     <div class="main-container">
         <!-- <img src="logo_sao.png" alt="SAO Logo" class="logo" /> -->
-        <p class="profile-title">Welcome to theSAOnline, player!</p>
+        <div class="top-bar">
+            <div class="top-left">
+                <div class="icon-btn" onclick="goBack()"><img src="/img/back2.png" alt="Back"></div>
+                <div class="icon-btn" onclick="goHome()"><img src="/img/home2.png" alt="Home"></div>
+            </div>
+            <div class="top-right">
+                <div class="currency-box">
+                    <span class="coin">🪙</span>
+                    <span>10000</span>
+                </div>
+                <div class="currency-box">
+                    <span class="gem">💎</span>
+                    <span>50</span>
+                </div>
+            </div>
+        </div>
         <div class="profile-card">
             <div class="info-section">
                 <div class="grid-container">
                     <div class="item">🪙<span id="player-col">1000000</span></div>
                     <div class="item">💎<span id="player-gems">1000000</span></div>
                 </div>
+                
                 <div class="avatar-section">
                     <img src="/img/avatar.png" alt="avatar" class="avatar-img">
                 </div>
-                <div class="level" id="player-level">Lv. 100</div>
-                <div class="name" id="player-name">ARJUNA</div>
-            </div>
-
-            <div>
-                <div class="stat-section">
-                    <div class="stat-title">STATISTIC</div>
-                    <div class="stat-row">
-                        <span>TP:</span>
-                        <span id="player-tp">10,000,000</span>
+                <div class="name" id="player-name"><span>ARJUNA</span><span class="level">Lv. 100</span></div>
+                <div class="box badge-box">
+                    <div class="badge-section">
+                        <img src="/img/badge-1.png" alt="badge" class="badge-img">
                     </div>
-                    <div class="stat-row">
-                        <span>🗡️ Attack</span>
-                        <span id="player-attack">250,000</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>❤️ Max HP</span>
-                        <span id="player-maxhp">900,000</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>🛡️ Defense</span>
-                        <span id="player-defense">80,000</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>🧪 Max MP</span>
-                        <span id="player-maxmp">600,000</span>
+                    <div class="badge-section">
+                        <img src="/img/badge-2.png" alt="badge" class="badge-img">
                     </div>
                 </div>
-                <div class="box-pixel">🗡️ <span id="player-weapon">SWORDS</span></div>
+            </div>
+
+            <div class="stat-section">
+                <div class="stat-box">
+                    <div class="radar">
+                        <svg id="radarChart" viewBox="0 0 300 300">
+                        <defs>
+                            <filter id="glow">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- ring/grid -->
+                        <polygon class="ring" id="ring4"></polygon>
+                        <polygon class="ring" id="ring3"></polygon>
+                        <polygon class="ring" id="ring2"></polygon>
+                        <polygon class="ring" id="ring1"></polygon>
+
+                        <!-- axis -->
+                        <g id="axisLines"></g>
+
+                        <!-- stat fill -->
+                        <polygon id="statShape" class="stat-shape" filter="url(#glow)"></polygon>
+
+                        <!-- nodes -->
+                        <g id="nodes"></g>
+                        </svg>
+
+                        <div class="stat-label label-atk">ATK</div>
+                        <div class="stat-label label-def">DEF</div>
+                        <div class="stat-label label-crit">Crit%</div>
+                        <div class="stat-label label-cdmg">CritDMG</div>
+                        <div class="stat-label label-mp">MP</div>
+                        <div class="stat-label label-hp">HP</div>
+                    </div>
+                </diV>
             </div>
             <div>
                 <div class="wequip-container">
@@ -78,6 +113,108 @@
         </div>
     </div>
     <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function goHome() {
+            window.location.href = "menu.html";
+        }
+        const radarStats = {
+            atk: 85,
+            def: 70,
+            crit: 60,
+            cdmg: 75,
+            mp: 50,
+            hp: 90
+        };
+
+        const radarOrder = ["atk", "def", "crit", "cdmg", "mp", "hp"];
+
+        function getPolygonPoints(cx, cy, radius, count, scale = 1) {
+        const points = [];
+        const angleStep = (Math.PI * 2) / count;
+        const startAngle = -Math.PI / 2;
+
+        for (let i = 0; i < count; i++) {
+            const angle = startAngle + i * angleStep;
+            const x = cx + Math.cos(angle) * radius * scale;
+            const y = cy + Math.sin(angle) * radius * scale;
+            points.push(`${x},${y}`);
+        }
+
+        return points.join(" ");
+        }
+
+        function getStatPoints(cx, cy, radius, stats, order) {
+            const points = [];
+            const angleStep = (Math.PI * 2) / order.length;
+            const startAngle = -Math.PI / 2;
+
+            for (let i = 0; i < order.length; i++) {
+                const key = order[i];
+                const value = Math.max(0, Math.min(100, stats[key])) / 100;
+                const angle = startAngle + i * angleStep;
+                const x = cx + Math.cos(angle) * radius * value;
+                const y = cy + Math.sin(angle) * radius * value;
+                points.push({ x, y });
+            }
+
+            return points;
+            }
+
+            function drawRadar(stats) {
+            const cx = 150;
+            const cy = 150;
+            const radius = 110;
+            const count = radarOrder.length;
+
+            document.getElementById("ring4").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 1));
+            document.getElementById("ring3").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 0.75));
+            document.getElementById("ring2").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 0.5));
+            document.getElementById("ring1").setAttribute("points", getPolygonPoints(cx, cy, radius, count, 0.25));
+
+            const axisGroup = document.getElementById("axisLines");
+            axisGroup.innerHTML = "";
+
+            const angleStep = (Math.PI * 2) / count;
+            const startAngle = -Math.PI / 2;
+
+            for (let i = 0; i < count; i++) {
+                const angle = startAngle + i * angleStep;
+                const x = cx + Math.cos(angle) * radius;
+                const y = cy + Math.sin(angle) * radius;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", cx);
+                line.setAttribute("y1", cy);
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", y);
+                line.setAttribute("class", "axis-line");
+                axisGroup.appendChild(line);
+            }
+
+            const statPoints = getStatPoints(cx, cy, radius, stats, radarOrder);
+            const statShape = document.getElementById("statShape");
+            statShape.setAttribute(
+                "points",
+                statPoints.map(point => `${point.x},${point.y}`).join(" ")
+            );
+
+            const nodesGroup = document.getElementById("nodes");
+            nodesGroup.innerHTML = "";
+
+            statPoints.forEach(point => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", point.x);
+                circle.setAttribute("cy", point.y);
+                circle.setAttribute("r", 4.5);
+                circle.setAttribute("class", "node");
+                nodesGroup.appendChild(circle);
+            });
+        }
+
+        drawRadar(radarStats);
     </script>
 </body>
 </html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Futuristic Login UI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .futuristic-panel {
+    position: relative;
+    width: 420px;
+    height: 170px;
+    }
+
+    .futuristic-panel svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    }
+
+    .panel-bg {
+    fill: rgba(18, 35, 85, 0.85);
+    }
+
+    .panel-line {
+    fill: none;
+    stroke: #22f6ff;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 4px #22f6ff);
+    }
+
+    .accent-line {
+    stroke: #22f6ff;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 4px #22f6ff);
+    }
+
+    .dot {
+    fill: #22f6ff;
+    filter: drop-shadow(0 0 4px #22f6ff);
+    }
+
+    .panel-content {
+    position: relative;
+    z-index: 2;
+    padding: 36px 28px;
+    color: white;
+    font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+    <div class="futuristic-panel">
+        <svg viewBox="0 0 220 90" preserveAspectRatio="none">
+            <!-- background panel -->
+            <polygon
+            points="0,22 16,8 128,8 142,0 190,0 220,18 220,90 0,90"
+            class="panel-bg"
+            />
+
+            <!-- border utama -->
+            <polyline
+            points="0,22 16,8 128,8 142,0 190,0 220,18 220,60 185,90 0,90 0,22"
+            class="panel-line"
+            />
+
+            <!-- garis miring kanan bawah -->
+            <polyline
+            points="120,82 180,82 205,55"
+            class="panel-line"
+            />
+
+            <!-- aksen garis kecil kiri bawah -->
+            <line x1="28" y1="84" x2="38" y2="90" class="accent-line" />
+            <line x1="38" y1="84" x2="48" y2="90" class="accent-line" />
+            <line x1="48" y1="84" x2="58" y2="90" class="accent-line" />
+            <line x1="58" y1="84" x2="68" y2="90" class="accent-line" />
+            <line x1="68" y1="84" x2="78" y2="90" class="accent-line" />
+
+            <!-- titik dekorasi -->
+            <circle cx="120" cy="82" r="2" class="dot" />
+            <circle cx="18" cy="24" r="2" class="dot" />
+            <circle cx="66" cy="10" r="2" class="dot" />
+        </svg>
+
+        <div class="panel-content">
+            Isi konten di sini
+        </div>
+        </div>
+</body>
+</html>

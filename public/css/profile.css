@@ -96,20 +96,59 @@ body {
     box-sizing: border-box;
     gap: 20px; /* jarak antara logo dan card */
 }
-
-.logo {
-    width: 100%;
-    height: 248px;
-    margin-bottom: 0px;
-    image-rendering: pixelated;
+/* TOP BAR */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    width: 75%;
 }
 
+.top-left,
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.icon-btn img{
+    width: 45px;
+    height: 45px;
+}
+
+.currency-box {
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 40px;
+    color: #222;
+}
+
+.coin {
+    color: #b58500;
+    font-size: 40px;
+}
+
+.gem {
+    color: #7f82ff;
+    font-size: 40px;
+    margin-top: -10px;
+}
+
+.info-section {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+}
 
 .profile-card {
     display: flex;
     gap: 30px;
     color: black;
-    align-items: start;
+    align-items: center;
 }
 
 .profile-title {
@@ -128,10 +167,32 @@ body {
     height: 200px;
     align-items: center;
     background: #215b7a;
-    border: 4px solid white;
+    border-radius: 30px;
+    box-shadow:
+    inset 0 0 18px rgba(255,255,255,0.04),
+    0 10px 28px rgba(0,0,0,0.35);
+    margin: 0 auto;
+}
+
+.badge-box {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.badge-section {
+    display: flex;
+    width: 150px;
+    height: auto;
+    align-items: center;
     border-radius: 30px;
     /* box-shadow: 4px 4px 0 #d4af4d; */
     margin: 0 auto;
+}
+
+.badge-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .grid-container {
@@ -161,7 +222,6 @@ body {
 }
 
 .item {
-    padding: 1rem;
     text-align: center;
     color: white;
     font-size: 20px;
@@ -172,7 +232,6 @@ body {
     image-rendering: pixelated;
     background-image: url('https://i.ibb.co/Y8tJkLk/avatar-pixel.png'); /* ganti URL ini dengan pixel avatar kamu */
     background-size: cover;
-    border: 4px solid #000;
     border-radius: 8px;
 }
 
@@ -186,24 +245,49 @@ body {
 .name {
     padding: 0px 10px;
     background: #215b7a;
-    border: 4px solid white;
     border-radius: 30px;
-    /* box-shadow: 2px 2px 0 #d4af4d; */
+    box-shadow:
+    inset 0 0 18px rgba(255,255,255,0.04),
+    0 10px 28px rgba(0,0,0,0.35);
    
     font-size: 30px;
     text-align: center;
     color: white;
     text-wrap: nowrap;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
-.stat-section {
+/*.stat-section {
     background: #215b7a;
     border: 4px solid white;
     border-radius: 30px;
     padding: 10px;
     /* box-shadow: 4px 4px 0 black; */
-    width: 400px;
+    /*width: 400px;
     color: white;
+ }
+ */
+.stat-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ .stat-box {
+    width: 300px;
+    height: 300px;
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+    border-radius: 18px;
+    background:
+    radial-gradient(circle at center, rgba(70, 90, 130, 0.35), rgba(18, 20, 28, 0.96));
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+    inset 0 0 18px rgba(255,255,255,0.04),
+    0 10px 28px rgba(0,0,0,0.35);
 }
 
 .stat-title {
@@ -233,7 +317,6 @@ body {
     margin-top: 14px;
     padding: 8px;
     background: #215b7a;
-    border: 4px solid white;
     border-radius: 30px;
     text-align: center;
     /* box-shadow: 2px 2px 0 black; */
@@ -245,10 +328,11 @@ body {
     margin-top: 14px;
     padding: 0px 8px;
     background: #215b7a;
-    border: 4px solid white;    
     border-radius: 30px;
     text-align: center;
-    /* box-shadow: 2px 2px 0 black; */
+    box-shadow:
+    inset 0 0 18px rgba(255,255,255,0.04),
+    0 10px 28px rgba(0,0,0,0.35);
     font-size: 30px;
     color: white;
 }
@@ -270,9 +354,10 @@ body {
     height:150px;
     width: 150px;
     background: #215b7a;
-    border: 4px solid white;
     border-radius: 30px;
-    /* box-shadow: 2px 2px 0 black; */
+    box-shadow:
+    inset 0 0 18px rgba(255,255,255,0.04),
+    0 10px 28px rgba(0,0,0,0.35);
     font-size: 20px;
     text-align: center;
 }
@@ -297,6 +382,71 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.radar {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.radar svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.ring {
+    fill: none;
+    stroke: rgba(255,255,255,0.12);
+    stroke-width: 1.5;
+}
+
+.axis-line {
+    stroke: rgba(255,255,255,0.10);
+    stroke-width: 1.2;
+}
+
+.stat-shape {
+    fill: rgba(78, 226, 255, 0.22);
+    stroke: rgba(78, 226, 255, 0.95);
+    stroke-width: 2.5;
+    animation: pulseRadar 2.2s ease-in-out infinite;
+}
+
+.node {
+    fill: #8af4ff;
+    stroke: white;
+    stroke-width: 1.4;
+}
+
+.stat-label {
+    position: absolute;
+    font-size: 20px;
+    font-weight: bold;
+    color: #f3fbff;
+    letter-spacing: 0.4px;
+    text-shadow: 0 0 8px rgba(78, 226, 255, 0.35);
+}
+
+.label-atk  { top: 2px; left: 50%; transform: translateX(-50%); }
+.label-def  { top: 52px; right: 10px; }
+.label-crit { bottom: 38px; right: 4px; }
+.label-cdmg { bottom: 4px; left: 50%; transform: translateX(-50%); }
+.label-mp   { bottom: 38px; left: 10px; }
+.label-hp   { top: 52px; left: 10px; }
+
+@keyframes pulseRadar {
+    0%, 100% {
+    opacity: 0.92;
+    transform: scale(1);
+    transform-origin: center;
+    }
+    50% {
+    opacity: 1;
+    transform: scale(1.02);
+    transform-origin: center;
+    }
 }
 @media (max-width: 768px) {
     .main-container{
