@@ -110,7 +110,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <script type="module">
         function goBack() {
             window.history.back();
         }
@@ -212,7 +212,42 @@
             });
         }
 
+        // ================== FUNCTION BARU ==================
+        async function loadProfile() {
+        const {
+            data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session) {
+            alert("Belum login!");
+            return;
+        }
+
+        const res = await fetch("/api/player_profiles", {
+            headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            },
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            console.error(result.error);
+            return;
+        }
+
+        const profile = result.data;
+
+        document.getElementById("player-name").innerHTML = `
+            <span>${profile.nickname}</span>
+            <span class="level">Lv. ${profile.level}</span>
+        `;
+        }
+
+        // ================== INIT ==================
         drawRadar(radarStats);
+        loadProfile();
+        
     </script>
 </body>
 </html>
