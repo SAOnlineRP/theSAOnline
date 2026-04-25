@@ -184,13 +184,18 @@
     }
 
     .quest-title {
-      background: rgba(20, 20, 20, 0.65);
       padding: 18px 24px;
       font-size: 60px;
-      font-weight: 300;
+      font-weight: 600;
       letter-spacing: 2px;
       text-align: center;
       margin-bottom: 0px;
+      background:
+      radial-gradient(circle at center, rgba(70, 90, 130, 1), rgba(18, 20, 28, 0.96));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+      inset 0 0 18px rgba(255,255,255,0.04),
+      0 10px 28px rgba(0,0,0,0.35);
     }
 
     .menu-grid {
@@ -202,17 +207,44 @@
     }
 
     .menu-btn {
+      clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+      );
+    }
+
+    .menu-btn {
       display: flex;
       justify-content: center;
       align-items: center;
       text-align: center;
       font-size: 28px;
-      font-weight: 400;
+      font-weight: 600;
       text-transform: uppercase;
       color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      background: rgba(0, 0, 0, 0.35);
       position: relative;
+      background: radial-gradient(circle at center, rgba(70, 90, 130, 1), rgba(18, 20, 28, 0.96));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+      inset 0 0 18px rgba(255,255,255,0.04),
+      0 10px 28px rgba(0,0,0,0.35);
+    }
+
+    .menu-btn {
+      box-shadow:
+        inset 0 0 12px rgba(255,255,255,0.05),
+        0 0 8px rgba(24,184,255,0.2),
+        0 0 16px rgba(24,184,255,0.15);
+    }
+
+    .menu-btn:hover {
+      box-shadow:
+        0 0 12px rgba(24,184,255,0.6),
+        0 0 24px rgba(24,184,255,0.3);
     }
 
     .menu-btn.active {
@@ -238,18 +270,21 @@
       font-size: 21px;
       text-transform: uppercase;
       color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      background: rgba(255, 255, 255, 0.18);
       line-height: 1.15;
+      background: radial-gradient(circle at center, rgba(70, 90, 130, 1), rgba(18, 20, 28, 0.96));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+      inset 0 0 18px rgba(255,255,255,0.04),
+      0 10px 28px rgba(0,0,0,0.35);
     }
 
-    .small-btn.dark {
+    /*.small-btn.dark {
       background: rgba(120, 120, 120, 0.18);
     }
 
     .small-btn.light {
       background: rgba(255, 255, 255, 0.28);
-    }
+    }*/
 
     @media (max-width: 900px) {
       .menu-panel {
