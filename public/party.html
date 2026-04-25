@@ -33,6 +33,7 @@
     /* top icons */
     .top-bar {
       display: flex;
+      justify-content: space-between;
       gap: 14px;
       margin-bottom: 6px;
       font-size: 40px;
@@ -50,8 +51,9 @@
     .content-row {
       display: flex;
       gap: 16px;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
+      height: 80%;
     }
 
     .column {
@@ -203,17 +205,18 @@
 
     /* equipments */
     .equipments-panel {
-      width: 190px;
-      display: flex;
-      flex-direction: column;
+      width: 350px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* 2 kolom */
       gap: 10px;
     }
 
     .equip-card {
       background: #bfe9f2;
       border: 2px solid #e9f9ff;
-      height: 165px;
-      width: 165px;
+      width: 100%;   /* penting biar ikut grid */
+      aspect-ratio: 1 / 1; /* biar kotak */
+      height: auto;
       position: relative;
       display: flex;
       align-items: center;
@@ -300,6 +303,7 @@
       }
 
       .content-row {
+        margin: 0px 5px;
         flex-wrap: wrap;
         justify-content: space-between;
         gap: 12px;
@@ -308,6 +312,10 @@
       /* Party Members tetap lebar besar */
       .content-row > .column:nth-child(1) {
         width: calc(100% - 140px);
+      }
+
+      .column{
+        align-items: center;
       }
 
       .members-panel {
@@ -339,15 +347,10 @@
       }
 
       .equipments-panel {
-        width: 100%;
-        flex-direction: row;
+        width: 90%;
         gap: 10px;
       }
 
-      .equip-card {
-        width: calc(50% - 5px);
-        height: 140px;
-      }
 
       /* Weapon ada di bawah equipments */
       .bottom-row {
@@ -376,6 +379,7 @@
 
       .title {
         font-size: 20px;
+        gap: 8px;
       }
     }
   </style>
@@ -383,8 +387,13 @@
 <body>
   <div class="game-ui">
     <div class="top-bar">
-      <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
-      <button onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+      <div>
+        <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+      </div>
+      <div>
+        <button class="save-btn">SAVE</button>
+      </div>
     </div>
 
     <div class="content-row">
@@ -461,6 +470,16 @@
         <div class="panel equipments-panel">
 
           <div class="equip-card">
+            <img src="https://via.placeholder.com/90x70" alt="Weapon">
+            <div class="equip-type">👕</div>
+          </div>
+
+          <div class="equip-card">
+            <img src="https://via.placeholder.com/90x70" alt="Shield">
+            <div class="equip-type">👖</div>
+          </div>
+
+          <div class="equip-card">
             <img src="https://via.placeholder.com/90x70" alt="Armor Top">
             <div class="equip-type">👕</div>
           </div>
@@ -471,20 +490,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="bottom-row">
-      <div class="weapon-section">
-        <div class="title">Weapon</div>
-        <div class="weapon-panel">
-          <div class="edit-icon">✎</div>
-          <div class="weapon-box">
-            <img src="https://via.placeholder.com/90x26" alt="Weapon">
-          </div>
-        </div>
-      </div>
-
-      <button class="save-btn">SAVE</button>
     </div>
   </div>
   <script>
