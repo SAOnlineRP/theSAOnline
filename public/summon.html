@@ -100,6 +100,11 @@
       text-align: center;
     }
 
+    .menu-btn.active {
+      background: #ffffff;
+      border: 3px solid #111;
+    }
+
     /* info text */
     .guarantee-box {
       position: absolute;
@@ -162,16 +167,31 @@
       }
 
       .left-panel {
-        height: unset;
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        top: 100px;
+
+        width: auto;
+        height: auto;
+
+        display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
+
         gap: 20px;
-        margin: 20px;
         padding: 20px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        white-space: nowrap;
       }
 
       .menu-btn {
+        flex: 0 0 150px;
+        min-height: 80px;
         font-size: 18px;
       }
 
@@ -200,10 +220,15 @@
 
     <div class="content">
       <div class="left-panel">
-        <button class="menu-btn">Special<br>Summon</button>
-        <button class="menu-btn">Regular<br>Summon</button>
+        <button class="menu-btn active" onclick="changeSummon('special', this)">
+          Special<br>Summon
+        </button>
+
+        <button class="menu-btn" onclick="changeSummon('regular', this)">
+          Regular<br>Summon
+        </button>
       </div>
-      <div>
+      <div class="right-panel">
         <div class="guarantee-box">
           Get guaranteed partner<br>
           every 10 summons!
@@ -224,6 +249,52 @@
     </div>
   </div>
   <script>
+    const summonData = {
+      special: {
+        text: "Get guaranteed partner<br>every 10 summons!",
+        singleText: "Single<br>Summon",
+        singleCost: "💎 250",
+        multiText: "Summon<br>4x",
+        multiCost: "💎 2000"
+      },
+      regular: {
+        text: "Regular summon banner<br>standard partner pool!",
+        singleText: "Single<br>Summon",
+        singleCost: "🪙 1000",
+        multiText: "Summon<br>10x",
+        multiCost: "🪙 9000"
+      }
+    };
+
+    function changeSummon(type, button) {
+      const data = summonData[type];
+      const rightPanel = document.querySelector(".right-panel");
+
+      rightPanel.innerHTML = `
+        <div class="guarantee-box">
+          ${data.text}
+        </div>
+
+        <div class="bottom-actions">
+          <div class="summon-group">
+            <button class="summon-btn">${data.singleText}</button>
+            <div class="cost">${data.singleCost}</div>
+          </div>
+
+          <div class="summon-group">
+            <button class="summon-btn">${data.multiText}</button>
+            <div class="cost">${data.multiCost}</div>
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll(".menu-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+      button.classList.add("active");
+    }
+
     function goBack() {
       window.history.back();
     }
@@ -231,6 +302,6 @@
     function goHome() {
       window.location.href = "menu.html";
     }
-    </script>
+  </script>
 </body>
 </html>
