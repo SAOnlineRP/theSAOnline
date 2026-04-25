@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Friend Menu Wireframe</title>
+  <title>Friend Menu</title>
+
   <style>
     * {
       box-sizing: border-box;
@@ -17,13 +18,14 @@
     }
 
     .screen {
-      height: 100vh;              /* patok ke tinggi layar */
-        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
-        max-width: 100%;
-        margin: 0 auto;
-
-        position: relative;
-        overflow: hidden;
+      height: 100vh;
+      width: calc(100vh * 16 / 9);
+      max-width: 100%;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      color: white;
     }
 
     .top-bar {
@@ -34,9 +36,14 @@
     }
 
     .top-icon {
-      font-size: 50px;
       cursor: pointer;
       user-select: none;
+    }
+
+    .top-icon img {
+      width: 45px;
+      height: 45px;
+      margin-top: 10px;
     }
 
     .layout {
@@ -57,10 +64,16 @@
       background: #bfbfbf;
       border: none;
       padding: 12px 8px;
-      font-size: 30px;
+      font-size: 26px;
       text-align: center;
       cursor: pointer;
       color: #222;
+      transition: 0.2s;
+    }
+
+    .menu-btn:hover {
+      background: #909090;
+      color: white;
     }
 
     .menu-btn.active {
@@ -86,9 +99,9 @@
       display: flex;
       align-items: center;
       background: #d9d9d9;
-      height: 24px;
+      height: 28px;
       padding: 0 8px;
-      width: 135px;
+      width: 150px;
       font-size: 13px;
       color: #444;
     }
@@ -109,6 +122,7 @@
     .content-area {
       display: flex;
       gap: 18px;
+      animation: fadeIn 0.2s ease;
     }
 
     .card-grid {
@@ -116,77 +130,435 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 14px 18px;
       flex: 1;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .card-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .card-grid::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.4);
+      border-radius: 10px;
     }
 
     .friend-card {
       background: #d9d9d9;
-      height: 60px;
+      min-height: 70px;
       width: 100%;
+      color: #222;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 2px solid transparent;
     }
 
-    .scroll-bar {
-      width: 10px;
-      height: 136px;
+    .friend-card:hover {
+      background: #f1f1f1;
+      transform: translateY(-2px);
+      border-color: white;
+    }
+
+    .friend-name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .friend-id {
+      font-size: 12px;
+      color: #555;
+    }
+
+    .friend-status {
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .online {
+      color: green;
+      font-weight: bold;
+    }
+
+    .offline {
+      color: #777;
+      font-weight: bold;
+    }
+
+    .panel-content {
+      width: 100%;
+      color: white;
+    }
+
+    .panel-content h3 {
+      margin-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .panel-content p {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
       background: #d9d9d9;
-      position: relative;
-      margin-top: 2px;
     }
 
-    .scroll-thumb {
+    .action-btn {
+      padding: 10px 14px;
+      border: none;
+      cursor: pointer;
+      background: #222;
+      color: white;
+    }
+
+    .request-card {
+      background: #d9d9d9;
+      color: #222;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .detail-card {
+      background: #d9d9d9;
+      color: #222;
+      padding: 18px;
       width: 100%;
-      height: 70px;
-      background: #b5b5b5;
+    }
+
+    .detail-card h3 {
+      color: #222;
+    }
+
+    .back-detail {
+      margin-top: 16px;
+      padding: 10px 14px;
+      background: #222;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .screen {
+        width: 100%;
+        height: 100vh;
+        overflow-y: auto;
+      }
+
+      .layout {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .sidebar {
+        flex-direction: row;
+        width: 90%;
+        justify-content: center;
+        overflow-x: auto;
+      }
+
+      .menu-btn {
+        font-size: 18px;
+        min-width: 120px;
+      }
+
+      .main-panel {
+        width: 90%;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
-    <div class="screen">
-        <div class="top-bar">
-            <div class="top-icon" onclick="goBack()"><img src="/img/back.png" style="width: 45px; height: 45px; margin-top:10px" alt="Back"></div>
-            <div class="top-icon" onclick="goHome()"><img src="/img/home.png" style="width: 45px; height: 45px; margin-top:10px" alt="Home"></div>
-        </div>
+  <div class="screen">
+    <div class="top-bar">
+      <div class="top-icon" onclick="goBack()">
+        <img src="/img/back.png" alt="Back">
+      </div>
 
-        <div class="layout">
-            <div class="sidebar">
-            <button class="menu-btn active">My Friends</button>
-            <button class="menu-btn">Add Friends</button>
-            <button class="menu-btn">Request Add</button>
-            </div>
-
-            <div class="main-panel">
-            <div class="search-bar">
-                <div class="search-box">
-                <input type="text" placeholder="Search by ID" />
-                <span class="search-icon">🔍</span>
-                </div>
-            </div>
-
-            <div class="content-area">
-                <div class="card-grid">
-                <div class="friend-card"></div>
-                <div class="friend-card"></div>
-                <div class="friend-card"></div>
-                <div class="friend-card"></div>
-                <div class="friend-card"></div>
-                <div class="friend-card"></div>
-                </div>
-
-                <div class="scroll-bar">
-                <div class="scroll-thumb"></div>
-                </div>
-            </div>
-            </div>
-        </div>
+      <div class="top-icon" onclick="goHome()">
+        <img src="/img/home.png" alt="Home">
+      </div>
     </div>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
 
-        function goHome() {
-            window.location.href = "menu.html";
-        }
-    </script>
+    <div class="layout">
+      <div class="sidebar">
+        <button class="menu-btn active" data-menu="friends">My Friends</button>
+        <button class="menu-btn" data-menu="add">Add Friends</button>
+        <button class="menu-btn" data-menu="request">Request Add</button>
+      </div>
 
+      <div class="main-panel">
+        <div class="search-bar" id="searchBar">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by ID">
+            <span class="search-icon">🔍</span>
+          </div>
+        </div>
+
+        <div class="content-area" id="contentArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const friends = [
+      {
+        id: "FR001",
+        name: "Astra",
+        level: 24,
+        status: "Online"
+      },
+      {
+        id: "FR002",
+        name: "Luna",
+        level: 18,
+        status: "Offline"
+      },
+      {
+        id: "FR003",
+        name: "Raven",
+        level: 32,
+        status: "Online"
+      },
+      {
+        id: "FR004",
+        name: "Kai",
+        level: 15,
+        status: "Offline"
+      },
+      {
+        id: "FR005",
+        name: "Nova",
+        level: 27,
+        status: "Online"
+      },
+      {
+        id: "FR006",
+        name: "Zephyr",
+        level: 41,
+        status: "Offline"
+      }
+    ];
+
+    const requests = [
+      {
+        id: "RQ001",
+        name: "Orion",
+        level: 12
+      },
+      {
+        id: "RQ002",
+        name: "Mika",
+        level: 19
+      }
+    ];
+
+    const buttons = document.querySelectorAll(".menu-btn");
+    const contentArea = document.getElementById("contentArea");
+    const searchBar = document.getElementById("searchBar");
+    const searchInput = document.getElementById("searchInput");
+
+    let currentMenu = "friends";
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        buttons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        currentMenu = button.dataset.menu;
+        searchInput.value = "";
+
+        renderContent(currentMenu);
+      });
+    });
+
+    searchInput.addEventListener("input", () => {
+      if (currentMenu === "friends") {
+        renderFriends(searchInput.value);
+      }
+    });
+
+    function renderContent(menu) {
+      if (menu === "friends") {
+        searchBar.style.display = "flex";
+        renderFriends();
+      }
+
+      if (menu === "add") {
+        searchBar.style.display = "none";
+        renderAddFriend();
+      }
+
+      if (menu === "request") {
+        searchBar.style.display = "none";
+        renderRequests();
+      }
+    }
+
+    function renderFriends(keyword = "") {
+      const filteredFriends = friends.filter(friend =>
+        friend.id.toLowerCase().includes(keyword.toLowerCase()) ||
+        friend.name.toLowerCase().includes(keyword.toLowerCase())
+      );
+
+      contentArea.innerHTML = `
+        <div class="card-grid">
+          ${filteredFriends.map(friend => `
+            <div class="friend-card" onclick="showFriendDetail('${friend.id}')">
+              <div class="friend-name">${friend.name}</div>
+              <div class="friend-id">ID: ${friend.id}</div>
+              <div>Lv. ${friend.level}</div>
+              <div class="friend-status ${friend.status === "Online" ? "online" : "offline"}">
+                ${friend.status}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderAddFriend() {
+      contentArea.innerHTML = `
+        <div class="panel-content">
+          <h3>Add Friend</h3>
+          <p>Masukkan Friend ID untuk mengirim request pertemanan.</p>
+
+          <div class="input-row">
+            <input type="text" id="friendIdInput" placeholder="Example: FR009">
+            <button class="action-btn" onclick="sendFriendRequest()">Add</button>
+          </div>
+
+          <p id="addMessage" style="margin-top: 14px;"></p>
+        </div>
+      `;
+    }
+
+    function renderRequests() {
+      contentArea.innerHTML = `
+        <div class="panel-content">
+          <h3>Request Add</h3>
+
+          ${
+            requests.length === 0
+              ? `<p>Belum ada request.</p>`
+              : requests.map(request => `
+                <div class="request-card">
+                  <strong>${request.name}</strong>
+                  <div>ID: ${request.id}</div>
+                  <div>Lv. ${request.level}</div>
+
+                  <div class="request-actions">
+                    <button class="action-btn" onclick="acceptRequest('${request.id}')">Accept</button>
+                    <button class="action-btn" onclick="declineRequest('${request.id}')">Decline</button>
+                  </div>
+                </div>
+              `).join("")
+          }
+        </div>
+      `;
+    }
+
+    function showFriendDetail(friendId) {
+      const friend = friends.find(item => item.id === friendId);
+
+      if (!friend) return;
+
+      contentArea.innerHTML = `
+        <div class="detail-card">
+          <h3>${friend.name}</h3>
+          <p><strong>ID:</strong> ${friend.id}</p>
+          <p><strong>Level:</strong> ${friend.level}</p>
+          <p><strong>Status:</strong> ${friend.status}</p>
+
+          <button class="back-detail" onclick="renderFriends()">Back to List</button>
+        </div>
+      `;
+    }
+
+    function sendFriendRequest() {
+      const input = document.getElementById("friendIdInput");
+      const message = document.getElementById("addMessage");
+
+      if (!input.value.trim()) {
+        message.textContent = "Friend ID tidak boleh kosong.";
+        return;
+      }
+
+      message.textContent = `Request berhasil dikirim ke ID: ${input.value}`;
+      input.value = "";
+    }
+
+    function acceptRequest(requestId) {
+      const index = requests.findIndex(request => request.id === requestId);
+
+      if (index !== -1) {
+        const accepted = requests[index];
+
+        friends.push({
+          id: accepted.id,
+          name: accepted.name,
+          level: accepted.level,
+          status: "Online"
+        });
+
+        requests.splice(index, 1);
+        renderRequests();
+      }
+    }
+
+    function declineRequest(requestId) {
+      const index = requests.findIndex(request => request.id === requestId);
+
+      if (index !== -1) {
+        requests.splice(index, 1);
+        renderRequests();
+      }
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function goHome() {
+      window.location.href = "menu.html";
+    }
+
+    renderContent(currentMenu);
+  </script>
 </body>
 </html>
