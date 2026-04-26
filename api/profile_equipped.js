@@ -26,15 +26,6 @@ export default async function handler(req, res) {
 
   // GET profile milik user login
     if (req.method === "GET") {
-        const { data: profile, error: profileError } = await supabase
-            .from("player_profiles")
-            .select("*")
-            .eq("player_id", user.id)
-            .single();
-
-        if (profileError) {
-            return res.status(500).json({ error: profileError.message });
-        }
 
         const { data: equipped, error: equippedError } = await supabase
             .from("player_equipped")
@@ -110,7 +101,6 @@ export default async function handler(req, res) {
 
         return res.status(200).json({
             data: {
-            profile,
             equipped,
             },
         });
