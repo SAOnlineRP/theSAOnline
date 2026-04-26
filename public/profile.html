@@ -30,11 +30,11 @@
             <div class="top-right">
                 <div class="currency-box">
                     <span class="coin">🪙</span>
-                    <span>10000</span>
+                    <span id="col">10000</span>
                 </div>
                 <div class="currency-box">
                     <span class="gem">💎</span>
-                    <span>50</span>
+                    <span id="arcana-gem">50</span>
                 </div>
             </div>
         </div>
@@ -101,8 +101,8 @@
                 </div>
                 
                 <div class="grid-container">
-                    <div class="skill-records"><img src="/img/sr-1.png" alt="sr" class="avatar-img"></div>
-                    <div class="skill-records"><img src="/img/sr-2.png" alt="sr" class="avatar-img"></div>
+                    <div class="skill-records"><img id="skill-record-1" src="/img/sr-1.png" alt="sr" class="avatar-img"></div>
+                    <div class="skill-records"><img id="skill-record-2" src="/img/sr-2.png" alt="sr" class="avatar-img"></div>
                 </div>
                 <div class="wequip-container">
                     <div class="wequip-box">Equipment</div>
@@ -111,8 +111,8 @@
                 <div class="equipment-container">
                     <div class="box-equip"><img id="equipped-right-arm" src="/img/eq-1.png" alt="sr" class="avatar-img"></div>
                     <div class="box-equip"><img id="equipped-left-arm" src="/img/eq-2.png" alt="sr" class="avatar-img"></div>
-                    <div class="box-equip"><img src="/img/eq-3.png" alt="sr" class="avatar-img"></div>
-                    <div class="box-equip"><img src="/img/eq-4.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip"><img id="armor-lower" src="/img/eq-3.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip"><img id="armor-upper" src="/img/eq-4.png" alt="sr" class="avatar-img"></div>
                 </div>
             </div>
         </div>
@@ -266,8 +266,16 @@
                 <span class="level">Lv. ${profile.level}</span>
                 `;
 
-                document.getElementById("equipped-right-arm").src = equippedRightArm;
-                document.getElementById("equipped-left-arm").src = equippedLeftArm;
+                document.getElementById("col").textContent = profile.col;
+                document.getElementById("arcana-gem").textContent = profile.arcana_gems;
+
+                document.getElementById("equipped-right-arm").src = equipped.equipped.right_arm.catalog.link_photo || "/img/eq-1.png";
+                document.getElementById("equipped-left-arm").src = equipped.equipped.left_arm.catalog.link_photo || "/img/eq-2.png";
+                document.getElementById("armor-lower").src = equipped.equipped.lower.catalog.link_photo || "/img/eq-3.png";
+                document.getElementById("armor-upper").src = equipped.equipped.upper.catalog.link_photo || "/img/eq-4.png";
+                document.getElementById("skill-record-1").src = equipped.equipped.first_partner.catalog.link_photo || "/img/sr-1.png";
+                document.getElementById("skill-record-2").src = equipped.equipped.second_partner.catalog.link_photo || "/img/sr-2.png";
+
                 document.getElementById("badge-1").src = badges.badges[0]?.catalog.link_photo || "/img/badge-1.png";
                 document.getElementById("badge-2").src = badges.badges[1]?.catalog.link_photo || "/img/badge-2.png";
 

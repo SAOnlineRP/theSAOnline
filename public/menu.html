@@ -176,6 +176,46 @@
       });
     }
 
+    async function loadProfile(session) {
+      try {
+        setProgress(10);
+
+        const headers = {
+            Authorization: `Bearer ${session.access_token}`,
+        };
+
+        setProgress(20);
+
+        const [profileRes, equippedRes, statRes, badgeRes] = await Promise.all([
+            fetch("/api/profile", { headers }),
+        ]);
+
+        setProgress(40);
+
+        const profileResult = await profileRes.json();
+
+        if (!profileRes.ok) throw new Error(profileResult.error);
+
+        const profile = profileResult.data;
+
+        console.log("profile:", profile);
+
+        setProgress(50); // API done (50%)
+
+        // 🔥 tunggu gambar
+        await waitForImages();
+
+        // selesai semua
+        setProgress(100);
+
+        setTimeout(hideLoading, 300);
+
+    } catch (err) {
+        console.error("Load error:", err);
+        hideLoading();
+    }
+    }
+
     window.goToQuest = goToQuest;
     window.goToParty = goToParty;
     window.goToSummon = goToSummon;
@@ -188,16 +228,10 @@
 
     async function init() {
       try {
-        setProgress(10);
-
         const session = await requireLogin();
         if (!session) return; // ✅ sekarang valid
 
-        setProgress(50);
-
-        await waitForImages();
-
-        setProgress(100);
+        await loadProfile(session);
         setTimeout(hideLoading, 500);
 
       } catch (err) {
