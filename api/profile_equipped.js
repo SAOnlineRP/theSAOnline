@@ -25,74 +25,87 @@ export default async function handler(req, res) {
   }
 
   // GET profile milik user login
-  if (req.method === "GET") {
-    const { data, error } = await supabase
-        .from("player_profiles")
-        .select(`
-        *,
-        player_equipped!player_equipped_player_id_fkey (
+    if (req.method === "GET") {
+        const { data: profile, error: profileError } = await supabase
+            .from("player_profiles")
+            .select("*")
+            .eq("player_id", user.id)
+            .single();
+
+        if (profileError) {
+            return res.status(500).json({ error: profileError.message });
+        }
+
+        const { data: equipped, error: equippedError } = await supabase
+            .from("player_equipped")
+            .select(`
+            *,
             right_arm:player_equipments!player_equipped_right_arm_fkey (
-            id,
-            level,
-            star,
-            catalog:catalog_equipments (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
                 id,
                 name,
                 link_photo
-            )
+                )
             ),
             left_arm:player_equipments!player_equipped_left_arm_fkey (
-            id,
-            level,
-            star,
-            catalog:catalog_equipments (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
                 id,
                 name,
                 link_photo
-            )
+                )
             ),
             lower:player_equipments!player_equipped_lower_fkey (
-            id,
-            level,
-            star,
-            catalog:catalog_equipments (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
                 id,
                 name,
                 link_photo
-            )
+                )
             ),
             upper:player_equipments!player_equipped_upper_fkey (
-            id,
-            level,
-            star,
-            catalog:catalog_equipments (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
                 id,
                 name,
                 link_photo
-            )
+                )
             ),
             first_partner:player_partners!player_equipped_first_partner_fkey (
-            id,
-            level,
-            star,
-            partner_id
+                id,
+                level,
+                star,
+                partner_id
             ),
             second_partner:player_partners!player_equipped_second_partner_fkey (
-            id,
-            level,
-            star,
-            partner_id
+                id,
+                level,
+                star,
+                partner_id
             )
-        )
-        `)
-        .eq("player_id", user.id)
-        .single();
+            `)
+            .eq("player_id", user.id)
+            .single();
 
-    if (error) {
-        return res.status(500).json({ error: error.message });
-    }
+        if (equippedError) {
+            return res.status(500).json({ error: equippedError.message });
+        }
 
-    return res.status(200).json({ data });
+        return res.status(200).json({
+            data: {
+            profile,
+            equipped,
+            },
+        });
     }
 
   return res.status(405).json({ error: "Method not allowed" });
