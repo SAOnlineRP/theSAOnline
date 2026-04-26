@@ -23,17 +23,17 @@
     <div class="top-bar">
         <div class="top-left">
             <div class="avatar-box hud-panel" onclick="goToProfile()">
-                <img src="/img/kirito.png" alt="Kirito Avatar">
+                <img src="/img/kirito.png" alt="Kirito Avatar" id="avatar">
             </div>
 
             <div class="info-box hud-panel">
-                <div class="name">KIRITO</div>
-                <div class="lvl">Lvl. 100</div>
+                <div class="name" id="player-name">KIRITO</div>
+                <div class="lvl" id="player-level">Lvl. 100</div>
             </div>
 
             <div class="gold-box hud-panel">
-                <div class="gold-row">🪙 <span>10000</span></div>
-                <div class="gold-row">💎 <span>50</span></div>
+                <div class="gold-row">🪙 <span id="col">10000</span></div>
+                <div class="gold-row">💎 <span id="arcana-gem">50</span></div>
             </div>
         </div>
 
@@ -186,7 +186,7 @@
 
         setProgress(20);
 
-        const [profileRes, equippedRes, statRes, badgeRes] = await Promise.all([
+        const [profileRes] = await Promise.all([
             fetch("/api/profile", { headers }),
         ]);
 
@@ -199,6 +199,13 @@
         const profile = profileResult.data;
 
         console.log("profile:", profile);
+
+        document.getElementById("avatar").src = profile.avatar || "/img/avatar.png";
+        document.getElementById("player-name").textContent = profile.name;
+        document.getElementById("player-level").textContent = `Lvl. ${profile.level}`;
+        document.getElementById("col").textContent = profile.col;
+        document.getElementById("arcana-gem").textContent = profile.arcana_gems;
+
 
         setProgress(50); // API done (50%)
 

@@ -42,7 +42,7 @@
             <div class="info-section">
                 <div class="name" id="player-name"><span>ARJUNA</span><span class="level">Lv. 100</span></div>
                 <div class="avatar-section">
-                    <img src="/img/avatar.png" alt="avatar" class="avatar-img">
+                    <img id="avatar" src="/img/avatar.png" alt="avatar" class="avatar-img">
                 </div>
                 
                 <div class="box badge-box">
@@ -266,9 +266,11 @@
                 <span class="level">Lv. ${profile.level}</span>
                 `;
 
+                document.getElementById("avatar").src = profile.avatar || "/img/avatar.png";
+
                 document.getElementById("col").textContent = profile.col;
                 document.getElementById("arcana-gem").textContent = profile.arcana_gems;
-
+ 
                 document.getElementById("equipped-right-arm").src = equipped.equipped.right_arm.catalog.link_photo || "/img/eq-1.png";
                 document.getElementById("equipped-left-arm").src = equipped.equipped.left_arm.catalog.link_photo || "/img/eq-2.png";
                 document.getElementById("armor-lower").src = equipped.equipped.lower.catalog.link_photo || "/img/eq-3.png";
@@ -279,9 +281,8 @@
                 document.getElementById("badge-1").src = badges.badges[0]?.catalog.link_photo || "/img/badge-1.png";
                 document.getElementById("badge-2").src = badges.badges[1]?.catalog.link_photo || "/img/badge-2.png";
 
+                console.log("profile:", profile);
                 console.log("equipped:", equipped);
-                console.log("equippedRightArm:", equippedRightArm);
-                console.log("equippedLeftArm:", equippedLeftArm);
                 console.log("badges:", badges);
 
                 setProgress(50); // API done (50%)

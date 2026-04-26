@@ -9,6 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --bg-top: #003973;
+      --bg-mid: #11375d;
+      --bg-bottom: #020813;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -18,6 +24,8 @@
 
     body {
       min-height: 100vh;
+      background-size: cover;
+      background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
     }
 
     .game-ui {
@@ -30,21 +38,48 @@
         overflow: hidden;
     }
 
+    .bg-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(600px, 60vw);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+      filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
+      z-index: -1;
+    }
+
     /* top icons */
     .top-bar {
       display: flex;
       justify-content: space-between;
       gap: 14px;
+      margin-top: 10px;
       margin-bottom: 6px;
       font-size: 40px;
     }
 
-    .top-bar button {
+    .top-left button {
       border: none;
       background: transparent;
       cursor: pointer;
       font-size: 40px;
       line-height: 1;
+    }
+
+    .save-btn {
+      padding: 12px 24px;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      background: #215b7a;
+      border-radius: 30px;
+      box-shadow:
+      inset 0 0 18px rgba(255,255,255,0.04),
+      0 10px 28px rgba(0,0,0,0.35);
+      color: white;
     }
 
     /* section titles */
@@ -64,7 +99,7 @@
 
     .title {
       font-size: 28px;
-      color: #111;
+      color: white;
       margin-left: 6px;
       display: flex;
       justify-content: space-between;
@@ -72,9 +107,13 @@
 
     /* main panels */
     .panel {
-      background: #6b6b6b;
+      background: #215b7a;
       padding: 10px;
       position: relative;
+      border-radius: 10px;
+      box-shadow:
+      inset 0 0 18px rgba(255,255,255,0.04),
+      0 10px 28px rgba(0,0,0,0.35);
     }
 
     .edit-icon {
@@ -280,18 +319,71 @@
       object-fit: contain;
     }
 
-    .save-btn {
-      width: 110px;
-      height: 72px;
-      border: none;
-      background: #cfcfcf;
-      font-size: 18px;
-      cursor: pointer;
-      box-shadow: inset 0 0 0 1px #bbb;
-    }
-
     .save-btn:hover {
       background: #bfbfbf;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(420px, 90%);
+      background: #123b5a;
+      border: 2px solid #7ee7ff;
+      border-radius: 16px;
+      padding: 24px;
+      color: white;
+      box-shadow: 0 0 30px rgba(126, 231, 255, 0.35);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    .party-options {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .party-options button {
+      padding: 12px;
+      border: 1px solid #7ee7ff;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .party-options button:hover {
+      background: rgba(126, 231, 255, 0.2);
+    }
+
+    .edit-btn {
+      cursor: pointer;
+    }
+
+    .edit-btn:hover {
+      color: black;
     }
 
     /* mobile */
@@ -386,20 +478,21 @@
 </head>
 <body>
   <div class="game-ui">
+    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
     <div class="top-bar">
-      <div>
-        <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
-        <button onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+      <div class="top-left">
+        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
       </div>
       <div>
-        <button class="save-btn">SAVE</button>
+        <button class="save-btn" onclick="saveChange()">SAVE</button>
       </div>
     </div>
 
     <div class="content-row">
       <!-- Party Members -->
       <div class="column">
-        <div class="title"><span>Party Members</span><span>✎</span></div>
+        <div class="title"><span>Party Members</span><span id="edit-party" class="edit-btn">✎</span></div>
         <div class="panel members-panel">
 
           <div class="member-card">
@@ -438,7 +531,7 @@
 
       <!-- Partners -->
       <div class="column">
-        <div class="title"><span>Partners</span><span>✎</span></div>
+        <div class="title"><span>Partners</span><a href="#"><span>✎</span></a></div>
         <div class="panel partners-panel">
           
 
@@ -466,7 +559,7 @@
 
       <!-- Equipments -->
       <div class="column">
-        <div class="title"><span>Equipments</span><span>✎</span></div>
+        <div class="title"><span>Equipments</span><a href="#"><span>✎</span></a></div>
         <div class="panel equipments-panel">
 
           <div class="equip-card">
@@ -491,6 +584,20 @@
         </div>
       </div>
     </div>
+    <div id="partyModal" class="modal-overlay">
+      <div class="modal-box">
+        <button class="modal-close" id="closePartyModal">×</button>
+
+        <h2>Edit Party</h2>
+        <p>Pilih member yang mau diganti:</p>
+
+        <div class="party-options">
+          <button>Aleyna</button>
+          <button>Arjuna</button>
+          <button>Empty Slot</button>
+        </div>
+      </div>
+    </div>
   </div>
   <script>
     function goBack() {
@@ -499,6 +606,29 @@
     function goHome() {
       window.location.href = "menu.html";
     }
+
+    function saveChange() {
+      alert("Changes saved!");
+    }
+
+    const editPartyBtn = document.getElementById("edit-party");
+    const partyModal = document.getElementById("partyModal");
+    const closePartyModal = document.getElementById("closePartyModal");
+
+    editPartyBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      partyModal.classList.add("show");
+    });
+
+    closePartyModal.addEventListener("click", function () {
+      partyModal.classList.remove("show");
+    });
+
+    partyModal.addEventListener("click", function (e) {
+      if (e.target === partyModal) {
+        partyModal.classList.remove("show");
+      }
+    });
   </script>
 </body>
 </html>
