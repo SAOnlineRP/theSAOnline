@@ -47,10 +47,10 @@
                 
                 <div class="box badge-box">
                     <div class="badge-section">
-                        <img src="/img/badge-1.png" alt="badge" class="badge-img">
+                        <img id="badge-1" src="/img/badge-1.png" alt="badge" class="badge-img">
                     </div>
                     <div class="badge-section">
-                        <img src="/img/badge-2.png" alt="badge" class="badge-img">
+                        <img id="badge-2" src="/img/badge-2.png" alt="badge" class="badge-img">
                     </div>
                 </div>
             </div>
@@ -130,14 +130,7 @@
         window.goBack = goBack;
         window.goHome = goHome;
 
-        const radarStats = {
-            atk: 85,
-            def: 70,
-            crit: 60,
-            cdmg: 75,
-            mp: 50,
-            hp: 90
-        };
+        
 
         const radarOrder = ["atk", "def", "crit", "cdmg", "mp", "hp"];
 
@@ -171,9 +164,9 @@
             }
 
             return points;
-            }
+        }
 
-            function drawRadar(stats) {
+        function drawRadar(stats) {
             const cx = 150;
             const cy = 150;
             const radius = 110;
@@ -245,21 +238,29 @@
 
                 setProgress(20);
 
-                const [profileRes, equippedRes] = await Promise.all([
+                const [profileRes, equippedRes, statRes, badgeRes] = await Promise.all([
                 fetch("/api/profile", { headers }),
                 fetch("/api/profile_equipped", { headers }),
+                fetch("/api/profile_stat", { headers }),
+                fetch("/api/profile_badges", { headers }),
                 ]);
 
                 setProgress(40);
 
                 const profileResult = await profileRes.json();
                 const equippedResult = await equippedRes.json();
+                const statResult = await statRes.json();
+                const badgeResult = await badgeRes.json();  
 
                 if (!profileRes.ok) throw new Error(profileResult.error);
                 if (!equippedRes.ok) throw new Error(equippedResult.error);
+                if (!statRes.ok) throw new Error(statResult.error);
+                if (!badgeRes.ok) throw new Error(badgeResult.error);
 
                 const profile = profileResult.data;
                 const equipped = equippedResult.data;
+                const stats = statResult.data;
+                const badges = badgeResult.data;
 
                 var equippedRightArm = equipped.equipped.right_arm.catalog.link_photo;
                 var equippedLeftArm = equipped.equipped.left_arm.catalog.link_photo;
@@ -271,15 +272,29 @@
 
                 document.getElementById("equipped-right-arm").src = equippedRightArm;
                 document.getElementById("equipped-left-arm").src = equippedLeftArm;
-                
+                document.getElementById("badge-1").src = badges.badges[0]?.catalog.link_photo || "/img/badge-1.png";
+                document.getElementById("badge-2").src = badges.badges[1]?.catalog.link_photo || "/img/badge-2.png";
+
                 console.log("equipped:", equipped);
                 console.log("equippedRightArm:", equippedRightArm);
                 console.log("equippedLeftArm:", equippedLeftArm);
+                console.log("badges:", badges);
 
                 setProgress(50); // API done (50%)
 
+                const radarStats = {
+                    atk: stats.stats.atk,
+                    def: stats.stats.def,
+                    crit: stats.stats.crit_pct,
+                    cdmg: stats.stats.crit_dmg,
+                    mp: stats.stats.max_mp,
+                    hp: stats.stats.max_hp
+                };
+
                 // 🔥 tunggu gambar
                 await waitForImages();
+
+                await drawRadar(radarStats);
 
                 // selesai semua
                 setProgress(100);
@@ -344,7 +359,7 @@
 
         
         // ================== INIT ==================
-        drawRadar(radarStats);
+        
         loadProfile();
         
     </script>
