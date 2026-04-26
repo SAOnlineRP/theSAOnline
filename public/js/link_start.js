@@ -87,7 +87,7 @@ async function handleLogin(event) {
   document.body.style.opacity = "0";
 
   setTimeout(() => {
-    window.location.href = "menu2.html";
+    window.location.href = "menu.html";
   }, 800);
 }
 

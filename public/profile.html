@@ -119,6 +119,13 @@
     </div>
     <script type="module">
         import { supabase } from "/js/supabaseClient.js";
+        import { requireLogin } from "/js/authGuard.js";
+
+        const overlay = document.getElementById("loading-overlay");
+        const bar = document.getElementById("loading-bar");
+
+        let progress = 0;
+
         function goBack() {
             window.history.back();
         }
@@ -130,7 +137,6 @@
         window.goBack = goBack;
         window.goHome = goHome;
 
-        
 
         const radarOrder = ["atk", "def", "crit", "cdmg", "mp", "hp"];
 
@@ -218,31 +224,21 @@
         }
 
         // ================== FUNCTION BARU ==================
-        async function loadProfile() {
+        async function loadProfile(session) {
             try {
                 setProgress(10);
 
-                const {
-                data: { session },
-                } = await supabase.auth.getSession();
-
-                if (!session) {
-                alert("Belum login!");
-                window.location.href = "index.html";
-                return;
-                }
-
                 const headers = {
-                Authorization: `Bearer ${session.access_token}`,
+                    Authorization: `Bearer ${session.access_token}`,
                 };
 
                 setProgress(20);
 
                 const [profileRes, equippedRes, statRes, badgeRes] = await Promise.all([
-                fetch("/api/profile", { headers }),
-                fetch("/api/profile_equipped", { headers }),
-                fetch("/api/profile_stat", { headers }),
-                fetch("/api/profile_badges", { headers }),
+                    fetch("/api/profile", { headers }),
+                    fetch("/api/profile_equipped", { headers }),
+                    fetch("/api/profile_stat", { headers }),
+                    fetch("/api/profile_badges", { headers }),
                 ]);
 
                 setProgress(40);
@@ -307,10 +303,6 @@
             }
         }
 
-        const overlay = document.getElementById("loading-overlay");
-        const bar = document.getElementById("loading-bar");
-
-        let progress = 0;
 
         function setProgress(value) {
             progress = value;
@@ -357,11 +349,11 @@
             });
         }
 
-        
-        // ================== INIT ==================
-        
-        loadProfile();
-        
+        const session = await requireLogin();
+
+        if (session) {
+            await loadProfile(session);
+        }
     </script>
 </body>
 </html>
