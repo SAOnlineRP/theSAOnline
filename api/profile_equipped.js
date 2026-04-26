@@ -84,17 +84,25 @@ export default async function handler(req, res) {
                 id,
                 level,
                 star,
-                partner_id
+                catalog:catalog_partners (
+                id,
+                name,
+                link_photo
+                )
             ),
             second_partner:player_partners!player_equipped_second_partner_fkey (
                 id,
                 level,
                 star,
-                partner_id
+                catalog:catalog_partners (
+                id,
+                name,
+                link_photo
+                )
             )
             `)
             .eq("player_id", user.id)
-            .single();
+            .maybeSingle();
 
         if (equippedError) {
             return res.status(500).json({ error: equippedError.message });

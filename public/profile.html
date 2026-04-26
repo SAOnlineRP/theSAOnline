@@ -13,6 +13,13 @@
 </head>
 <body>
     <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div>Loading Assets...</div>
+        <div class="loading-bar-container">
+            <div id="loading-bar" class="loading-bar"></div>
+        </div>
+    </div>
     <div class="main-container">
         <!-- <img src="logo_sao.png" alt="SAO Logo" class="logo" /> -->
         <div class="top-bar">
@@ -102,8 +109,8 @@
                     <div class="wequip-box-edit">Edit</div>
                 </div>
                 <div class="equipment-container">
-                    <div class="box-equip"><img src="/img/eq-1.png" alt="sr" class="avatar-img"></div>
-                    <div class="box-equip"><img src="/img/eq-2.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip"><img id="equipped-right-arm" src="/img/eq-1.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip"><img id="equipped-left-arm" src="/img/eq-2.png" alt="sr" class="avatar-img"></div>
                     <div class="box-equip"><img src="/img/eq-3.png" alt="sr" class="avatar-img"></div>
                     <div class="box-equip"><img src="/img/eq-4.png" alt="sr" class="avatar-img"></div>
                 </div>
@@ -219,36 +226,123 @@
 
         // ================== FUNCTION BARU ==================
         async function loadProfile() {
-        const {
-            data: { session },
-        } = await supabase.auth.getSession();
+            try {
+                setProgress(10);
 
-        if (!session) {
-            alert("Belum login!");
-            return;
+                const {
+                data: { session },
+                } = await supabase.auth.getSession();
+
+                if (!session) {
+                alert("Belum login!");
+                window.location.href = "index.html";
+                return;
+                }
+
+                const headers = {
+                Authorization: `Bearer ${session.access_token}`,
+                };
+
+                setProgress(20);
+
+                const [profileRes, equippedRes] = await Promise.all([
+                fetch("/api/profile", { headers }),
+                fetch("/api/profile_equipped", { headers }),
+                ]);
+
+                setProgress(40);
+
+                const profileResult = await profileRes.json();
+                const equippedResult = await equippedRes.json();
+
+                if (!profileRes.ok) throw new Error(profileResult.error);
+                if (!equippedRes.ok) throw new Error(equippedResult.error);
+
+                const profile = profileResult.data;
+                const equipped = equippedResult.data;
+
+                var equippedRightArm = equipped.equipped.right_arm.catalog.link_photo;
+                var equippedLeftArm = equipped.equipped.left_arm.catalog.link_photo;
+
+                document.getElementById("player-name").innerHTML = `
+                <span>${profile.name}</span>
+                <span class="level">Lv. ${profile.level}</span>
+                `;
+
+                document.getElementById("equipped-right-arm").src = equippedRightArm;
+                document.getElementById("equipped-left-arm").src = equippedLeftArm;
+                
+                console.log("equipped:", equipped);
+                console.log("equippedRightArm:", equippedRightArm);
+                console.log("equippedLeftArm:", equippedLeftArm);
+
+                setProgress(50); // API done (50%)
+
+                // 🔥 tunggu gambar
+                await waitForImages();
+
+                // selesai semua
+                setProgress(100);
+
+                setTimeout(hideLoading, 300);
+
+            } catch (err) {
+                console.error("Load error:", err);
+                hideLoading();
+            }
         }
 
-        const res = await fetch("/api/profile", {
-            headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            },
-        });
+        const overlay = document.getElementById("loading-overlay");
+        const bar = document.getElementById("loading-bar");
 
-        const result = await res.json();
+        let progress = 0;
 
-        if (!res.ok) {
-            console.error(result.error);
-            return;
+        function setProgress(value) {
+            progress = value;
+            bar.style.width = progress + "%";
         }
 
-        const profile = result.data;
-
-        document.getElementById("player-name").innerHTML = `
-            <span>${profile.name}</span>
-            <span class="level">Lv. ${profile.level}</span>
-        `;
+        function hideLoading() {
+            overlay.classList.add("fade-out");
+            setTimeout(() => {
+                overlay.style.display = "none";
+            }, 500);
         }
 
+        function waitForImages() {
+            const images = document.querySelectorAll("img");
+            let loaded = 0;
+            const total = images.length;
+
+            if (total === 0) return Promise.resolve();
+
+            return new Promise((resolve) => {
+                images.forEach((img) => {
+                if (img.complete) {
+                    loaded++;
+                    update();
+                } else {
+                    img.onload = () => {
+                    loaded++;
+                    update();
+                    };
+                    img.onerror = () => {
+                    loaded++;
+                    update();
+                    };
+                }
+                });
+
+                function update() {
+                const percent = (loaded / total) * 50; // max 50%
+                setProgress(50 + percent);
+
+                if (loaded === total) resolve();
+                }
+            });
+        }
+
+        
         // ================== INIT ==================
         drawRadar(radarStats);
         loadProfile();
