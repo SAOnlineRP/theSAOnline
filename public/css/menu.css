@@ -20,6 +20,8 @@ body {
     min-height: 100vh;
     background: #111;
     overflow: hidden;
+    background-image: url("/img/bg-sword.jpg");
+    background-size: cover;
 }
 
 .loading-overlay {
@@ -69,6 +71,32 @@ body {
     margin: 0 auto;
     position: relative;
     overflow: hidden;
+}
+
+.logout-btn {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
+
+    width: 140px;
+    height: 48px;
+
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+    border: none;
+    color: white;
+
+    transition: 0.2s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 0 12px var(--cyan-soft),
+      inset 0 0 12px rgba(24,184,255,0.2);
 }
 
 .hud-panel {

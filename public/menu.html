@@ -81,6 +81,9 @@
         </button>
       </div>
     </nav>
+    <button class="logout-btn hud-panel" onclick="handleLogout()">
+      LOGOUT
+    </button>
 
   </main>
 
@@ -217,10 +220,13 @@
 
         setTimeout(hideLoading, 300);
 
-    } catch (err) {
-        console.error("Load error:", err);
-        hideLoading();
+      } catch (err) {
+          console.error("Load error:", err);
+          hideLoading();
+      }
     }
+    async function handleLogout() {
+      await logout();
     }
 
     window.goToQuest = goToQuest;
