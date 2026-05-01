@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quest UI</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #020617;
+      --neon-blue: #00f0ff;
+      --neon-purple: #7a5cff;
+      --neon-pink: #ff2fd1;
+      --glass: rgba(255,255,255,0.05);
+      --border-glow: rgba(0, 240, 255, 0.4);
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #031027, #010409 80%);
+      color: white;
+    }
+
+    /* CONTAINER */
+    .container {
+      height: 100vh;
+      width: calc(100vh * 16 / 9);
+      max-width: 100%;
+      margin: auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* GLOW BACKGROUND */
+    .container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(0,255,255,0.08), transparent 40%),
+                  radial-gradient(circle at 70% 80%, rgba(255,0,255,0.08), transparent 40%);
+      pointer-events: none;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 14px;
+    }
+
+    .topbar-left button img {
+      filter: drop-shadow(0 0 6px var(--neon-blue));
+    }
+
+    .currency-box {
+      background: var(--glass);
+      border: 1px solid var(--border-glow);
+      backdrop-filter: blur(8px);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+    }
+
+    /* TAB */
+    .tab {
+      background: transparent;
+      border: 1px solid var(--border-glow);
+      color: var(--neon-blue);
+      border-radius: 6px;
+    }
+
+    .tab.active {
+      background: var(--neon-blue);
+      color: #000;
+      box-shadow: 0 0 12px var(--neon-blue);
+    }
+
+    /* CARD */
+    .story-card {
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      backdrop-filter: blur(6px);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid transparent;
+      background: linear-gradient(120deg, transparent, var(--neon-blue), transparent);
+      opacity: 0.2;
+    }
+
+    .story-card.active {
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 25px rgba(0,255,255,0.15);
+    }
+
+    /* TITLE */
+    .quest-title {
+      font-size: 34px;
+      color: var(--neon-blue);
+      text-shadow: 0 0 10px var(--neon-blue);
+    }
+
+    /* DESC */
+    .quest-desc {
+      opacity: 0.8;
+    }
+
+    /* DIVIDER */
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+    }
+
+    /* BUTTON */
+    .enter-btn {
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      border: none;
+      color: black;
+      border-radius: 6px;
+      box-shadow: 0 0 12px var(--neon-blue);
+      transition: 0.3s;
+    }
+
+    .enter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px var(--neon-blue);
+    }
+
+     @media (max-width: 640px) {
+      .container {
+        aspect-ratio: 9 / 16;
+        min-height: 100vh;
+        width: unset;
+      }
+
+      .content {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 20px;
+      }
+
+      .topbar-left {
+        margin: 15px;
+      }
+
+      .topbar-left button {
+        font-size: 20px;
+      }
+
+      .topbar-left button img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .topbar-right {
+        gap: 0px;
+      }
+
+      .currency-box {
+        font-size: 18px;
+        padding: 0 8px;
+        min-width: 70px;
+      }
+
+      .left-panel {
+        width: 100%;
+      }
+
+      .tab {
+        font-size: 14px;
+        padding: 8px 14px;
+      }
+
+      .story-card {
+        height: 50px;
+        font-size: 12px;
+        padding: 5px;
+      }
+
+      .right-panel {
+        min-height: 280px;
+      }
+
+      .quest-title {
+        font-size: 15px;
+      }
+
+      .quest-desc {
+        font-size: 12px;
+        max-width: 100%;
+      }
+
+      .tabs-two {
+        flex-direction: row;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+
+        justify-content: flex-start;
+        padding-inline: 25%;
+        scroll-padding-inline: 50%;
+      }
+
+      .tabs-two::-webkit-scrollbar {
+        width: 10px;
+        height: 8px;
+      }
+
+      .tabs-two::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0);
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+
+      .story-card {
+        flex: 0 0 100px; /* lebar card biar bisa geser horizontal */
+        scroll-snap-align: center;
+        margin-bottom: 0;
+      }
+
+      .rewards {
+        font-size: 14px;
+      }
+
+      .enter-btn {
+        font-size: 14px;
+        padding: 8px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
+    <div class="topbar">
+      <div class="topbar-left">
+        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="currency-box">🪙 10000</div>
+        <div class="currency-box">💎 50</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="left-panel">
+        <div class="tabs">
+            <button class="tab active" onclick="changeTab('story', this)">Story</button>
+            <button class="tab" onclick="changeTab('daily', this)">Daily</button>
+            <button class="tab" onclick="changeTab('event', this)">Event</button>
+        </div>
+
+        <div class="tabs-two" id="cardContainer">
+            <div class="story-card active">The Beginning</div>
+            <div class="story-card">The Journey Begins</div>
+            <div class="story-card">More Stories Coming Soon!</div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div>
+            <div class="quest-title" id="questTitle">The Beginning</div>
+            <div class="quest-desc" id="questDesc">
+            Mulai petualangan pertamamu di Aincrad dan pelajari dasar pertarungan.
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="divider"></div>
+            <div class="rewards-label">Rewards</div>
+            <div class="rewards">
+            <span id="rewardGold">🪙 10000</span>
+            <span id="rewardEnergy">💎 50</span>
+            </div>
+            <div class="enter-btn-container">
+            <button class="enter-btn" id="enterBtn">Enter Story</button>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+  <script>
+    window.onload = () => {
+        renderCards(currentTab);
+        updateRightContent(data[currentTab][0]);
+    };
+    function goBack() {
+      window.history.back();
+    }
+
+    function goHome() {
+      window.location.href = "menu.html";
+    }
+
+    var data = {
+        story: [
+        {
+            title: "The Beginning",
+            desc: "Mulai petualangan pertamamu di Aincrad dan pelajari dasar pertarungan.",
+            gold: "🪙 10000",
+            energy: "💎 50",
+            button: "Enter Story",
+            action: "story.html"
+        },
+        {
+            title: "The Journey Begins",
+            desc: "Lanjutkan perjalanan ke area berikutnya dan hadapi monster yang lebih kuat.",
+            gold: "🪙 12000",
+            energy: "💎 60",
+            button: "Enter Story",
+            action: "story2.html"
+        },
+        {
+            title: "More Stories Coming Soon!",
+            desc: "Chapter berikutnya belum tersedia. Nantikan update selanjutnya.",
+            gold: "🪙 0",
+            energy: "💎 0",
+            button: "Coming Soon",
+            action: "story3.html"
+        }
+        ],
+        daily: [
+        {
+            title: "Kill 10 Monsters",
+            desc: "Kalahkan 10 monster hari ini untuk mendapatkan hadiah harian.",
+            gold: "🪙 2000",
+            energy: "💎 10",
+            button: "Enter Daily",
+            action: "daily1.html"
+        },
+        {
+            title: "Collect 5 Herbs",
+            desc: "Kumpulkan 5 herbs dari field untuk kebutuhan crafting.",
+            gold: "🪙 1500",
+            energy: "💎 8",
+            button: "Enter Daily",
+            action: "daily2.html"
+        },
+        {
+            title: "Login Reward",
+            desc: "Login hari ini dan ambil bonus reward harianmu.",
+            gold: "🪙 500",
+            energy: "💎 5",
+            button: "Claim Reward",
+            action: "daily3.html"
+        }
+        ],
+        event: [
+        {
+            title: "Boss Raid Event",
+            desc: "Ikuti raid boss terbatas dan dapatkan item langka.",
+            gold: "🪙 5000",
+            energy: "💎 25",
+            button: "Join Event",
+            action: "event1.html"
+        },
+        {
+            title: "Limited Dungeon",
+            desc: "Masuki dungeon spesial event sebelum waktunya habis.",
+            gold: "🪙 7000",
+            energy: "💎 30",
+            button: "Join Event",
+            action: "event2.html"
+        },
+        {
+            title: "Special Login Bonus",
+            desc: "Bonus login spesial event tersedia untuk waktu terbatas.",
+            gold: "🪙 3000",
+            energy: "💎 15",
+            button: "Claim Bonus",
+            action: "event3.html"
+        }
+        ]
+    };
+
+    let currentTab = "story";
+
+    function changeTab(type, el) {
+        currentTab = type;
+
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        el.classList.add("active");
+
+        renderCards(type);
+
+        updateRightContent(data[type][0]);
+    } 
+
+    function renderCards(type) {
+        const container = document.getElementById("cardContainer");
+        container.innerHTML = "";
+
+        data[type].forEach((item, index) => {
+            const div = document.createElement("div");
+            div.className = "story-card";
+            if (index === 0) div.classList.add("active");
+
+            div.innerText = item.title;
+            div.onclick = () => selectCard(div, item);
+
+            container.appendChild(div);
+        });
+    }
+
+    function selectCard(cardEl, item) {
+        document.querySelectorAll(".story-card").forEach(card => card.classList.remove("active"));
+        cardEl.classList.add("active");
+
+        updateRightContent(item);
+    }
+
+    function updateRightContent(item) {
+        document.getElementById("questTitle").innerText = item.title;
+        document.getElementById("questDesc").innerText = item.desc;
+        document.getElementById("rewardGold").innerText = item.gold;
+        document.getElementById("rewardEnergy").innerText = item.energy;
+
+        const btn = document.getElementById("enterBtn");
+        btn.innerText = item.button;
+
+        // ⬇️ INI YANG PENTING
+        btn.onclick = () => {
+            window.location.href = item.action;
+        };
+    }
+
+  </script>
+</body>
+</html>
