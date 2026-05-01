@@ -58,8 +58,11 @@
       </button>
 
       <div class="menu-grid">
-        <button class="menu-btn hud-panel" onclick="goToParty()">
+        <!--<button class="menu-btn hud-panel" onclick="goToParty()">
           <span class="btn-content">PARTY</span>
+        </button>-->
+        <button class="menu-btn hud-panel" onclick="goToPartner()">
+          <span class="btn-content">PARTNER</span>
         </button>
 
         <button class="menu-btn hud-panel" onclick="goToSummon()">
@@ -89,7 +92,7 @@
 
   <script type="module">
     import { supabase } from "/js/supabaseClient.js";
-    import { requireLogin } from "/js/authGuard.js";
+    import { requireLogin, logout } from "/js/authGuard.js";
 
     const overlay = document.getElementById("loading-overlay");
     const bar = document.getElementById("loading-bar");
@@ -116,6 +119,10 @@
 
     function goToFriends() {
       window.location.href = "friends.html";
+    }
+
+    function goToPartner() {
+      window.location.href = "partner.html";
     }
 
     function goToProfile() {
@@ -235,9 +242,11 @@
     window.goToFriends = goToFriends;
     window.goToProfile = goToProfile;
     window.goToStorage = goToStorage;
+    window.goToPartner = goToPartner;
     window.goToMarketPlace = goToMarketPlace;
     window.goToBlackSmith = goToBlackSmith;
     window.showText = showText;
+    window.handleLogout = handleLogout;
 
     async function init() {
       try {

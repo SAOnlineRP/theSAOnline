@@ -4,16 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quest UI</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-top: #003973;
+      --bg-mid: #11375d;
+      --bg-bottom: #020813;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Orbitron', sans-serif !important;
     }
 
     body {
       min-height: 100vh;
+      background-size: cover;
+      background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
     }
 
     .container {
@@ -26,12 +37,27 @@
         overflow: hidden;
     }
 
+    .bg-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(600px, 60vw);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+      filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
+      z-index: -1;
+    }
+
     /* top bar */
     .topbar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
+      gap: 14px;
+      margin-top: 10px;
+      margin-bottom: 6px;
+      font-size: 40px;
     }
 
     .topbar-left {
@@ -61,7 +87,7 @@
       justify-content: center;
       gap: 6px;
       font-size: 24px;
-      color: #222;
+      color: white;
       padding: 0 12px;
     }
 
@@ -296,10 +322,11 @@
 </head>
 <body>
   <div class="container">
+    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
     <div class="topbar">
       <div class="topbar-left">
-        <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
-        <button onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
       </div>
 
       <div class="topbar-right">
@@ -366,7 +393,7 @@
             gold: "🪙 10000",
             energy: "💎 50",
             button: "Enter Story",
-            action: "story1.html"
+            action: "story.html"
         },
         {
             title: "The Journey Begins",
