@@ -386,6 +386,94 @@
       color: black;
     }
 
+    /* partner list */
+    .partner-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .partner-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid cyan;
+      border-radius: 8px;
+      cursor: pointer;
+
+      /* tambahan overlay */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .partner-name {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.6);
+      font-size: 12px;
+      text-align: center;
+      padding: 2px;
+    }
+
+    .partner-item:hover {
+      background: rgba(126, 231, 255, 0.3);
+    }
+
+    .partner-item img {
+      width: 100%;
+      object-fit: cover;
+      margin-bottom: 5px;
+    }
+
+    /* equipment list */
+    .equipment-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .equipment-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid cyan;
+      border-radius: 8px;
+      cursor: pointer;
+
+      /* tambahan overlay */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .equipment-name {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.6);
+      font-size: 12px;
+      text-align: center;
+      padding: 2px;
+    }
+
+    .equipment-item:hover {
+      background: rgba(126, 231, 255, 0.3);
+    }
+
+    .equipment-item img {
+      width: 100%;
+      object-fit: cover;
+      margin-bottom: 5px;
+    }
+
     /* mobile */
     @media (max-width: 768px) {
       .game-ui {
@@ -531,7 +619,7 @@
 
       <!-- Partners -->
       <div class="column">
-        <div class="title"><span>Partners</span><a href="#"><span>✎</span></a></div>
+        <div class="title"><span>Partners</span><a href="#"><span id="edit-partner">✎</span></a></div>
         <div class="panel partners-panel">
           
 
@@ -559,7 +647,7 @@
 
       <!-- Equipments -->
       <div class="column">
-        <div class="title"><span>Equipments</span><a href="#"><span>✎</span></a></div>
+        <div class="title"><span>Equipments</span><a href="#"><span id="edit-equipment">✎</span></a></div>
         <div class="panel equipments-panel">
 
           <div class="equip-card">
@@ -598,6 +686,56 @@
         </div>
       </div>
     </div>
+
+    <div id="partnerModal" class="modal-overlay">
+      <div class="modal-box">
+        <button class="modal-close" id="closePartnerModal">×</button>
+
+        <h2>Edit Partner</h2>
+        <p>Pilih partner yang mau diganti:</p>
+
+        <div class="party-options">
+          <button class="partner-slot">Slot 1</button>
+          <button class="partner-slot">Slot 2</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="partnerListModal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>Pilih Partner</h3>
+
+        <div class="partner-list">
+          
+        </div>
+      </div>
+    </div>
+
+    <div id="equipmentModal" class="modal-overlay">
+      <div class="modal-box">
+        <button class="modal-close" id="closeEquipmentModal">×</button>
+
+        <h2>Edit Equipment</h2>
+        <p>Pilih equipment yang mau diganti:</p>
+
+        <div class="party-options">
+          <button class="equipment-slot">Weapon: </button>
+          <button class="equipment-slot">Shield: </button>
+          <button class="equipment-slot">Armor-Upper: </button>
+          <button class="equipment-slot">Armor-Lower: </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="equipmentListModal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>Pilih Partner</h3>
+
+        <div class="equipment-list">
+          
+        </div>
+      </div>
+    </div>
   </div>
   <script>
     function goBack() {
@@ -629,6 +767,184 @@
         partyModal.classList.remove("show");
       }
     });
+
+    const editPartnerBtn = document.getElementById("edit-partner");
+    const partnerModal = document.getElementById("partnerModal");
+    const partnerListModal = document.getElementById("partnerListModal");
+
+    const partnerSlots = document.querySelectorAll(".partner-slot");
+    const partnerCards = document.querySelectorAll(".partner-card");
+    const partnerList = document.querySelector(".partner-list");
+
+    let selectedSlotIndex = null;
+    let selectedPartners = [null, null]; // slot 1 & 2
+
+    /* 🔥 DATA PARTNER */
+    const partnerData = [
+      { name: "Kirito", img: "/img/kirito.png" },
+      { name: "Asuna", img: "/img/kirito.png" },
+      { name: "Sinon", img: "/img/kirito.png" },
+      { name: "Leafa", img: "/img/kirito.png" },
+      { name: "Alice", img: "/img/kirito.png" },
+      { name: "Eugeo", img: "/img/kirito.png" }
+    ];
+
+    /* 🔧 RENDER LIST */
+    function renderPartnerList() {
+      partnerList.innerHTML = partnerData.map((p, i) => `
+        <div class="partner-item" data-index="${i}">
+          <img src="${p.img}">
+          <div class="partner-name">${p.name}</div>
+        </div>
+      `).join("");
+
+      /* pasang event setelah render */
+      const items = document.querySelectorAll(".partner-item");
+
+      items.forEach(item => {
+        item.onclick = () => {
+          const index = item.dataset.index;
+          const data = partnerData[index];
+
+          // ❌ CEK DUPLIKAT
+          if (selectedPartners.includes(index)) {
+            alert("Partner ini sudah dipakai di slot lain!");
+            return;
+          }
+
+          if (selectedSlotIndex !== null) {
+            // simpan pilihan
+            selectedPartners[selectedSlotIndex] = index;
+
+            // update UI
+            const card = partnerCards[selectedSlotIndex];
+            const img = card.querySelector("img");
+            img.src = data.img;
+          }
+
+          partnerListModal.classList.remove("show");
+        };
+      });
+    }
+
+    /* buka modal slot */
+    editPartnerBtn.onclick = () => {
+      partnerModal.classList.add("show");
+    };
+
+    /* klik slot */
+    partnerSlots.forEach((slot, index) => {
+      slot.onclick = () => {
+        selectedSlotIndex = index;
+        partnerModal.classList.remove("show");
+
+        renderPartnerList(); // render tiap buka
+        partnerListModal.classList.add("show");
+      };
+    });
+
+    /* klik luar modal */
+    window.onclick = (e) => {
+      if (e.target === partnerModal) partnerModal.classList.remove("show");
+      if (e.target === partnerListModal) partnerListModal.classList.remove("show");
+    };
+
+    const editEquipmentBtn = document.getElementById("edit-equipment");
+    const equipmentModal = document.getElementById("equipmentModal");
+    const equipmentListModal = document.getElementById("equipmentListModal");
+
+    const equipmentSlots = document.querySelectorAll(".equipment-slot");
+    const equipmentCards = document.querySelectorAll(".equip-card");
+    const equipmentList = document.querySelector(".equipment-list");
+
+    let selectedEquipmentIndex = null;
+
+    /* 🔥 DATA PARTNER */
+    const equipmentData = [
+      { name: "Sword", img: "/img/kirito.png" },
+      { name: "Dagger", img: "/img/kirito.png" },
+      { name: "Rapier", img: "/img/kirito.png" },
+      { name: "Axe", img: "/img/kirito.png" },
+      { name: "Bow", img: "/img/kirito.png" },
+      { name: "Bow", img: "/img/kirito.png" }
+    ];
+
+    const weaponList = [
+      { name: "Sword", img: "/img/kirito.png" },
+      { name: "Axe", img: "/img/eq-1.png" }
+    ];
+
+    const shieldList = [
+      { name: "Shield", img: "/img/eq-2.png" },
+      { name: "Barrier", img: "/img/eq-2.png" }
+    ];
+
+    const armorTopList = [
+      { name: "Armor Top A", img: "/img/eq-3.png" }
+    ];
+
+    const armorBottomList = [
+      { name: "Armor Bottom A", img: "/img/eq-4.png" }
+    ];
+
+    function getEquipmentListBySlot(slotIndex) {
+      if (slotIndex === 0) return weaponList;
+      if (slotIndex === 1) return shieldList;
+      if (slotIndex === 2) return armorTopList;
+      if (slotIndex === 3) return armorBottomList;
+      return [];
+    }
+
+    /* 🔧 RENDER LIST */
+    function renderEquipmentList() {
+      const currentData = getEquipmentListBySlot(selectedEquipmentIndex);
+
+      equipmentList.innerHTML = currentData.map((p, i) => `
+        <div class="equipment-item" data-index="${i}">
+          <img src="${p.img}">
+          <div class="equipment-name">${p.name}</div>
+        </div>
+      `).join("");
+
+      const items = document.querySelectorAll(".equipment-item");
+
+      items.forEach(item => {
+        item.onclick = () => {
+          const index = item.dataset.index;
+          const data = currentData[index];
+
+          if (selectedEquipmentIndex !== null) {
+            const card = equipmentCards[selectedEquipmentIndex];
+            const img = card.querySelector("img");
+            img.src = data.img;
+          }
+
+          equipmentListModal.classList.remove("show");
+        };
+      });
+    }
+
+    /* buka modal slot */
+    editEquipmentBtn.onclick = () => {
+      equipmentModal.classList.add("show");
+    };
+
+    /* klik slot */
+    equipmentSlots.forEach((slot, index) => {
+      slot.onclick = () => {
+        selectedEquipmentIndex = index;
+        equipmentModal.classList.remove("show");
+
+        renderEquipmentList(); // render tiap buka
+        equipmentListModal.classList.add("show");
+      };
+    });
+
+    /* klik luar modal */
+    window.onclick = (e) => {
+      if (e.target === equipmentModal) equipmentModal.classList.remove("show");
+      if (e.target === equipmentListModal) equipmentListModal.classList.remove("show");
+    };
   </script>
 </body>
 </html>
