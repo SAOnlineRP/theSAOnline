@@ -56,7 +56,7 @@
         justify-content: space-between;
         gap: 14px;
         margin-top: 10px;
-        margin-bottom: 6px;
+        margin-bottom: 12px;
         font-size: 40px;
         }
 
@@ -90,6 +90,185 @@
         color: white;
         padding: 0 12px;
         }
+
+        .content{
+            height: calc(100% - 100px);
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            justify-content: space-around;
+        }
+
+        .info-partner{
+            width: 65%;
+            min-height: 80%;
+            background: #215b7a;
+            border-radius: 10px;
+            box-shadow:
+            inset 0 0 18px rgba(255,255,255,0.04),
+            0 10px 28px rgba(0,0,0,0.35);
+
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            justify-content: space-around;
+
+            transition: all 0.3s ease;
+        }
+
+        /* KELUAR */
+        .info-exit {
+            opacity: 0;
+            transform: translateX(40px) scale(0.95);
+            filter: blur(4px);
+        }
+
+        /* MASUK */
+        .info-enter {
+            animation: enterAnim 0.5s ease forwards;
+        }
+
+        @keyframes enterAnim {
+            0% {
+                opacity: 0;
+                transform: translateX(-40px) scale(0.95);
+                filter: blur(6px);
+            }
+            60% {
+                transform: translateX(10px) scale(1.02);
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        /* GLOW EFFECT */
+        .info-partner.glow {
+            box-shadow:
+                0 0 20px rgba(0,255,255,0.4),
+                0 0 40px rgba(0,255,255,0.2),
+                inset 0 0 10px rgba(255,255,255,0.05);
+        }
+
+        /* SELECTED ITEM */
+        .partner-option.active {
+            outline: 2px solid cyan;
+            transform: scale(1.05);
+            transition: 0.2s;
+        }
+
+        .list-partner{
+            width: 20%;
+            min-height: 80%;
+            background: #215b7a;
+            border-radius: 10px;
+            box-shadow:
+            inset 0 0 18px rgba(255,255,255,0.04),
+            0 10px 28px rgba(0,0,0,0.35);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .partner-option{
+            width: 100%;
+            height: auto;
+        }
+
+        .partner-option img{
+            width: 100%;
+            background-size: cover;
+        }
+
+        .list-partner::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .list-partner::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .detail-partner {
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            color: white;
+            justify-content: center;
+        }
+
+        /* NAMA */
+        .detail-partner h3 {
+            font-size: 22px;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(0,255,255,0.3);
+            padding-bottom: 6px;
+        }
+
+        /* STAT CONTAINER */
+        .stat-partner {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* STAT ITEM */
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* BAR */
+        .stat-bar {
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00e5ff, #00ffcc);
+            border-radius: 10px;
+        }
+
+        /* SKILL */
+        .skills-partner {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .skill {
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(0,255,255,0.2);
+            transition: 0.2s;
+        }
+
+        .skill:hover {
+            background: rgba(0,255,255,0.15);
+            transform: translateX(4px);
+        }
+
+        .foto-partner{
+            height: 100%
+        }
+
+        .foto-partner img{
+            height: 100%;
+            background-size: cover;
+        }
     </style>
 </head>
 <body>
@@ -107,7 +286,54 @@
         </div>
         </div>
         <div class="content">
+            <div class="info-partner">
+                <div class="detail-partner">
+                    <h3>Kirito Kazugaya</h3>
 
+                    <div class="stat-partner">
+                        <div class="stat-item">
+                            <div class="stat-label">ATK</div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">DEF</div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">HP</div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skills-partner">
+                        <div class="skill">⚔️ Skill A</div>
+                        <div class="skill">💥 Skill B</div>
+                        <div class="skill">✨ Skill C</div>
+                    </div>
+                </div>
+                <div class="foto-partner">
+                    <img src="/img/character_sao.png">
+                </div>
+            </div>
+            <div class="list-partner">
+                <div class="partner-option">
+                    <img src="/img/sr-1.png">
+                </div>
+                <div class="partner-option">
+                    <img src="/img/sr-1.png">
+                </div>
+                <div class="partner-option">
+                    <img src="/img/sr-1.png">
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -118,6 +344,84 @@
         function goHome() {
         window.location.href = "menu.html";
         }
+        const partners = [
+        {
+            name: "Kirito Kazugaya",
+            atk: 80,
+            def: 60,
+            hp: 90,
+            skills: ["⚔️ Skill A", "💥 Skill B", "✨ Skill C"],
+            img: "/img/character_kirito.png"
+        },
+        {
+            name: "Asuna Yuuki",
+            atk: 75,
+            def: 65,
+            hp: 85,
+            skills: ["🌸 Flash", "⚡ Speed Strike", "✨ Heal"],
+            img: "/img/character_asuna.png"
+        },
+        {
+            name: "Kiel",
+            atk: 85,
+            def: 50,
+            hp: 70,
+            skills: ["🎯 Snipe", "💥 Bullet Rain", "👁️ Focus"],
+            img: "/img/character_kiel.png"
+        }
+    ];
+
+    const options = document.querySelectorAll(".partner-option");
+
+    options.forEach((el, index) => {
+        el.addEventListener("click", () => {
+            updatePartner(partners[index], el);
+        });
+    });
+
+    function updatePartner(data, clickedEl) {
+        const container = document.querySelector(".info-partner");
+
+        // highlight yang dipilih
+        document.querySelectorAll(".partner-option").forEach(el => {
+            el.classList.remove("active");
+        });
+        clickedEl.classList.add("active");
+
+        // animasi keluar
+        container.classList.add("info-exit");
+
+        setTimeout(() => {
+            // update isi
+            document.querySelector(".detail-partner h3").innerText = data.name;
+
+            const bars = document.querySelectorAll(".stat-fill");
+            bars[0].style.width = data.atk + "%";
+            bars[1].style.width = data.def + "%";
+            bars[2].style.width = data.hp + "%";
+
+            const skillContainer = document.querySelector(".skills-partner");
+            skillContainer.innerHTML = "";
+
+            data.skills.forEach(skill => {
+                const div = document.createElement("div");
+                div.className = "skill";
+                div.innerText = skill;
+                skillContainer.appendChild(div);
+            });
+
+            document.querySelector(".foto-partner img").src = data.img;
+
+            // reset & masuk animasi
+            container.classList.remove("info-exit");
+            container.classList.add("info-enter", "glow");
+
+            setTimeout(() => {
+                container.classList.remove("info-enter");
+            }, 500);
+
+        }, 250);
+    }
     </script>
 </body>
 </html>
