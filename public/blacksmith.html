@@ -54,8 +54,10 @@
     .topbar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
+      gap: 14px;
+      margin-top: 10px;
+      margin-bottom: 30px;
+      font-size: 40px;
     }
 
     .topbar-left {
@@ -84,8 +86,8 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      font-size: 24px;
-      color: #222;
+      font-size: 40px;
+      color: white;
       padding: 0 12px;
     }
 
@@ -93,12 +95,19 @@
     .inventory-area {
       position: absolute;
       right: 55px;
-      top: 145px;
+      top: 120px;
       z-index: 2;
       color: #fff;
       display: flex;
       gap: 20px;
       align-items: flex-start;
+      display: flex;
+    }
+
+    .inventory-panel {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
     }
 
     /* category tabs */
@@ -114,13 +123,13 @@
       width: 80px;
       height: 80px;
       border: none;
-      background: transparent;
+      background: #215b7a;
       font-size: 32px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #111;
+      color: white;
     }
 
     .category-tabs .tab {
@@ -133,12 +142,13 @@
     }
 
     .grid-box {
-      background: #8d8d8d;
+      background: #215b7a;
       padding: 12px;
       display: grid;
       grid-template-columns: repeat(4, 80px);
       grid-auto-rows: 80px;
       gap: 8px;
+      border-radius: 10px;
 
       max-height: calc((80px * 4) + (8px * 3) + 24px);
       overflow-y: auto;
@@ -205,6 +215,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 99;
     }
 
     .popup.hidden {
@@ -256,8 +267,8 @@
     <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
     <div class="topbar">
       <div class="topbar-left">
-        <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
-        <button onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
       </div>
 
       <div class="topbar-right">
@@ -279,8 +290,8 @@
             <div class="grid-box" id="gridBox"></div>
 
             <div class="bottom-buttons">
-            <button class="action-btn" onclick="levelUp()">Level Up</button>
-            <button class="action-btn">Limit Break</button>
+              <button class="action-btn" onclick="levelUp()">Level Up</button>
+              <button class="action-btn">Limit Break</button>
             </div>
         </div>
         </div>

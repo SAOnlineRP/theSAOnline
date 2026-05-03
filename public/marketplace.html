@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/marketplace.css">
 </head>
 <body>
@@ -17,8 +16,8 @@
   <div class="container">
     <div class="topbar">
       <div class="topbar-left">
-        <button onclick="goBack()"><img src="/img/back.png" style="background: white; width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
-        <button onclick="goHome()"><img src="/img/home.png" style="background: white; width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
       </div>
 
       <div class="topbar-right">
@@ -69,7 +68,7 @@
                             <div class="cost-add">
                                 <div class="cost-item"><i class="bi bi-coin"></i><span>20,000</span></div>
                                 <div class="add-btn"> 
-                                    <a>Add to <i class="bi bi-cart" style="color:white"></i></a>
+                                    <a class="add-to-cart">Add to <i class="bi bi-cart" style="color:white"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -483,6 +482,61 @@
     function closePopup() {
         document.getElementById('myPopup').style.display = 'none';
     }
+
+    let cart = [];
+
+    function renderCart() {
+        const cartList = document.querySelector('.cart-list');
+        cartList.innerHTML = '';
+
+        let total = 0;
+
+        cart.forEach(item => {
+            const subtotal = item.price * item.qty;
+            total += subtotal;
+
+            cartList.innerHTML += `
+            <div class="wequip-box">
+                <div class="desc-item">
+                <div class="item-name">${item.name}</div>
+                <div>Qty: ${item.qty}</div>
+                <div>Price: ${item.price.toLocaleString()}</div>
+                <div>Total: ${subtotal.toLocaleString()}</div>
+                </div>
+            </div>
+            `;
+        });
+
+        document.querySelector('.popup-content div:nth-of-type(2)').innerText = "Total = " + total.toLocaleString();
+    }
+
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            const card = this.closest('.wequip-box');
+
+            // ambil nama
+            const name = card.querySelector('.item-name').innerText;
+
+            // ambil harga (hapus koma)
+            const priceText = card.querySelector('.cost-item span').innerText;
+            const price = parseInt(priceText.replace(/,/g, ''));
+
+            // ambil qty
+            const qty = parseInt(card.querySelector('.qty-input').value);
+
+            // cek existing item
+            const existing = cart.find(item => item.name === name);
+
+            if (existing) {
+            existing.qty += qty;
+            } else {
+            cart.push({ name, price, qty });
+            }
+
+            renderCart();
+        });
+    });
   </script>
 </body>
 </html>
