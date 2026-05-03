@@ -151,6 +151,153 @@
       gap: 4px;
     }
 
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      background: rgba(0,0,0,0.7);
+
+      display: flex;
+      align-items: center;     /* CENTER VERTICAL */
+      justify-content: center; /* CENTER HORIZONTAL */
+
+      z-index: 999;
+    }
+
+    .popup.hidden {
+      display: none;
+    }
+
+    .popup-content {
+      width: 90%;
+      max-width: 500px;
+
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+
+      text-align: center;
+
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .popup-content {
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .popup-cards {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .popup-card {
+      width: 100px;
+      height: 140px;
+      perspective: 1000px;
+    }
+
+    .popup-card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .popup-card.flip .popup-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .popup-card-front,
+    .popup-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 2px solid #000;
+      backface-visibility: hidden;
+    }
+
+    .popup-card-front {
+      background: #444;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .popup-card-back {
+      transform: rotateY(180deg);
+      overflow: hidden;
+    }
+
+    .popup-card-back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card {
+      width: 100px;
+      height: 140px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .card.flip .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      backface-visibility: hidden;
+      border: 2px solid #000;
+    }
+
+    .card-front {
+      background: #444;
+      color: #fff;
+    }
+
+    .card-back {
+      background: #fff;
+      transform: rotateY(180deg);
+    }
+
+    .partner { background: gold; }
+    .item { background: lightblue; }
+    .shard { background: lightgreen; }
+
     @media (max-width: 640px) {
       .screen {
         aspect-ratio: 9 / 16;
@@ -246,9 +393,253 @@
           </div>
         </div>
       </div>
+      <!-- POPUP RESULT -->
+      <div id="result-popup" class="popup hidden">
+        <div class="popup-content">
+          <div id="popup-cards" class="popup-cards"></div>
+
+          <div class="popup-actions">
+            <button onclick="summonAgain()">Summon Again</button>
+            <button onclick="closePopup()">Kembali</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <script>
+    // =========================
+    // 🎯 DATA
+    // =========================
+
+    // 20 partner (equal chance)
+    const partners = [
+      { id: 1, name: "Kirito", image: "/img/partners/kirito.png" },
+      { id: 2, name: "Asuna", image: "/img/partners/asuna.png" },
+      { id: 3, name: "Agil", image: "/img/partners/agil.png" },
+      { id: 4, name: "Klein", image: "/img/partners/klein.png" },
+      { id: 5, name: "Leafa", image: "/img/partners/leafa.png" },
+      { id: 6, name: "Lisbeth", image: "/img/partners/lisbeth.png" },
+      { id: 7, name: "Sachi", image: "/img/partners/sachi.png" },
+      { id: 8, name: "Silica", image: "/img/partners/silica.png" },
+      { id: 9, name: "Sinon", image: "/img/partners/sinon.png" },
+      { id: 10, name: "Yui", image: "/img/partners/yui.png" },
+      { id: 11, name: "Yuuki", image: "/img/partners/yuuki.png" },
+      { id: 12, name: "Alice", image: "/img/partners/alice.png" },
+      { id: 13, name: "Argo", image: "/img/partners/argo.png" },
+      { id: 14, name: "Diavel", image: "/img/partners/diavel.png" },
+      { id: 15, name: "Eugeo", image: "/img/partners/eugeo.png" },
+      { id: 16, name: "Eydis", image: "/img/partners/eydis.png" },
+      { id: 17, name: "Heathcliff", image: "/img/partners/heathcliff.png" },
+      { id: 18, name: "Mito", image: "/img/partners/mito.png" },
+      { id: 19, name: "Philia", image: "/img/partners/philia.png" },
+      { id: 20, name: "Strea", image: "/img/partners/strea.png" }
+    ];
+
+    // 10 items (equal chance)
+    const items = Array.from({ length: 10 }, (_, i) => ({
+      id: i + 1,
+      name: `Item ${i + 1}`
+    }));
+
+    const inventory = {
+      partners: new Set(), // punya siapa aja
+      shards: {} // { partnerId: totalShard }
+    };
+
+    let pityCounter = 0;
+    const MAX_PITY = 10;
+
+    function getPartnerRate() {
+      return Math.min(0.01 + pityCounter * 0.01, 1);
+    }
+
+    // =========================
+    // 🎲 HELPER
+    // =========================
+
+    function randomFromArray(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+
+    // =========================
+    // 🎁 ROLL LOGIC
+    // =========================
+
+    function rollPartner() {
+      return {
+        type: "partner",
+        data: randomFromArray(partners)
+      };
+    }
+
+    function rollNonPartner() {
+      const rand = Math.random();
+
+      if (rand < 0.5) {
+        return {
+          type: "item",
+          data: randomFromArray(items)
+        };
+      }
+
+      return {
+        type: "shard",
+        data: {
+          partner: randomFromArray(partners),
+          amount: randomInt(5, 10)
+        }
+      };
+    }
+
+    function multiRoll(count = 10) {
+      const results = [];
+
+      for (let i = 0; i < count; i++) {
+        results.push(rollWithPity());
+      }
+
+      return results;
+    }
+
+    function rollWithPity() {
+      pityCounter++;
+
+      // 💥 HARD PITY
+      if (pityCounter >= MAX_PITY) {
+        pityCounter = 0;
+        return rollPartner();
+      }
+
+      const rate = getPartnerRate();
+      const rand = Math.random();
+
+      if (rand < rate) {
+        pityCounter = 0;
+        return rollPartner();
+      }
+
+      return rollNonPartner();
+    }
+
+    function processResult(result) {
+      if (result.type === "partner") {
+        const id = result.data.id;
+
+        // kalau sudah punya → convert jadi shard
+        if (inventory.partners.has(id)) {
+          const amount = 10;
+
+          inventory.shards[id] = (inventory.shards[id] || 0) + amount;
+
+          return {
+            type: "shard",
+            data: {
+              partner: result.data,
+              amount: amount,
+              fromDuplicate: true
+            }
+          };
+        }
+
+        // kalau baru → simpan
+        inventory.partners.add(id);
+      }
+
+      return result;
+    }
+
+    function renderPopup(results) {
+      const container = document.getElementById("popup-cards");
+      container.innerHTML = "";
+
+      document.getElementById("result-popup").classList.remove("hidden");
+
+      results.forEach((r, index) => {
+        const card = document.createElement("div");
+        card.className = "popup-card";
+
+        const inner = document.createElement("div");
+        inner.className = "popup-card-inner";
+
+        const front = document.createElement("div");
+        front.className = "popup-card-front";
+        front.innerText = "?";
+
+        const back = document.createElement("div");
+        back.className = "popup-card-back";
+
+        const img = document.createElement("img");
+
+        if (r.type === "partner") {
+          img.src = r.data.partner.image;
+        } else if (r.type === "shard") {
+          img.src = r.data.partner.image;
+        } else {
+          img.src = "/img/item.png";
+        }
+
+        back.appendChild(img);
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+        container.appendChild(card);
+
+        // 🔥 animasi flip delay satu-satu
+        setTimeout(() => {
+          card.classList.add("flip");
+        }, index * 300);
+      });
+    }
+
+    function renderCards(results) {
+      const container = document.getElementById("gacha-result");
+      container.innerHTML = "";
+
+      results.forEach((r, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const inner = document.createElement("div");
+        inner.className = "card-inner";
+
+        const front = document.createElement("div");
+        front.className = "card-front";
+        front.innerText = "?";
+
+        const back = document.createElement("div");
+        back.className = "card-back " + r.type;
+
+        if (r.type === "partner") {
+          back.innerText = `🎉 ${r.data.name}`;
+        } else if (r.type === "item") {
+          back.innerText = `🎉 ${r.data.name}`;
+        } else {
+          const tag = r.data.fromDuplicate ? " (dup)" : "";
+          back.innerText = `🧩 ${r.data.partner.name} x${r.data.amount}${tag}`;
+        }
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+        container.appendChild(card);
+
+        // delay flip satu-satu
+        setTimeout(() => {
+          card.classList.add("flip");
+        }, index * 300);
+      });
+    }
+
+
+    // =========================
+    // 🔄 UI SWITCH (punya kamu)
+    // =========================
     const summonData = {
       special: {
         text: "Get guaranteed partner<br>every 10 summons!",
@@ -294,6 +685,35 @@
 
       button.classList.add("active");
     }
+
+     // =========================
+    // 🎮 SUMMON HANDLER
+    // =========================
+
+    document.addEventListener("click", function (e) {
+      if (!e.target.classList.contains("summon-btn")) return;
+
+      const text = e.target.innerText;
+
+      let count = 1;
+      if (text.includes("4x")) count = 4;
+      if (text.includes("10x")) count = 10;
+
+      let results = multiRoll(count);
+
+      // proses duplicate
+      results = results.map(r => processResult(r));
+
+      console.log("FINAL RESULT:", results);
+      console.log("INVENTORY:", inventory);
+
+      renderPopup(results);
+    });
+
+
+    // =========================
+    // NAVIGATION
+    // =========================
 
     function goBack() {
       window.history.back();
