@@ -8,15 +8,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+    --bg-top: #003973;
+    --bg-mid: #11375d;
+    --bg-bottom: #020813;
+    }
+
     * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif !important;
     }
 
     body {
-      min-height: 100vh;
-      font-family: "Orbitron", sans-serif !important;
+    min-height: 100vh;
+    background-size: cover;
+    background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
     }
 
     .screen {
@@ -27,6 +35,19 @@
 
         position: relative;
         overflow: hidden;
+    }
+
+      .bg-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(600px, 60vw);
+        opacity: 0.4;
+        pointer-events: none;
+        z-index: 0;
+        filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
+        z-index: -1;
     }
 
     /* top bar */
@@ -232,7 +253,7 @@
 </head>
 <body>
   <div class="screen">
-
+    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
     <div class="topbar">
       <div class="topbar-left">
         <button onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>

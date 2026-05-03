@@ -9,6 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --bg-top: #003973;
+      --bg-mid: #11375d;
+      --bg-bottom: #020813;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -17,8 +23,9 @@
     }
 
     body {
-      
       min-height: 100vh;
+      background-size: cover;
+      background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
     }
 
     .screen {
@@ -29,6 +36,19 @@
 
         position: relative;
         overflow: hidden;
+    }
+
+    .bg-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(600px, 60vw);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+      filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
+      z-index: -1;
     }
 
     .content {
@@ -49,9 +69,11 @@
       font-size: 50px;
     }
 
-    .top-left .icon {
+    .top-left button {
+      border: none;
+      background: none;
+      font-size: 40px;
       cursor: pointer;
-      line-height: 1;
     }
 
     /* top currency */
@@ -72,6 +94,7 @@
       justify-content: center;
       gap: 6px;
       font-size: 40px;
+      color: white;
     }
 
     /* left menu */
@@ -87,14 +110,15 @@
       justify-content: center;
       align-items: center;
       gap: 14px;
+      border-radius: 10px;
     }
 
     .menu-btn {
       width: 150px;
       min-height: 80px;
       background: #d9d9d9;
-      border: none;
-      font-size: 30px;
+      border-radius: 10px;
+      font-size: 25px;
       cursor: pointer;
       padding: 6px;
       text-align: center;
@@ -254,44 +278,24 @@
       object-fit: cover;
     }
 
-    .card {
-      width: 100px;
-      height: 140px;
-      perspective: 1000px;
+    .rare {
+      animation: rarePop 0.5s ease;
+      box-shadow: 0 0 20px gold, 0 0 40px orange;
+      border: 3px solid gold;
     }
 
-    .card-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.6s;
-    }
-
-    .card.flip .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .card-front, .card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      backface-visibility: hidden;
-      border: 2px solid #000;
-    }
-
-    .card-front {
-      background: #444;
-      color: #fff;
-    }
-
-    .card-back {
-      background: #fff;
-      transform: rotateY(180deg);
+    @keyframes rarePop {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+      70% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .partner { background: gold; }
@@ -355,9 +359,10 @@
 </head>
 <body>
   <div class="screen">
+    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
     <div class="top-left">
-        <button class="icon" onclick="goBack()"><img src="/img/back.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
-        <button class="icon" onclick="goHome()"><img src="/img/home.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
     </div>
 
     <div class="top-right">
@@ -450,7 +455,7 @@
     const MAX_PITY = 10;
 
     function getPartnerRate() {
-      return Math.min(0.01 + pityCounter * 0.01, 1);
+      return Math.min(0.01 + pityCounter * 0.005, 0.2);
     }
 
     // =========================
@@ -576,11 +581,13 @@
         const img = document.createElement("img");
 
         if (r.type === "partner") {
-          img.src = r.data.partner.image;
+          img.src = r.data.image;
+          back.appendChild(img);
         } else if (r.type === "shard") {
-          img.src = r.data.partner.image;
+          const tag = r.data.fromDuplicate ? " (dup)" : "";
+          back.innerText = `🧩 ${r.data.partner.name} x${r.data.amount}${tag}`;
         } else {
-          img.src = "/img/item.png";
+          back.innerText = `🎉 ${r.data.name}`;
         }
 
         back.appendChild(img);
@@ -593,45 +600,14 @@
         // 🔥 animasi flip delay satu-satu
         setTimeout(() => {
           card.classList.add("flip");
-        }, index * 300);
-      });
-    }
 
-    function renderCards(results) {
-      const container = document.getElementById("gacha-result");
-      container.innerHTML = "";
+          // ⭐ RARE EFFECT (partner only)
+          if (r.type === "partner") {
+            setTimeout(() => {
+              card.classList.add("rare");
+            }, 200); // sedikit delay setelah flip
+          }
 
-      results.forEach((r, index) => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const inner = document.createElement("div");
-        inner.className = "card-inner";
-
-        const front = document.createElement("div");
-        front.className = "card-front";
-        front.innerText = "?";
-
-        const back = document.createElement("div");
-        back.className = "card-back " + r.type;
-
-        if (r.type === "partner") {
-          back.innerText = `🎉 ${r.data.name}`;
-        } else if (r.type === "item") {
-          back.innerText = `🎉 ${r.data.name}`;
-        } else {
-          const tag = r.data.fromDuplicate ? " (dup)" : "";
-          back.innerText = `🧩 ${r.data.partner.name} x${r.data.amount}${tag}`;
-        }
-
-        inner.appendChild(front);
-        inner.appendChild(back);
-        card.appendChild(inner);
-        container.appendChild(card);
-
-        // delay flip satu-satu
-        setTimeout(() => {
-          card.classList.add("flip");
         }, index * 300);
       });
     }
@@ -686,6 +662,13 @@
       button.classList.add("active");
     }
 
+    function summonAgain() {
+      closePopup();
+      let results = multiRoll(4);
+      results = results.map(r => processResult(r));
+      renderPopup(results);
+    }
+
      // =========================
     // 🎮 SUMMON HANDLER
     // =========================
@@ -722,6 +705,17 @@
     function goHome() {
       window.location.href = "menu.html";
     }
+
+    function closePopup() {
+      document.getElementById("result-popup").classList.add("hidden");
+    }
+
+    // klik background modal → close
+    document.getElementById("result-popup").addEventListener("click", function (e) {
+      if (e.target.id === "result-popup") {
+        closePopup();
+      }
+    });
   </script>
 </body>
 </html>

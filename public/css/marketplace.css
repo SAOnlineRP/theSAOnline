@@ -1,15 +1,20 @@
-html, body {
-    height: 100vh;
-    overflow: hidden;
+:root {
+--bg-top: #003973;
+--bg-mid: #11375d;
+--bg-bottom: #020813;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Orbitron', sans-serif !important;
 }
 
 body {
-    margin: 0;
-    background-image: url("../img/welcome.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    font-family: "Orbitron", sans-serif;
-    color: #fff;
+min-height: 100vh;
+background-size: cover;
+background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
 }
 .container {
   height: 100vh;              /* patok ke tinggi layar */
@@ -19,6 +24,19 @@ body {
 
     position: relative;
     overflow: hidden;
+}
+
+.bg-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(600px, 60vw);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+    filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
+    z-index: -1;
 }
 
 /* top bar */
@@ -58,6 +76,7 @@ body {
     font-size: 24px;
     color: #222;
     padding: 0 12px;
+    color: white;
 }
 
 .nav-tabs {
