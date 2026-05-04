@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/bf6001b681.js" crossorigin="anonymous"></script>
     <style>
         :root {
         --bg-top: #003973;
@@ -294,8 +295,16 @@
         <div class="content">
             <div class="info-partner">
                 <div class="detail-partner">
-                    <h3>Kirito Kazugaya</h3>
-
+                    <div>   
+                        <div style="display: flex; justify-content: space-between;">
+                            <h3 class="nama-partner">Kirito Kazugaya</h3>
+                            <h3 class="level-partner">Lv. 100</h3>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div class="stars" style="font-size: 20px;">★★★★★</div>
+                            <button><img src="/img/star-up.png"></button>
+                        </div>
+                    </div>
                     <div class="stat-partner">
                         <div class="stat-item">
                             <div class="stat-label">ATK</div>
@@ -353,6 +362,7 @@
         const partners = [
         {
             name: "Kirito Kazugaya",
+            level: 100,
             atk: 80,
             def: 60,
             hp: 90,
@@ -361,6 +371,7 @@
         },
         {
             name: "Asuna Yuuki",
+            level: 70,
             atk: 75,
             def: 65,
             hp: 85,
@@ -369,6 +380,7 @@
         },
         {
             name: "Kiel",
+            level: 50,
             atk: 85,
             def: 50,
             hp: 70,
@@ -399,7 +411,8 @@
 
         setTimeout(() => {
             // update isi
-            document.querySelector(".detail-partner h3").innerText = data.name;
+            document.querySelector(".nama-partner").innerText = data.name;
+            document.querySelector(".level-partner").innerText = "Lv." + data.level;
 
             const bars = document.querySelectorAll(".stat-fill");
             bars[0].style.width = data.atk + "%";
