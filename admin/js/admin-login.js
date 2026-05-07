@@ -21,7 +21,7 @@ adminLoginForm.addEventListener("submit", function (e) {
     loginMessage.textContent = "Login berhasil...";
 
     setTimeout(() => {
-      window.location.href = "/admin/admin-dashboard.html";
+      window.location.href = "/admin/admin-dashboard-2.html";
     }, 700);
   } else {
     loginMessage.style.color = "#fca5a5";

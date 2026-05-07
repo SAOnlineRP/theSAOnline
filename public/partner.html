@@ -215,6 +215,18 @@
             padding-bottom: 6px;
         }
 
+        .stars-partner button {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .levelup-partner button {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
         /* STAT CONTAINER */
         .stat-partner {
             display: flex;
@@ -297,12 +309,17 @@
                 <div class="detail-partner">
                     <div>   
                         <div style="display: flex; justify-content: space-between;">
-                            <h3 class="nama-partner">Kirito Kazugaya</h3>
-                            <h3 class="level-partner">Lv. 100</h3>
+                            <div>
+                                <h3 class="nama-partner">Kirito Kazugaya</h3>
+                            </div>
+                            <div class="levelup-partner" style="display: flex; justify-content: space-between;">
+                                <h3 class="level-partner">Lv. 100</h3>
+                                <button><img src="/img/star-up.png" style="width: 25px; height: 25px;"></button>
+                            </div>
                         </div>
-                        <div style="display: flex; justify-content: space-between;">
+                        <div class="stars-partner" style="display: flex; justify-content: flex-start; gap:10px">
                             <div class="stars" style="font-size: 20px;">★★★★★</div>
-                            <button><img src="/img/star-up.png"></button>
+                            <button><img src="/img/star-up.png" style="width: 25px; height: 25px;"></button>
                         </div>
                     </div>
                     <div class="stat-partner">
