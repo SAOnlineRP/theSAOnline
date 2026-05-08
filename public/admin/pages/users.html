@@ -1,0 +1,129 @@
+<section id="users" class="content-section">
+    <!-- USER LIST -->
+    <div id="usersListView">
+        <div class="panel-card">
+        <div class="panel-head">
+            <h3>Users</h3>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="admin-table">
+            <thead>
+                <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>player1</td>
+                <td>player1@mail.com</td>
+                <td>User</td>
+                <td>
+                    <button class="table-btn edit" onclick="viewUser(1)">
+                    View
+                    </button>
+                </td>
+                </tr>
+                <tr>
+                <td>admin</td>
+                <td>admin@mail.com</td>
+                <td>Admin</td>
+                <td>
+                    <button class="table-btn edit" onclick="viewUser(2)">
+                    View
+                    </button>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+    <!-- USER DETAIL -->
+    <div id="userDetailView" style="display:none;">
+
+        <div class="panel-card">
+
+        <!-- HEADER -->
+        <div class="user-profile-header">
+
+            <div class="user-profile-info">
+            <h2 id="detailUsername">Player</h2>
+            <p>Player Profile & Inventory</p>
+            </div>
+
+            <button
+            class="admin-btn primary-btn"
+            onclick="closeUserDetail()"
+            >
+            ← Back
+            </button>
+
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+            <h3>Level</h3>
+            <p id="userLevel">25</p>
+            </div>
+
+            <div class="stat-card">
+            <h3>Gold</h3>
+            <p id="userGold">5000</p>
+            </div>
+
+            <div class="stat-card">
+            <h3>Gems</h3>
+            <p id="userGems">1200</p>
+            </div>
+
+            <div class="stat-card">
+            <h3>Total Weapon</h3>
+            <p id="userWeaponCount">2</p>
+            </div>
+
+        </div>
+
+        <!-- INVENTORY -->
+        <div class="inventory-grid">
+
+            <!-- WEAPONS -->
+            <div class="inventory-card">
+            <h4>Weapons</h4>
+            <ul id="weaponList"></ul>
+            </div>
+
+            <!-- ITEMS -->
+            <div class="inventory-card">
+            <h4>Items</h4>
+            <ul id="itemList"></ul>
+            </div>
+
+            <!-- GACHA -->
+            <div class="inventory-card">
+            <h4>Gacha History</h4>
+            <ul id="gachaList"></ul>
+            </div>
+
+            <!-- ACCOUNT -->
+            <div class="inventory-card">
+            <h4>Account Info</h4>
+
+            <ul>
+                <li>Email: player1@mail.com</li>
+                <li>Status: Active</li>
+                <li>Role: User</li>
+            </ul>
+            </div>
+
+        </div>
+
+        </div>
+
+    </div>
+    </section>

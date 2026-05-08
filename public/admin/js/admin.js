@@ -12,12 +12,14 @@ const menuItems =
 async function loadPage(page) {
 
   const response =
-    await fetch(`/pages/${page}.html`);
+    await fetch(`pages/${page}.html`);
 
   const html =
     await response.text();
 
   mainContent.innerHTML = html;
+
+  document.getElementById(page).classList.add('active');
 }
 
 // ======================
@@ -25,23 +27,15 @@ async function loadPage(page) {
 // ======================
 
 menuItems.forEach((item) => {
-
   item.addEventListener("click", () => {
 
-    // active state
-    menuItems.forEach(btn =>
-      btn.classList.remove("active")
-    );
-
-    item.classList.add("active");
+    // ambil nama page dari data-page
+    const page = item.dataset.page;
 
     // load page
-    const page =
-      item.dataset.page;
-
     loadPage(page);
-  });
 
+  });
 });
 
 // ======================
