@@ -4,7 +4,81 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
+
   <link rel="stylesheet" href="css/admin.css" />
 </head>
+
 <body class="admin-body">
+
+  <div class="admin-layout">
+
+    <aside class="admin-sidebar">
+
+      <div class="sidebar-top">
+        <h2>Admin CMS</h2>
+        <p>THE SAONLINE</p>
+      </div>
+
+      <nav class="sidebar-menu">
+
+        <button
+          class="menu-item active"
+          data-page="overview"
+        >
+          Overview
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="characters"
+        >
+          Characters
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="items"
+        >
+          Items
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="gacha"
+        >
+          Gacha Banner
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="users"
+        >
+          Users
+        </button>
+
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button
+          id="logoutBtn"
+          class="admin-btn danger-btn"
+        >
+          Logout
+        </button>
+      </div>
+
+    </aside>
+
+    <main
+      class="admin-main"
+      id="mainContent"
+    >
+
+    </main>
+
+  </div>
+
+  <script src="js/admin.js"></script>
+
 </body>
+</html>
