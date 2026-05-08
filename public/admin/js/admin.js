@@ -1,3 +1,4 @@
+console.log("masuk js")
 const mainContent =
   document.getElementById("mainContent");
 
