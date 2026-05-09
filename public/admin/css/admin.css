@@ -132,6 +132,8 @@ body.admin-body {
   flex-direction: column;
   justify-content: space-between;
   padding: 24px 18px;
+  height: 100vh; /* penting */
+  overflow: hidden;
 }
 
 .sidebar-top h2 {
@@ -149,6 +151,14 @@ body.admin-body {
   flex-direction: column;
   gap: 10px;
   margin-top: 28px;
+
+  flex: 1;              /* isi ruang tengah */
+  overflow-y: auto;     /* bisa scroll */
+  overflow-x: hidden;
+
+  padding-right: 6px; 
+  justify-content: center;
+
 }
 
 .menu-item {
@@ -165,6 +175,35 @@ body.admin-body {
 
 .menu-item:hover,
 .menu-item.active {
+  background: rgba(37, 99, 235, 0.18);
+  color: #fff;
+}
+
+.submenu {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  margin-left: 15px;
+}
+
+.submenu-item {
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 14px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.submenu-item:hover,
+.submenu-item.active {
   background: rgba(37, 99, 235, 0.18);
   color: #fff;
 }

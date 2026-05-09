@@ -24,6 +24,28 @@ const usersData = [
       "Kirito ★5",
       "Asuna ★4"
     ]
+  },
+  {
+    id: 2,
+    username: "player2",
+    level: 25,
+    gold: 5000,
+    gems: 1200,
+
+    weapons: [
+      "Elucidator",
+      "Dark Repulser"
+    ],
+
+    items: [
+      "Potion",
+      "Crystal"
+    ],
+
+    gachaHistory: [
+      "Kirito ★5",
+      "Asuna ★4"
+    ]
   }
 ];
 

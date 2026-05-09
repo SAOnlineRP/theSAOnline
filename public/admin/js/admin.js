@@ -3,7 +3,7 @@ const mainContent =
   document.getElementById("mainContent");
 
 const menuItems =
-  document.querySelectorAll(".menu-item");
+  document.querySelectorAll(".menu-click");
 
 // ======================
 // LOAD PAGE
@@ -34,6 +34,24 @@ menuItems.forEach((item) => {
 
     // load page
     loadPage(page);
+
+  });
+});
+
+// =====================
+// 
+
+const expandButtons = document.querySelectorAll('.expand-btn');
+
+expandButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+
+    const submenu = btn.nextElementSibling;
+
+    submenu.style.display =
+      submenu.style.display === 'flex'
+        ? 'none'
+        : 'flex';
 
   });
 });
