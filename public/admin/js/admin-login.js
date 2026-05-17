@@ -1,7 +1,9 @@
+import { supabase } from "/js/supabaseClient.js";
+
 const adminLoginForm = document.getElementById("adminLoginForm");
 const loginMessage = document.getElementById("loginMessage");
 
-adminLoginForm.addEventListener("submit", function (e) {
+adminLoginForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   const username = document.getElementById("username").value.trim();
@@ -12,19 +14,32 @@ adminLoginForm.addEventListener("submit", function (e) {
     return;
   }
 
-  // Dummy login sementara
-  if (username === "admin" && password === "admin123") {
-    localStorage.setItem("isAdminLoggedIn", "true");
-    localStorage.setItem("adminUsername", username);
+  const email = `${username}@game.local`;
 
-    loginMessage.style.color = "#86efac";
-    loginMessage.textContent = "Login berhasil...";
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    setTimeout(() => {
-      window.location.href = "/admin/admin-dashboard-2.html";
-    }, 700);
-  } else {
+  if (error) {
     loginMessage.style.color = "#fca5a5";
     loginMessage.textContent = "Username atau password salah.";
+    return;
   }
+
+  localStorage.setItem("isAdminLoggedIn", "true");
+  localStorage.setItem("adminUsername", username);
+
+  // simpan access token juga
+  localStorage.setItem(
+    "access_token",
+    data.session.access_token
+  );
+
+  loginMessage.style.color = "#86efac";
+  loginMessage.textContent = "Login berhasil...";
+
+  setTimeout(() => {
+    window.location.href = "/admin/admin-dashboard.html";
+  }, 700);
 });
