@@ -1,3 +1,5 @@
+console.log("partner");
+
 const modal =
     document.getElementById("myModal");
 

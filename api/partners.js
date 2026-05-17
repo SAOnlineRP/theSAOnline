@@ -10,18 +10,11 @@ export default async function handler(req, res) {
 
   const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY,
-    {
-      global: {
-        headers: {
-          Authorization: authHeader,
-        },
-      },
-    }
+    process.env.SUPABASE_ANON_KEY
   );
 
   const { data, error } = await supabase
-    .from("summon_pool")
+    .from("catalog_partners")
     .select("*");
 
   if (error) {
