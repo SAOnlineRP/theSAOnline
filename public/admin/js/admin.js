@@ -27,15 +27,19 @@ async function loadPage(page) {
 // ======================
 
 menuItems.forEach((item) => {
-  item.addEventListener("click", () => {
 
-    // ambil nama page dari data-page
+  item.addEventListener("click", async () => {
+
     const page = item.dataset.page;
 
-    // load page
-    loadPage(page);
+    await loadPage(page);
+
+    if (page === "partners") {
+      initPartnersPage();
+    }
 
   });
+
 });
 
 // =====================

@@ -1,10 +1,11 @@
 import { supabase } from "/js/supabaseClient.js";
 
-const adminLoginForm = document.getElementById("adminLoginForm");
+const loginForm = document.getElementById("adminLoginForm");
+loginForm.addEventListener("submit", handleLogin);
 const loginMessage = document.getElementById("loginMessage");
 
-adminLoginForm.addEventListener("submit", async function (e) {
-  e.preventDefault();
+async function handleLogin(event) {
+  event.preventDefault();
 
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -42,4 +43,4 @@ adminLoginForm.addEventListener("submit", async function (e) {
   setTimeout(() => {
     window.location.href = "/admin/admin-dashboard.html";
   }, 700);
-});
+};
