@@ -6,21 +6,24 @@
         </div>
 
         <div class="table-wrapper">
-        <table class="admin-table">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Stats</th>
-                <th>Growth</th>
-                <th>Skill Name</th>
-                <th>Skill MP Cost</th>
-                <th>Effects</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody id="soulTraitsTableBody">
-            </tbody>
-        </table>
+            <div id="tableOverlayLoading" class="table-overlay hidden">
+                <div class="spinner"></div>
+            </div>
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Stats</th>
+                    <th>Growth</th>
+                    <th>Skill Name</th>
+                    <th>Skill MP Cost</th>
+                    <th>Effects</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="soulTraitsTableBody">
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
@@ -44,22 +47,37 @@
                     </div>
                     <div class="form-group">
                         <label for="soulTraitStats">Stats:</label>
-                        <input type="text" id="soulTraitStats" name="soulTraitStats" required />
+                        <input type="text" id="soulTraitStats" name="soulTraitStats" />
                     </div>
                     <div class="form-group">
                         <label for="soulTraitGrowth">Growth:</label>
-                        <input type="text" id="soulTraitGrowth" name="soulTraitGrowth" required />
+                        <input type="text" id="soulTraitGrowth" name="soulTraitGrowth" />
                     </div>
                     <div class="form-group">
                         <label for="soulTraitSkillName">Skill Name:</label>
-                        <input type="text" id="soulTraitSkillName" name="soulTraitSkillName" required />
+                        <input type="text" id="soulTraitSkillName" name="soulTraitSkillName" />
                     </div>
                     <div class="form-group">
                         <label for="soulTraitSkillMPCost">Skill MP Cost:</label>
-                        <input type="number" id="soulTraitSkillMPCost" name="soulTraitSkillMPCost" required />
+                        <input type="number" id="soulTraitSkillMPCost" name="soulTraitSkillMPCost" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitEffects">Effects:</label>
+                        <input type="text" id="soulTraitEffects" name="soulTraitEffects" />
                     </div>
                 </div>
-                <button class="admin-btn primary-btn" id="saveSoulTraitBtn">Save</button>
+                <button
+                    type="submit"
+                    class="admin-btn primary-btn"
+                    id="saveSoulTraitBtn"
+                >
+                    <span class="btn-text">Save</span>
+
+                    <span class="btn-loading hidden">
+                        <span class="spinner"></span>
+                        Saving...
+                    </span>
+                </button>
             </form>
         </div>
     </div>

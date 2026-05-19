@@ -513,7 +513,8 @@ input:focus {
 }
 
 .table-wrapper {
-    max-height: 400px;
+    min-height: 400px;
+    max-height: 430px;
     overflow-y: auto;
 }
 
@@ -531,6 +532,15 @@ input:focus {
     z-index: 10;
 }
 
+.admin-table td {
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  white-space: normal;
+  word-break: break-word;
+}
+
 .form-grid {
   display: flex;
   flex-wrap: wrap;
@@ -543,6 +553,63 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.table-wrapper {
+    position: relative;
+}
+
+.table-overlay {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.45);
+    height: 100%;
+    z-index: 10;
+    backdrop-filter: blur(2px);
+}
+
+.hidden {
+    display: none;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+
+    border: 5px solid #ffffff40;
+    border-top-color: white;
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin 0.7s linear infinite;
+    margin-right: 6px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @media (max-width: 900px) {

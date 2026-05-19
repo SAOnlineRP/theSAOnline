@@ -23,6 +23,43 @@ const dummySoulTrait = [
 
 let editingSoulTraitId = null;
 
+async function fetchSoulTraits() {
+
+    try {
+
+        const token =
+            localStorage.getItem("access_token");
+
+        const response = await fetch(
+            "http://localhost:3000/api/catalog_soul_traits",
+            {
+                method: "GET",
+
+                headers: {
+                    "Content-Type": "application/json",
+
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Unauthorized");
+        }
+
+        const soulTraits =
+            await response.json();
+
+        return soulTraits;
+
+    } catch (error) {
+
+        console.error(error);
+
+        return [];
+    }
+}
+
 function renderSoulTraits(soulTraits, tableBody) {
 
     tableBody.innerHTML = soulTraits
@@ -30,17 +67,22 @@ function renderSoulTraits(soulTraits, tableBody) {
             return `
                 <tr>
                     <td>${soulTrait.name}</td>
-                    <td>${soulTrait.stats.join(", ")}</td>
-                    <td>${soulTrait.growth.join(", ")}</td>
-                    <td>${soulTrait.skillName}</td>
-                    <td>${soulTrait.skillMpCost}</td>
+                    <td>${JSON.stringify(soulTrait.stats)}</td>
+                    <td>${JSON.stringify(soulTrait.growth)}</td>
+                    <td>${soulTrait.skill_name ?? soulTrait.skillName}</td>
+                    <td>${soulTrait.skill_mp_cost ?? soulTrait.skillMpCost}</td>
                     <td>${soulTrait.effects}</td>
                     <td>
-                        <button 
+                        <button type="button"
                             class="edit-btn"
+                            data-id="${soulTrait.id}">
+                            Edit
+                        </button>
+                        <button 
+                            class="delete-btn"
                             data-id="${soulTrait.id}"
                         >
-                            Edit
+                            Delete
                         </button>
                     </td>
                 </tr>
@@ -55,19 +97,24 @@ function fillSoulTraitForm(soulTrait) {
         soulTrait.name;
 
     document.getElementById("soulTraitStats").value =
-        soulTrait.stats.join(", ");
+        JSON.stringify(soulTrait.stats);
 
     document.getElementById("soulTraitGrowth").value =
-        soulTrait.growth.join(", ");
+        JSON.stringify(soulTrait.growth);
 
     document.getElementById("soulTraitSkillName").value =
-        soulTrait.skillName;
+        soulTrait.skillName ?? soulTrait.skill_name;
 
     document.getElementById("soulTraitSkillMPCost").value =
-        soulTrait.skillMpCost;
+        soulTrait.skillMpCost ?? soulTrait.skill_mp_cost;
+
+    document.getElementById("soulTraitEffects").value =
+        soulTrait.effects;
 }
 
 async function initSoulTraitsPage() {
+    let soulTraits = [];
+
     const modalSoulTrait =
         document.getElementById("soulTraitModal");
 
@@ -86,7 +133,71 @@ async function initSoulTraitsPage() {
     const modalTitle =
         modalSoulTrait.querySelector("h2");
 
-    renderSoulTraits(dummySoulTrait, soulTraitsTableBody);
+    const saveSoulTraitBtn =
+    document.getElementById("saveSoulTraitBtn");
+
+    const saveBtnText =
+        saveSoulTraitBtn.querySelector(".btn-text");
+
+    const saveBtnLoading =
+        saveSoulTraitBtn.querySelector(".btn-loading");
+
+    const tableOverlayLoading =
+        document.getElementById(
+            "tableOverlayLoading"
+        );
+
+    function setTableLoading(isLoading) {
+
+        tableOverlayLoading.classList.toggle(
+            "hidden",
+            !isLoading
+        );
+    }
+    function setSaveLoading(isLoading) {
+
+        saveSoulTraitBtn.classList.toggle(
+            "loading",
+            isLoading
+        );
+
+        saveBtnText.classList.toggle(
+            "hidden",
+            isLoading
+        );
+
+        saveBtnLoading.classList.toggle(
+            "hidden",
+            !isLoading
+        );
+
+        saveSoulTraitBtn.disabled = isLoading;
+    }
+
+    try {
+
+        setTableLoading(true);
+
+        const soulTraitsResponse =
+            await fetchSoulTraits();
+
+        soulTraits = Array.isArray(soulTraitsResponse)
+            ? soulTraitsResponse
+            : soulTraitsResponse?.data || [];
+
+        renderSoulTraits(
+            soulTraits,
+            soulTraitsTableBody
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    } finally {
+
+        setTableLoading(false);
+    }
 
     // buka modal
     openBtnSoulTrait.addEventListener("click", () => {
@@ -105,90 +216,232 @@ async function initSoulTraitsPage() {
         modalSoulTrait.style.display = "none";
     });
 
-    soulTraitsTableBody.addEventListener("click", (e) => {
+    soulTraitsTableBody.addEventListener("click", async (e) => {
 
-        if (!e.target.classList.contains("edit-btn")) {
-            return;
-        }
+        // =====================
+        // EDIT
+        // =====================
+        const editButton =
+            e.target.closest(".edit-btn");
 
-        const soulTraitId =
-            Number(e.target.dataset.id);
+        if (editButton) {
 
-        const soulTrait =
-            dummySoulTrait.find(
+            const soulTraitId = editButton.dataset.id;
+
+            const soulTrait = soulTraits.find(
                 (item) => item.id === soulTraitId
             );
 
-        if (!soulTrait) return;
+            if (!soulTrait) {
+                console.error(
+                    "Soul trait not found for ID:",
+                    soulTraitId
+                );
 
-        editingSoulTraitId = soulTraitId;
+                return;
+            }
 
-        modalTitle.textContent = "Edit Soul Trait";
+            editingSoulTraitId = soulTraitId;
 
-        fillSoulTraitForm(soulTrait);
+            modalTitle.textContent =
+                "Edit Soul Trait";
 
-        modalSoulTrait.style.display = "flex";
+            fillSoulTraitForm(soulTrait);
+
+            modalSoulTrait.style.display = "flex";
+        }
+
+        // =====================
+        // DELETE
+        // =====================
+        const deleteButton =
+            e.target.closest(".delete-btn");
+
+        if (deleteButton) {
+
+            const confirmed =
+                confirm("Delete this soul trait?");
+
+            if (!confirmed) {
+                return;
+            }
+
+            const token =
+                localStorage.getItem("access_token");
+
+            const soulTraitId = deleteButton.dataset.id;
+
+            try {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/catalog_soul_traits",
+                    {
+                        method: "DELETE",
+
+                        headers: {
+                            "Content-Type": "application/json",
+
+                            Authorization: `Bearer ${token}`,
+                        },
+
+                        body: JSON.stringify({
+                            id: soulTraitId,
+                        }),
+                    }
+                );
+
+                const result =
+                    await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+
+                const soulTraitsResponse =
+                    await fetchSoulTraits();
+
+                const updatedSoulTraits =
+                    Array.isArray(soulTraitsResponse)
+                        ? soulTraitsResponse
+                        : soulTraitsResponse?.data || [];
+
+                renderSoulTraits(
+                    updatedSoulTraits,
+                    soulTraitsTableBody
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+            }
+        }
     });
 
-    soulTraitForm.addEventListener("submit", (e) => {
+    soulTraitForm.addEventListener("submit", async (e) => {
 
         e.preventDefault();
+
+        setSaveLoading(true);
+
+        const token =
+            localStorage.getItem("access_token");
 
         const formData = {
             name: document.getElementById("soulTraitName").value,
 
-            stats: document
-                .getElementById("soulTraitStats")
-                .value
-                .split(","),
+            stats: JSON.parse(
+                document.getElementById("soulTraitStats").value
+            ),
 
-            growth: document
-                .getElementById("soulTraitGrowth")
-                .value
-                .split(","),
+            growth: JSON.parse(
+                document.getElementById("soulTraitGrowth").value
+            ),
 
-            skillName:
+            skill_name:
                 document.getElementById("soulTraitSkillName")
                     .value,
 
-            skillMpCost: Number(
+            skill_mp_cost: Number(
                 document.getElementById(
                     "soulTraitSkillMPCost"
                 ).value
             ),
+
+            effects:
+                document.getElementById(
+                    "soulTraitEffects"
+                ).value
         };
 
-        // EDIT
-        if (editingSoulTraitId !== null) {
+        try {
 
-            const index = dummySoulTrait.findIndex(
-                (item) => item.id === editingSoulTraitId
+            // =====================
+            // EDIT
+            // =====================
+            if (editingSoulTraitId !== null) {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/catalog_soul_traits",
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json",
+
+                            Authorization: `Bearer ${token}`,
+                        },
+
+                        body: JSON.stringify({
+                            id: editingSoulTraitId,
+                            ...formData,
+                        }),
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+            }
+
+            // =====================
+            // ADD
+            // =====================
+            else {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/catalog_soul_traits",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json",
+
+                            Authorization: `Bearer ${token}`,
+                        },
+
+                        body: JSON.stringify(formData),
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+            }
+
+            // reload data
+            const soulTraitsResponse =
+                await fetchSoulTraits();
+
+            soulTraits = Array.isArray(soulTraitsResponse)
+                ? soulTraitsResponse
+                : soulTraitsResponse?.data || [];
+
+            renderSoulTraits(
+                soulTraits,
+                soulTraitsTableBody
             );
 
-            dummySoulTrait[index] = {
-                ...dummySoulTrait[index],
-                ...formData,
-            };
+            modalSoulTrait.style.display = "none";
+
+            soulTraitForm.reset();
+
+            editingSoulTraitId = null;
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+        } finally {
+
+            setSaveLoading(false);
         }
-
-        // ADD
-        else {
-
-            dummySoulTrait.push({
-                id: Date.now(),
-                effects: "",
-                ...formData,
-            });
-        }
-
-        renderSoulTraits(
-            dummySoulTrait,
-            soulTraitsTableBody
-        );
-
-        modalSoulTrait.style.display = "none";
-
-        soulTraitForm.reset();
     });
 
     // klik luar modal
