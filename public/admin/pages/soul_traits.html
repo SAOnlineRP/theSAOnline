@@ -2,7 +2,7 @@
     <div class="panel-card">
         <div class="panel-head">
         <h3>Soul Traits</h3>
-        <button class="admin-btn primary-btn" id="openModal">+ Add Soul Trait</button>
+        <button class="admin-btn primary-btn" id="openSoulTraitModal">+ Add Soul Trait</button>
         </div>
 
         <div class="table-wrapper">
@@ -24,3 +24,44 @@
         </div>
     </div>
 </section>
+
+<!-- modal -->
+<div class="modal" id="soulTraitModal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" id="closeSoulTraitModal">
+        &times;
+        </span>
+
+        <h2>Add New Soul Trait</h2>
+        <div class="modal-body">
+            <form id="soulTraitForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="soulTraitName">Name:</label>
+                        <input type="text" id="soulTraitName" name="soulTraitName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitStats">Stats:</label>
+                        <input type="text" id="soulTraitStats" name="soulTraitStats" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitGrowth">Growth:</label>
+                        <input type="text" id="soulTraitGrowth" name="soulTraitGrowth" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitSkillName">Skill Name:</label>
+                        <input type="text" id="soulTraitSkillName" name="soulTraitSkillName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitSkillMPCost">Skill MP Cost:</label>
+                        <input type="number" id="soulTraitSkillMPCost" name="soulTraitSkillMPCost" required />
+                    </div>
+                </div>
+                <button class="admin-btn primary-btn" id="saveSoulTraitBtn">Save</button>
+            </form>
+        </div>
+    </div>
+
+</div>

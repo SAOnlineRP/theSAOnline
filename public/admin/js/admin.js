@@ -40,6 +40,10 @@ menuItems.forEach((item) => {
       initSkillsPage();
     } else if (page === "soul_traits") {
       initSoulTraitsPage();
+    } else if (page === "equipments") {
+      initEquipmentsPage();
+    } else if (page === "items") {
+      initItemsPage();
     }
 
   });

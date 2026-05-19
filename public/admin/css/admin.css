@@ -476,6 +476,75 @@ input:focus {
     0 0 20px rgba(37,99,235,0.25);
 }
 
+/* NEW CSS */
+
+/* background gelap */
+.modal {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,0.5);
+
+    justify-content: center;
+    align-items: center;
+}
+
+/* isi modal */
+.modal-content {
+    background: rgba(15, 23, 42, 0.92);
+    color: white;
+    padding: 24px;
+    width: 400px;
+
+    border-radius: 12px;
+
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table thead th {
+    position: sticky;
+    top: 0;
+
+    background: rgba(15, 23, 42, 0.92);
+    color: white;
+    z-index: 10;
+}
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  flex: 0 0 calc(50% - 8px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 @media (max-width: 900px) {
   .admin-layout {
     flex-direction: column;
