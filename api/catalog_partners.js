@@ -19,9 +19,21 @@ export default async function handler(req, res) {
     }
   );
 
-  const { data, error } = await supabase
+  /*const { data, error } = await supabase
     .from("catalog_partners")
-    .select("*");
+    .select("*");*/
+  const { data, error } = await supabase
+  .from("catalog_partners")
+  .select(`
+    id,
+    name,
+    catalog_partner_skills (
+      catalog_skills (
+        id,
+        name
+      )
+    )
+  `);
 
   if (error) {
     return res.status(500).json({ error: error.message });

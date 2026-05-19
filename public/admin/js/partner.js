@@ -1,4 +1,4 @@
-console.log("partner");
+//console.log("partner");
 
 /*const dummyPartners = [
     {
@@ -55,15 +55,21 @@ async function fetchPartners() {
 function renderPartners(partners, tableBody) {
 
     tableBody.innerHTML = partners
-        .map((partner) => `
-            <tr>
-                <td>${partner.name}</td>
-                <td>Partner in Game</td>
-                <td>
-                    <button>Edit</button>
-                </td>
-            </tr>
-        `)
+        .map((partner) => {
+
+            const skills = partner.catalog_partner_skills
+                .map(item => item.catalog_skills.name);
+
+            return `
+                <tr>
+                    <td>${partner.name}</td>
+                    <td>${JSON.stringify(skills)}</td>
+                    <td>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+            `;
+        })
         .join("");
 }
 

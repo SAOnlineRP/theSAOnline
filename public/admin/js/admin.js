@@ -36,6 +36,10 @@ menuItems.forEach((item) => {
 
     if (page === "partners") {
       initPartnersPage();
+    } else if (page === "skills") {
+      initSkillsPage();
+    } else if (page === "soul_traits") {
+      initSoulTraitsPage();
     }
 
   });
