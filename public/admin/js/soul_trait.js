@@ -31,15 +31,16 @@ async function fetchSoulTraits() {
             localStorage.getItem("access_token");
 
         const response = await fetch(
-            "http://localhost:3000/api/catalog_soul_traits",
+            "http://localhost:3000/api/admin",
             {
-                method: "GET",
+                method: "POST",
 
                 headers: {
                     "Content-Type": "application/json",
 
                     Authorization: `Bearer ${token}`,
                 },
+                body: JSON.stringify({ table: "catalog_soul_traits", action: "getAll" })
             }
         );
 
