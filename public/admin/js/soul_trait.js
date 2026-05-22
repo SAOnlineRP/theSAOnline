@@ -1,26 +1,3 @@
-console.log("soul traits initialized");
-
-const dummySoulTrait = [
-    {
-        id: 1,
-        name: "Valor",
-        stats: ["atk:10", "def:5"],
-        growth: ["atk:2", "def:1"],
-        skillName: "Valor Strike",
-        skillMpCost: 50,    
-        effects: "Deals double damage with dual-wielded weapons"
-    },
-    {
-        id: 2,
-        name: "Insight",
-        stats: ["atk:5", "def:10"],
-        growth: ["atk:1", "def:2"],
-        skillName: "Insight's Heal",
-        skillMpCost: 75,
-        effects: "Heals all party members"
-    },
-];
-
 let editingSoulTraitId = null;
 
 async function fetchSoulTraits() {

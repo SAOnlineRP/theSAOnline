@@ -23,15 +23,16 @@ async function fetchPartners() {
             localStorage.getItem("access_token");
 
         const response = await fetch(
-            "http://localhost:3000/api/catalog_partners",
+            "http://localhost:3000/api/admin",
             {
-                method: "GET",
+                method: "POST",
 
                 headers: {
                     "Content-Type": "application/json",
 
                     Authorization: `Bearer ${token}`,
                 },
+                body: JSON.stringify({ table: "catalog_partners", action: "getAll" })
             }
         );
 
@@ -86,14 +87,37 @@ async function initPartnersPage() {
 
     const partnersTableBody =
         document.getElementById("partnersTableBody");
-    
-    // fetch data API
-    const partners =
-        await fetchPartners();
-    
-    console.log(partners['data']);
 
-    renderPartners(partners['data'], partnersTableBody);
+    const tableOverlayLoading =
+        document.getElementById(
+            "tablePartnerOverlayLoading"
+        );
+
+    function setTableLoading(isLoading) {
+
+        tableOverlayLoading.classList.toggle(
+            "hidden",
+            !isLoading
+        );
+    }
+    
+    try {
+
+        setTableLoading(true);
+        // fetch data API
+        const partners =
+            await fetchPartners();
+        
+        console.log(partners['data']);
+
+        renderPartners(partners['data'], partnersTableBody);
+    } catch (error) {
+
+        console.error(error);
+    } finally {
+
+        setTableLoading(false);
+    }
 
     // buka modal
     openBtn.addEventListener("click", () => {

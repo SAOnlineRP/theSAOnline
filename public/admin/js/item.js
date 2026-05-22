@@ -1,4 +1,4 @@
-async function fetchSkills() {
+async function fetchItems() {
 
     try {
 
@@ -15,7 +15,7 @@ async function fetchSkills() {
 
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ table: "catalog_skills", action: "getAll" })
+                body: JSON.stringify({ table: "catalog_items", action: "getAll" })
             }
         );
 
@@ -23,10 +23,10 @@ async function fetchSkills() {
             throw new Error("Unauthorized");
         }
 
-        const skills =
+        const items =
             await response.json();
 
-        return skills;
+        return items;
 
     } catch (error) {
 
@@ -36,17 +36,17 @@ async function fetchSkills() {
     }
 }
 
-function renderSkills(skills, tableBody) {
+function renderItems(items, tableBody) {
 
-    tableBody.innerHTML = skills
-        .map((skill) => {
+    tableBody.innerHTML = items
+        .map((item) => {
             return `
                 <tr>
-                    <td>${skill.name}</td>
-                    <td>${skill.mp_cost}</td>
-                    <td>${JSON.stringify(skill.effects)}</td>
+                    <td>${item.name}</td>
+                    <td>${item.desc}</td>
                     <td>
-                        <button>Edit</button>
+                        <button class="table-btn edit">Edit</button>
+                        <button class="table-btn delete">Delete</button>
                     </td>
                 </tr>
             `;
@@ -54,13 +54,13 @@ function renderSkills(skills, tableBody) {
         .join("");
 }
 
-async function initSkillsPage() {
-    const skillsTableBody =
-        document.getElementById("skillsTableBody");
+async function initItemsPage() {
+    const itemsTableBody =
+        document.getElementById("itemsTableBody");
 
     const tableOverlayLoading =
         document.getElementById(
-            "tableSkillOverlayLoading"
+            "tableItemsOverlayLoading"
         );
 
     function setTableLoading(isLoading) {
@@ -75,16 +75,16 @@ async function initSkillsPage() {
 
         setTableLoading(true);
 
-        const skillsResponse =
-            await fetchSkills();
+        const itemsResponse =
+            await fetchItems();
 
-        skills = Array.isArray(skillsResponse)
-            ? skillsResponse
-            : skillsResponse?.data || [];
+        items = Array.isArray(itemsResponse)
+            ? itemsResponse
+            : itemsResponse?.data || [];
 
-        renderSkills(
-            skills,
-            skillsTableBody
+        renderItems(
+            items,
+            itemsTableBody
         );
 
     } catch (error) {
@@ -95,4 +95,5 @@ async function initSkillsPage() {
 
         setTableLoading(false);
     }
+
 }
