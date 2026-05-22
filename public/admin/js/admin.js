@@ -44,6 +44,9 @@ menuItems.forEach((item) => {
       initEquipmentsPage();
     } else if (page === "items") {
       initItemsPage();
+    } else if (page === "users") {
+      console.log("masuk users");
+      initUserPage();
     }
 
   });

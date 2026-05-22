@@ -1,6 +1,7 @@
 import { createSupabaseClient } from "../lib/supabase.js";
 
 const allowedTables = [
+  "players",
   "player_profiles",
   "player_stats",
   "player_partners",
@@ -55,23 +56,37 @@ export default async function handler(req, res) {
         error: "Invalid table"
       });
     }
+    // =========================
+    // GET LIST PLAYER 
+    // =========================
+    if (action === "getListPlayer") {
+
+      const { data, error } = await supabase
+        .from("players")
+        .select("id, username, email");
+
+      if (error) {
+        return res.status(500).json({
+          error: error.message
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data
+      });
+    }
 
     // =========================
     // GET DATA PROFILE
     // =========================
-    if (action === "getData") {
+    if (action === "getProfilePlayer") {
 
       let query = supabase
         .from(table)
-        .select("*");
-
-      // GET BY ID
-      if (id) {
-        query = query.eq("id", id).maybeSingle();
-      }
-      if(player_id) {
-        query = query.eq("player_id", player_id);
-      }
+        .select("*")
+        .eq("player_id", player_id)
+        .single();
 
       const {
         data,
@@ -84,6 +99,31 @@ export default async function handler(req, res) {
         });
       }
 
+      return res.status(200).json({
+        success: true,
+        data
+      });
+    }
+
+    // =========================
+    // GET DATA INVENTORY
+    // =========================
+    if (action === "getEquipmentPlayer") {
+      let query = supabase
+        .from("player_equipments")
+        .select("*, catalog:catalog_equipments (id, name, link_photo)")
+        .eq("player_id", player_id);
+      
+      const {
+        data,
+        error
+      } = await query;
+
+      if (error) {
+        return res.status(500).json({
+          error: error.message
+        });
+      }
       return res.status(200).json({
         success: true,
         data

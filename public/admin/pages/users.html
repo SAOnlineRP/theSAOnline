@@ -7,6 +7,9 @@
         </div>
 
         <div class="table-wrapper">
+            <div id="tableUserOverlayLoading" class="table-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <table class="admin-table">
             <thead>
                 <tr>
@@ -16,37 +19,8 @@
                 <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>player1</td>
-                    <td>player1@mail.com</td>
-                    <td>User</td>
-                    <td>
-                        <button class="table-btn edit" onclick="viewUser(1)">
-                        View
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>player2</td>
-                    <td>player1@mail.com</td>
-                    <td>User</td>
-                    <td>
-                        <button class="table-btn edit" onclick="viewUser(2)">
-                        View
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>admin</td>
-                    <td>admin@mail.com</td>
-                    <td>Admin</td>
-                    <td>
-                        <button class="table-btn edit" onclick="viewUser(2)">
-                        View
-                        </button>
-                    </td>
-                </tr>
+            <tbody id="listPlayersBody">
+                
             </tbody>
             </table>
         </div>
