@@ -41,9 +41,8 @@
 
             <button
             class="admin-btn primary-btn"
-            onclick="closeUserDetail()"
-            >
-            ← Back
+            onclick="editPlayerInfo()"
+            > Edit Player
             </button>
 
         </div>
@@ -106,9 +105,174 @@
             </div>
 
         </div>
+    </div>
+
+</section>
+
+<!-- EDIT PLAYER MODAL -->
+<div id="editPlayerModal" class="modal">
+
+    <div class="modal-content edit-player-modal">
+
+        <span
+            class="close-btn"
+            onclick="closeEditPlayerModal()"
+        >
+            ✕
+        </span>
+
+        <h2 style="margin-bottom:20px;">
+            Edit Player
+        </h2>
+
+        <!-- TABS -->
+        <div class="player-tabs">
+
+            <button
+                class="player-tab active"
+                onclick="switchPlayerTab(event, 'profile')"
+            >
+                Profile
+            </button>
+
+            <button
+                class="player-tab"
+                onclick="switchPlayerTab(event, 'equipment')"
+            >
+                Equipment
+            </button>
+
+            <button
+                class="player-tab"
+                onclick="switchPlayerTab(event, 'items')"
+            >
+                Items
+            </button>
+
+            <button
+                class="player-tab"
+                onclick="switchPlayerTab(event, 'stats')"
+            >
+                Stats
+            </button>
 
         </div>
 
+        <!-- PROFILE -->
+        <div
+            id="tab-profile"
+            class="player-tab-content active"
+        >
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="editUsername">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editEmail">
+                </div>
+
+                <div class="form-group">
+                    <label>Role</label>
+
+                    <select id="editRole">
+                        <option>User</option>
+                        <option>Admin</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- EQUIPMENT -->
+        <div
+            id="tab-equipment"
+            class="player-tab-content"
+        >
+
+            <div id="equipmentContainer"></div>
+
+            <button
+                class="admin-btn primary-btn"
+                onclick="addEquipmentRow()"
+            >
+                + Add Equipment
+            </button>
+
+        </div>
+
+        <!-- ITEMS -->
+        <div
+            id="tab-items"
+            class="player-tab-content"
+        >
+
+            <div id="itemsContainer"></div>
+
+            <button
+                class="admin-btn primary-btn"
+                onclick="addItemRow()"
+            >
+                + Add Item
+            </button>
+
+        </div>
+
+        <!-- STATS -->
+        <div
+            id="tab-stats"
+            class="player-tab-content"
+        >
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Level</label>
+                    <input type="number" id="editLevel">
+                </div>
+
+                <div class="form-group">
+                    <label>Gold</label>
+                    <input type="number" id="editGold">
+                </div>
+
+                <div class="form-group">
+                    <label>Gems</label>
+                    <input type="number" id="editGems">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div
+            style="
+                display:flex;
+                justify-content:flex-end;
+                gap:10px;
+                margin-top:24px;
+            "
+        >
+
+            <button
+                class="admin-btn"
+                onclick="closeEditPlayerModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="admin-btn primary-btn"
+                onclick="savePlayerChanges()"
+            >
+                Save Changes
+            </button>
+        </div>
     </div>
-</section>
+</div>
 <script src="../js/user.js"></script>

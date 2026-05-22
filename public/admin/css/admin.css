@@ -483,12 +483,19 @@ input:focus {
     display: none;
 
     position: fixed;
-    inset: 0;
 
-    background: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0,0,0,0.6);
 
     justify-content: center;
     align-items: center;
+
+    z-index: 999999;
 }
 
 /* isi modal */
@@ -610,6 +617,67 @@ input:focus {
     to {
         transform: rotate(360deg);
     }
+}
+
+.edit-player-modal{
+    width: 900px;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.player-tabs{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.player-tab{
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    background: rgba(255,255,255,0.05);
+    color: white;
+
+    transition: 0.2s ease;
+}
+
+.player-tab:hover{
+    background: rgba(255,255,255,0.08);
+}
+
+.player-tab.active{
+    background: #2563eb;
+}
+
+.player-tab-content{
+    display: none;
+}
+
+.player-tab-content.active{
+    display: block;
+}
+
+#editRole{
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: white;
+
+    padding: 12px 14px;
+    border-radius: 12px;
+}
+
+.dynamic-row{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.dynamic-row input{
+    flex: 1;
 }
 
 @media (max-width: 900px) {

@@ -106,12 +106,37 @@ export default async function handler(req, res) {
     }
 
     // =========================
-    // GET DATA INVENTORY
+    // GET EQUIPMENT PLAYER
     // =========================
     if (action === "getEquipmentPlayer") {
       let query = supabase
         .from("player_equipments")
         .select("*, catalog:catalog_equipments (id, name, link_photo)")
+        .eq("player_id", player_id);
+      
+      const {
+        data,
+        error
+      } = await query;
+
+      if (error) {
+        return res.status(500).json({
+          error: error.message
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        data
+      });
+    }
+
+    // =========================
+    // GET ITEM PLAYER
+    // =========================
+    if (action === "getItemsPlayer") {
+      let query = supabase
+        .from("player_items")
+        .select("*, catalog:catalog_items (id, name, desc, link_photo)")
         .eq("player_id", player_id);
       
       const {

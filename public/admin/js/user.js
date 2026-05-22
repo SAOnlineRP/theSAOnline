@@ -1,56 +1,3 @@
-// ======================
-// DUMMY USER DATA
-// ======================
-
-const usersData = [
-  {
-    id: 1,
-    username: "player1",
-    level: 25,
-    gold: 5000,
-    gems: 1200,
-
-    weapons: [
-      "Elucidator",
-      "Dark Repulser"
-    ],
-
-    items: [
-      "Potion",
-      "Crystal"
-    ],
-
-    gachaHistory: [
-      "Kirito ★5",
-      "Asuna ★4"
-    ]
-  },
-  {
-    id: 2,
-    username: "player2",
-    level: 25,
-    gold: 5000,
-    gems: 1200,
-
-    weapons: [
-      "Elucidator",
-      "Dark Repulser"
-    ],
-
-    items: [
-      "Potion",
-      "Crystal"
-    ],
-
-    gachaHistory: [
-      "Kirito ★5",
-      "Asuna ★4"
-    ]
-  }
-];
-
-let selectedUser = null;
-
 async function fetchListPlayers() {
   const token =
             localStorage.getItem("access_token");
@@ -129,7 +76,7 @@ async function fetchUserProfile(userId) {
   }
 }
 
-async function fetchUserInventory(userId) {
+async function fetchUserEquipment(userId) {
   const token =
             localStorage.getItem("access_token");
   try {
@@ -155,6 +102,35 @@ async function fetchUserInventory(userId) {
     console.error("Error fetching user equipment:", err);
   }
 }
+
+
+async function fetchUserItems(userId) {
+  const token =
+            localStorage.getItem("access_token");
+  try {
+    const response = await fetch(
+            "http://localhost:3000/api/cms_player",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ table: "player_items", action: "getItemsPlayer", player_id: userId })
+            }
+        );
+    const userItems = await response.json();
+    if (userItems.success) {
+      console.log("User Items:", userItems.data);
+      return userItems.data;
+    } else {
+      console.error("Failed to fetch user items:", userItems.error);
+    }
+  } catch (err) {
+    console.error("Error fetching user items:", err);
+  }
+}
+
 
 async function initUserPage() {
   const listPlayersBody =
@@ -238,15 +214,15 @@ async function initUserPage() {
 
   async function renderUserInventory(userId) {
     const weaponList = document.getElementById("weaponList");
-    // const itemList = document.getElementById("itemList");
+    const itemList = document.getElementById("itemList");
 
     weaponList.innerHTML = "";
-    // itemList.innerHTML = "";
+    itemList.innerHTML = "";
 
     let userEquipment = null;
     try {
       userEquipment =
-        await fetchUserInventory(userId);
+        await fetchUserEquipment(userId);
         console.log("User Equipment:", userEquipment);
         
     } catch (err) {
@@ -265,16 +241,27 @@ async function initUserPage() {
       `;
     });
 
-    // selectedUser.items.forEach((item, index) => {
-    //   itemList.innerHTML += `
-    //     <li>
-    //       ${item}
-    //       <button onclick="removeItem(${index})">
-    //         Remove
-    //      </button>
-    //    </li>
-    //  `;
-    //});
+    let userItems = null;
+    try {
+      userItems =
+        await fetchUserItems(userId);
+        console.log("User Items:", userItems);
+        
+    } catch (err) {
+      console.error("Error initializing user page:", err);
+    } finally {
+      
+    }
+    userItems.forEach((item, index) => {
+      itemList.innerHTML += `
+        <li>
+          ${item.catalog.name} (${item.quantity})
+          <button onclick="removeItem(${index})">
+            Remove
+          </button>
+        </li>
+      `;
+    }); 
   }
 
   // ======================
@@ -329,15 +316,88 @@ async function initUserPage() {
 
   function removeItem(index) {
     selectedUser.items.splice(index, 1);
-
     renderUserInventory();
   }
 
+  window.editPlayerInfo = function () {
+    document
+        .getElementById("editPlayerModal")
+        .style.display = "flex";
+  }
 
-  function closeUserDetail() {
-    document.getElementById("usersListView").style.display = "block";
+  window.closeEditPlayerModal = function() {
+      document
+          .getElementById("editPlayerModal")
+          .style.display = "none";
+  }
 
-    document.getElementById("userDetailView").style.display = "none";
+  window.switchPlayerTab = function(event, tabName){
+      document
+          .querySelectorAll(".player-tab")
+          .forEach(tab => {
+              tab.classList.remove("active");
+          });
+
+      document
+          .querySelectorAll(".player-tab-content")
+          .forEach(content => {
+              content.classList.remove("active");
+          });
+
+      event.target.classList.add("active");
+
+      document
+          .getElementById(`tab-${tabName}`)
+          .classList.add("active");
+  }
+
+  window.addEquipmentRow = function(){
+      const container =
+          document.getElementById("equipmentContainer");
+
+      const div =
+          document.createElement("div");
+
+      div.className = "dynamic-row";
+
+      div.innerHTML = `
+          <input type="text" placeholder="Equipment Name">
+          <input type="number" placeholder="Level">
+
+          <button
+              class="admin-btn danger-btn"
+              onclick="this.parentElement.remove()"
+          >
+              Remove
+          </button>
+      `;
+
+      container.appendChild(div);
+  }
+
+  window.addItemRow = function(){
+
+      const container =
+          document.getElementById("itemsContainer");
+
+      const div =
+          document.createElement("div");
+
+      div.className = "dynamic-row";
+
+      div.innerHTML = `
+          <input type="text" placeholder="Item Name">
+          <input type="number" placeholder="Amount">
+
+          <button
+              class="admin-btn danger-btn"
+              onclick="this.parentElement.remove()"
+          >
+              Remove
+          </button>
+      `;
+
+      container.appendChild(div);
   }
 }
 
