@@ -1,20 +1,3 @@
-//console.log("partner");
-
-/*const dummyPartners = [
-    {
-        id: 1,
-        name: "Kirito",
-        role: "Attacker",
-        rarity: "5★",
-    },
-    {
-        id: 2,
-        name: "Asuna",
-        role: "Support",
-        rarity: "5★",
-    },
-];*/
-
 async function fetchPartners() {
 
     try {
@@ -53,7 +36,7 @@ async function fetchPartners() {
     }
 }
 
-function renderPartners(partners, tableBody) {
+function renderListPartners(partners, tableBody) {
 
     tableBody.innerHTML = partners
         .map((partner) => {
@@ -110,7 +93,7 @@ async function initPartnersPage() {
         
         console.log(partners['data']);
 
-        renderPartners(partners['data'], partnersTableBody);
+        renderListPartners(partners['data'], partnersTableBody);
     } catch (error) {
 
         console.error(error);

@@ -1,278 +1,409 @@
 <section id="users" class="content-section">
     <!-- USER LIST -->
+    <!-- LOADING OVERLAY -->
+    <div id="detailUserOverlayLoading" class="table-overlay hidden">
+        <div class="spinner"></div>
+    </div>
     <div id="usersListView">
         <div class="panel-card">
-        <div class="panel-head">
-            <h3>Users</h3>
-        </div>
-
-        <div class="table-wrapper">
-            <div id="tableUserOverlayLoading" class="table-overlay hidden">
-                <div class="spinner"></div>
+            <div class="panel-head">
+                <h3>Users</h3>
             </div>
-            <table class="admin-table">
-            <thead>
-                <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="listPlayersBody">
-                
-            </tbody>
-            </table>
-        </div>
+
+            <div class="table-wrapper">
+                <div id="tableUserOverlayLoading" class="table-overlay hidden">
+                    <div class="spinner"></div>
+                </div>
+                <table class="admin-table">
+                <thead>
+                    <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="listPlayersBody">
+                    
+                </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <!-- USER DETAIL -->
     <div id="userDetailView" style="display:none;">
-
         <div class="panel-card">
-
         <!-- HEADER -->
         <div class="user-profile-header">
-
             <div class="user-profile-info">
-            <h2 id="detailUsername">Player</h2>
-            <p>Player Profile & Inventory</p>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <h2 id="detailUsername">Player</h2>
+                    <button class="stats-toggle-btn"
+                        onclick="togglePlayerStats()">
+                        View Stats
+                    </button>
+                </div>
+                
+                <p>Player Profile & Inventory</p>
             </div>
-
-            <button
-            class="admin-btn primary-btn"
-            onclick="editPlayerInfo()"
-            > Edit Player
+            <button class="admin-btn primary-btn" onclick="openEditPlayerModal()">
+                Edit Player
             </button>
 
         </div>
 
         <!-- STATS -->
         <div class="stats-grid">
-
             <div class="stat-card">
-            <h3>Level</h3>
-            <p id="userLevel">25</p>
+                <h3>Level</h3>
+                <p id="userLevel">25</p>
             </div>
-
             <div class="stat-card">
-            <h3>Gold</h3>
-            <p id="userGold">5000</p>
+                <h3>Col</h3>
+                <p id="userCol">5000</p>
             </div>
-
             <div class="stat-card">
-            <h3>Gems</h3>
-            <p id="userGems">1200</p>
+                <h3>Arcana Gems</h3>
+                <p id="userGems">1200</p>
             </div>
-
             <div class="stat-card">
-            <h3>Total Weapon</h3>
-            <p id="userWeaponCount">2</p>
+                <h3>Days Active</h3>
+                <p id="userDaysActive">30</p>
             </div>
-
         </div>
 
         <!-- INVENTORY -->
         <div class="inventory-grid">
-
-            <!-- WEAPONS -->
+            <!-- Equipments -->
             <div class="inventory-card">
-            <h4>Weapons</h4>
-            <ul id="weaponList"></ul>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <h4>Equipments</h4>
+                    <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddEquipmentModal()">
+                        + 
+                    </button>
+                </div>
+                
+                <ul id="weaponList"></ul>
             </div>
-
             <!-- ITEMS -->
             <div class="inventory-card">
-            <h4>Items</h4>
-            <ul id="itemList"></ul>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <h4>Items</h4>
+                    <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddItemModal()">
+                        + 
+                    </button>
+                </div>
+                <ul id="itemList"></ul>
             </div>
-
             <!-- GACHA -->
             <div class="inventory-card">
-            <h4>Gacha History</h4>
-            <ul id="gachaList"></ul>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <h4>Partners</h4>
+                    <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddPartnerModal()">
+                        + 
+                    </button>
+                </div>
+                <ul id="partnerList"></ul>
             </div>
-
             <!-- ACCOUNT -->
             <div class="inventory-card">
-            <h4>Account Info</h4>
-
-            <ul>
-                <li>Email: player1@mail.com</li>
-                <li>Status: Active</li>
-                <li>Role: User</li>
-            </ul>
+                <h4>Account Info</h4>
+                <ul>
+                    <li>Email: player1@mail.com</li>
+                    <li>Status: Active</li>
+                    <li>Role: User</li>
+                </ul>
             </div>
-
         </div>
     </div>
-
 </section>
 
 <!-- EDIT PLAYER MODAL -->
 <div id="editPlayerModal" class="modal">
-
     <div class="modal-content edit-player-modal">
-
-        <span
-            class="close-btn"
-            onclick="closeEditPlayerModal()"
-        >
+        <span class="close-btn" onclick="closeEditPlayerModal()">
             ✕
         </span>
-
         <h2 style="margin-bottom:20px;">
             Edit Player
         </h2>
 
         <!-- TABS -->
         <div class="player-tabs">
-
-            <button
-                class="player-tab active"
-                onclick="switchPlayerTab(event, 'profile')"
-            >
+            <button class="player-tab active" onclick="switchPlayerTab(event, 'profile')">
                 Profile
             </button>
-
-            <button
-                class="player-tab"
-                onclick="switchPlayerTab(event, 'equipment')"
-            >
-                Equipment
-            </button>
-
-            <button
-                class="player-tab"
-                onclick="switchPlayerTab(event, 'items')"
-            >
-                Items
-            </button>
-
-            <button
-                class="player-tab"
-                onclick="switchPlayerTab(event, 'stats')"
-            >
+            <button class="player-tab" onclick="switchPlayerTab(event, 'stats')">
                 Stats
             </button>
-
+            <button class="player-tab" onclick="switchPlayerTab(event, 'equipment')">
+                Equipment
+            </button>
+            <button class="player-tab" onclick="switchPlayerTab(event, 'items')">
+                Items
+            </button>
+            <button class="player-tab" onclick="switchPlayerTab(event, 'partners')">
+                Partners
+            </button>
         </div>
 
         <!-- PROFILE -->
-        <div
-            id="tab-profile"
-            class="player-tab-content active"
-        >
-
+        <div id="tab-profile" class="player-tab-content active">
             <div class="form-grid">
-
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" id="editUsername">
                 </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="editEmail">
-                </div>
-
-                <div class="form-group">
-                    <label>Role</label>
-
-                    <select id="editRole">
-                        <option>User</option>
-                        <option>Admin</option>
-                    </select>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- EQUIPMENT -->
-        <div
-            id="tab-equipment"
-            class="player-tab-content"
-        >
-
-            <div id="equipmentContainer"></div>
-
-            <button
-                class="admin-btn primary-btn"
-                onclick="addEquipmentRow()"
-            >
-                + Add Equipment
-            </button>
-
-        </div>
-
-        <!-- ITEMS -->
-        <div
-            id="tab-items"
-            class="player-tab-content"
-        >
-
-            <div id="itemsContainer"></div>
-
-            <button
-                class="admin-btn primary-btn"
-                onclick="addItemRow()"
-            >
-                + Add Item
-            </button>
-
-        </div>
-
-        <!-- STATS -->
-        <div
-            id="tab-stats"
-            class="player-tab-content"
-        >
-
-            <div class="form-grid">
-
                 <div class="form-group">
                     <label>Level</label>
                     <input type="number" id="editLevel">
                 </div>
-
                 <div class="form-group">
-                    <label>Gold</label>
-                    <input type="number" id="editGold">
+                    <label>Soul Trait</label>
+                    <input type="text" id="editSoulTrait">
                 </div>
-
+                <div class="form-group">
+                    <label>Col</label>
+                    <input type="number" id="editCol">
+                </div>
                 <div class="form-group">
                     <label>Gems</label>
                     <input type="number" id="editGems">
                 </div>
-
+                <div class="form-group">
+                    <label>Avatar</label>
+                    <input type="text" id="editAvatar">
+                </div>
             </div>
-
         </div>
 
-        <div
-            style="
-                display:flex;
-                justify-content:flex-end;
-                gap:10px;
-                margin-top:24px;
-            "
-        >
+        <!-- EQUIPMENT -->
+        <div id="tab-equipment" class="player-tab-content">
+            <div id="equipmentContainer"></div>
+        </div>
 
-            <button
-                class="admin-btn"
-                onclick="closeEditPlayerModal()"
-            >
+        <!-- ITEMS -->
+        <div id="tab-items" class="player-tab-content">
+            <div id="itemsContainer"></div>
+        </div>
+
+        <!-- PARTNERS -->
+        <div id="tab-partners" class="player-tab-content">
+            <div id="partnersContainer"></div>
+        </div>
+
+        <!-- STATS -->
+        <div id="tab-stats" class="player-tab-content">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>ATK</label>
+                    <input type="number" id="editAtk">
+                </div>
+                <div class="form-group">
+                    <label>DEF</label>
+                    <input type="number" id="editDef">
+                </div>
+                <div class="form-group">
+                    <label>HP</label>
+                    <input type="number" id="editHp">
+                </div>
+                <div class="form-group">
+                    <label>MP</label>
+                    <input type="number" id="editMp">
+                </div>
+                <div class="form-group">
+                    <label>Crit DMG</label>
+                    <input type="number" id="editCritDmg">
+                </div>
+                <div class="form-group">
+                    <label>Crit %</label>
+                    <input type="number" id="editCritRate">
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+            <button class="admin-btn" onclick="closeEditPlayerModal()">
                 Cancel
             </button>
 
-            <button
-                class="admin-btn primary-btn"
-                onclick="savePlayerChanges()"
-            >
+            <button class="admin-btn primary-btn" onclick="savePlayerChanges()">
                 Save Changes
             </button>
         </div>
     </div>
+</div>
+
+<div id="addEquipmentModal" class="modal">
+    <div class="modal-content add-equipment-modal" style="width:unset;">
+        <div id="overlayModalEquipment" class="table-overlay hidden">
+            <div class="spinner"></div>
+        </div>
+        <span class="close-btn" onclick="closeAddEquipmentModal()">
+            ✕
+        </span>
+        <div style="display:flex;align-items:center;margin-bottom:12px;gap:10px;">
+            <h2>
+                Add Equipment
+            </h2>
+            <button onclick="addEquipmentRow()">
+                + Add New
+            </button>
+        </div>
+        <div id="equipment-new">
+            <div class="form-add-grid dynamic-row">
+                
+                <select class="addEquipmentSelect" style="width:100%;">
+                    <option value="weapon1">Weapon 1</option>
+                    <option value="weapon2">Weapon 2</option>
+                    <option value="weapon3">Weapon 3</option>
+                </select>
+
+                <input
+                    type="number"
+                    class="equipment-level"
+                    placeholder="Level"
+                    min="1"
+                >
+                <input
+                    type="number"
+                    class="equipment-star"
+                    placeholder="Level"
+                    min="1"
+                >
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+            <button class="admin-btn" onclick="closeAddEquipmentModal()">
+                Cancel
+            </button>
+            <button class="admin-btn primary-btn" onclick="addNewEquipment()">
+                Add Equipment
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="addItemModal" class="modal">
+    <div class="modal-content add-item-modal" style="width:unset;">
+        <div id="overlayModalItem" class="table-overlay hidden">
+            <div class="spinner"></div>
+        </div>
+        <span class="close-btn" onclick="closeAddItemModal()">
+            ✕
+        </span>
+        <div style="display:flex;align-items:center;margin-bottom:12px;gap:10px;">
+            <h2>
+                Add Item
+            </h2>
+            <button onclick="addItemRow()">
+                + Add New
+            </button>
+        </div>
+        <div id="items-new">
+            <div class="form-add-grid dynamic-row">
+                
+                <select class="addItemSelect" style="width:100%;">
+                    <option value="item1">Item 1</option>
+                    <option value="item2">Item 2</option>
+                    <option value="item3">Item 3</option>
+                </select>
+
+                <input
+                    type="number"
+                    class="item-qty"
+                    placeholder="Amount"
+                    min="1"
+                >
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+            <button class="admin-btn" onclick="closeAddItemModal()">
+                Cancel
+            </button>
+            <button class="admin-btn primary-btn" onclick="addNewItem()">
+                Add Item
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="addPartnerModal" class="modal">
+    <div class="modal-content add-partner-modal" style="width:unset;">
+        <div id="overlayModalPartner" class="table-overlay hidden">
+            <div class="spinner"></div>
+        </div>
+        <span class="close-btn" onclick="closeAddPartnerModal()">
+            ✕
+        </span>
+        <div style="display:flex;align-items:center;margin-bottom:12px;gap:10px;">
+            <h2>
+                Add Partner
+            </h2>
+            <button onclick="addPartnerRow()">
+                + Add New
+            </button>
+        </div>
+        <div id="partners-new">
+            <div class="form-add-grid dynamic-row">
+                
+                <select class="addPartnerSelect" style="width:100%;">
+                    <option value="partner1">Partner 1</option>
+                    <option value="partner2">Partner 2</option>
+                    <option value="partner3">Partner 3</option>
+                </select>
+
+                <input
+                    type="number"
+                    class="partner-qty"
+                    placeholder="Amount"
+                    min="1"
+                >
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+            <button class="admin-btn" onclick="closeAddPartnerModal()">
+                Cancel
+            </button>
+            <button class="admin-btn primary-btn" onclick="addNewPartner()">
+                Add Partner
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- FLOATING STATS -->
+<div id="playerStatsPopup" class="player-stats-popup hidden">
+
+    <div class="player-stat-item">
+        <span>HP</span>
+        <strong id="userHp">1200</strong>
+    </div>
+
+    <div class="player-stat-item">
+        <span>ATK</span>
+        <strong id="userAtk">320</strong>
+    </div>
+
+    <div class="player-stat-item">
+        <span>MP</span>
+        <strong id="userMp">540</strong>
+    </div>
+
+    <div class="player-stat-item">
+        <span>DEF</span>
+        <strong id="userDef">210</strong>
+    </div>
+
+    <div class="player-stat-item">
+        <span>Crit %</span>
+        <strong id="userCritRate">35%</strong>
+    </div>
+
+    <div class="player-stat-item">
+        <span>Crit DMG</span>
+        <strong id="userCritDmg">180%</strong>
+    </div>
+
 </div>
 <script src="../js/user.js"></script>
