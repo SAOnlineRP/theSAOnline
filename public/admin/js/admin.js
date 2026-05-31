@@ -57,6 +57,9 @@ menuItems.forEach((item) => {
     } else if (page === "users") {
       item.classList.add('active');
       initUserPage();
+    } else if (page === "share") {
+      item.classList.add('active');
+      initSharePage();
     }
 
   });

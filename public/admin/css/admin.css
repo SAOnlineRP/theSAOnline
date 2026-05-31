@@ -287,6 +287,10 @@ body.admin-body {
   gap: 12px;
 }
 
+.panel-body{
+  overflow-x: auto;
+}
+
 .table-wrapper {
   overflow-x: auto;
 }
@@ -841,6 +845,50 @@ input:focus {
 
 .select2-results{
     color: black;
+}
+
+.recipient-box{
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:12px;
+    cursor:pointer;
+    max-width:400px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:15px;
+}
+
+.close-btn{
+    border:none;
+    background:none;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.search-input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+}
+
+.user-list{
+    max-height:300px;
+    overflow-y:auto;
+}
+
+.user-item{
+    display:block;
+    padding:8px 0;
+}
+
+.modal-footer{
+    text-align:right;
+    margin-top:20px;
 }
 
 @media (max-width: 900px) {

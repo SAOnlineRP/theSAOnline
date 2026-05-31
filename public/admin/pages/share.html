@@ -3,5 +3,80 @@
         <div class="panel-head">
             <h3>Share</h3>
         </div>
+        <div class="panel-body">
+            <div>
+                <h3>Form Update Info Selected Player</h3>
+            </div>
+            
+            <div class="recipient-box" id="openModal">
+                <span id="selectedSummary">
+                    Pilih penerima
+                </span>
+            </div>
+        </div>
     </div>
 </section>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h3>Pilih Penerima</h3>
+
+            <button
+                type="button"
+                class="close-btn"
+                id="closeModal">
+                ✕
+            </button>
+        </div>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Cari nama..."
+            class="search-input">
+
+        <div class="user-list">
+
+            <label class="user-item">
+                <input type="checkbox"
+                       class="recipient"
+                       value="Aleyna">
+                Aleyna
+            </label>
+
+            <label class="user-item">
+                <input type="checkbox"
+                       class="recipient"
+                       value="Budi">
+                Budi
+            </label>
+
+            <label class="user-item">
+                <input type="checkbox"
+                       class="recipient"
+                       value="Cici">
+                Cici
+            </label>
+
+            <label class="user-item">
+                <input type="checkbox"
+                       class="recipient"
+                       value="Dedi">
+                Dedi
+            </label>
+
+        </div>
+
+        <div class="modal-footer">
+            <button id="saveBtn">
+                Simpan
+            </button>
+        </div>
+
+    </div>
+
+</div>
