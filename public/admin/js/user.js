@@ -487,16 +487,6 @@ async function initUserPage() {
     function(event, tabName) {
 
     document
-  };
-
-  // =========================
-  // TAB
-  // =========================
-
-  window.switchPlayerTab =
-    function(event, tabName) {
-
-    document
       .querySelectorAll(".player-tab")
       .forEach((tab) => {
         tab.classList.remove(

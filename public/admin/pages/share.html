@@ -4,79 +4,265 @@
             <h3>Share</h3>
         </div>
         <div class="panel-body">
-            <div>
-                <h3>Form Update Info Selected Player</h3>
+            <!-- TABS -->
+            <div class="share-tabs">
+                <button class="share-tab active" onclick="switchShareTab(event, 'update-bulk')">
+                    Update Bulk
+                </button>
+                <button class="share-tab" onclick="switchShareTab(event, 'gifts')">
+                    Gifts
+                </button>
             </div>
-            
-            <div class="recipient-box" id="openModal">
-                <span id="selectedSummary">
-                    Pilih penerima
-                </span>
+            <div id="tab-update-bulk" class="share-tab-content active">
+                <div class="share-layout">
+                    <div class="share-left">
+                        <div class="form-share-grid">
+                            <div class="form-share-group">
+                                <label>Player Terpilih</label>
+                                <button class="admin-btn" id="selectedSummary" onclick="openRecipientModal()">
+                                    Pilih penerima
+                                </button>
+                            </div>
+
+                            <div class="form-share-group">
+                                <label>Tipe Update</label>
+                                <select id="shareType">
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="type-a">Col/Gems</option>
+                                    <option value="type-b">Equipments/Partner</option>
+                                    <option value="type-c">Items</option>
+                                    <option value="type-d">Badges</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="share-right">
+                        <div class="form-share-grid hidden" id="type-a">
+                            <div class="form-share-group">
+                                <label>Data</label>
+                                <select>
+                                    <option value="col">Col</option>
+                                    <option value="arcana_gems">Arcana Gems</option>
+                                </select>
+                            </div>
+                            <div class="form-share-group">
+                                <label>Amount:</label>
+                                <input type="number">
+                            </div>
+                        </div>
+
+                        <div class="form-share-grid hidden" id="type-b">
+                            <div class="form-share-group">
+                                <label>Table</label>
+                                <select>
+                                    <option value="player_equipments">Equipments</option>
+                                    <option value="player_partners">Partners</option>
+                                </select>
+                            </div>
+                            <div class="form-share-group">
+                                <label>Catalog</label>
+                                <select>
+                                    <option>Equipment 1</option>
+                                </select>
+                            </div>
+                            <div class="form-share-group">
+                                <label>Level</label>
+                                <input type="number">
+                            </div>
+                            <div class="form-share-group">
+                                <label>Star</label>
+                                <input type="number">
+                            </div>
+                        </div>
+
+                        <div class="form-share-grid hidden" id="type-c">
+                            <div class="form-share-group">
+                                <label>Catalog</label>
+                                <select>
+                                    <option>Item A</option>
+                                </select>
+                            </div>
+                            <div clas="form-share-group">
+                                <label>Quantity</label>
+                                <input type="number">
+                            </div>
+                        </div>
+
+                        <div class="form-share-grid hidden" id="type-d">
+                            <div class="form-share-group">
+                                <label>Catalog</label>
+                                <select>
+                                    <option>Badge A</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+                    <button class="admin-btn primary-btn">Update Selected</button>
+                </div>
+            </div>
+            <div id="tab-gifts" class="share-tab-content">
+                <div class="share-layout">
+                    <div class="share-left">
+                        <div class="form-share-grid">
+                            <div class="form-share-group">
+                                <label>Player Terpilih</label>
+                                <button onclick="openRecipientModal()">
+                                    Pilih penerima
+                                </button>
+                            </div>
+
+                            <div class="form-share-group">
+                                <label>Tipe Update</label>
+                                <select id="giftType">
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="gift-a">Col/Gems</option>
+                                    <option value="gift-b">Equipments/Partner</option>
+                                    <option value="gift-c">Items</option>
+                                    <option value="gift-d">Badges</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="share-right">
+                        <div class="form-share-grid hidden" id="gift-a">
+                            <div class="form-share-group">
+                                <label>Data</label>
+                                <select>
+                                    <option value="col">Col</option>
+                                    <option value="arcana_gems">Arcana Gems</option>
+                                </select>
+                            </div>
+                            <div class="form-share-group">
+                                <label>Amount:</label>
+                                <input type="number">
+                            </div>
+                        </div>
+
+                        <div class="form-share-grid hidden" id="gift-b">
+                            <div class="form-share-group">
+                                <label>Table</label>
+                                <select>
+                                    <option value="player_equipments">Equipments</option>
+                                    <option value="player_partners">Partners</option>
+                                </select>
+                            </div>
+                            <div class="form-share-group">
+                                <label>Catalog</label>
+                                <select>
+                                    <option>Equipment 1</option>
+                                </select>
+                            </div>
+                            <div class="form-share-group">
+                                <label>Level</label>
+                                <input type="number">
+                            </div>
+                            <div class="form-share-group">
+                                <label>Star</label>
+                                <input type="number">
+                            </div>
+                        </div>
+
+                        <div class="form-share-grid hidden" id="gift-c">
+                            <div class="form-share-group">
+                                <label>Catalog</label>
+                                <select>
+                                    <option>Item A</option>
+                                </select>
+                            </div>
+                            <div clas="form-share-group">
+                                <label>Quantity</label>
+                                <input type="number">
+                            </div>
+                        </div>
+
+                        <div class="form-share-grid hidden" id="gift-d">
+                            <div class="form-share-group">
+                                <label>Catalog</label>
+                                <select>
+                                    <option>Badge A</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+                    <button class="admin-btn primary-btn">Send</button>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Modal -->
-<div class="modal" id="modal">
+<div class="modal" id="recipientModal">
 
     <div class="modal-content">
 
         <div class="modal-header">
-            <h3>Pilih Penerima</h3>
+            <div style="display:flex; gap:10px;">
+                <h3>Pilih Penerima</h3>
+                <button onclick="uploadCSV()"><i class="fa-solid fa-upload"></i></button>
+            </div>
+            <span class="close-btn" onclick="closeRecipientModal()">
+            ✕
+            </span>
+        </div>
 
-            <button
-                type="button"
-                class="close-btn"
-                id="closeModal">
+        <div class="search-wrapper">
+
+            <input type="text" id="searchInput" placeholder="Cari nama..." class="search-input">
+
+            <button type="button" id="clearSearch" class="clear-search">
                 ✕
+            </button>
+
+        </div>
+
+        <div class="actions">
+            <button id="selectAllBtn" onclick="toggleAllRecipients()">
+                Pilih Semua
             </button>
         </div>
 
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Cari nama..."
-            class="search-input">
-
-        <div class="user-list">
-
-            <label class="user-item">
-                <input type="checkbox"
-                       class="recipient"
-                       value="Aleyna">
-                Aleyna
-            </label>
-
-            <label class="user-item">
-                <input type="checkbox"
-                       class="recipient"
-                       value="Budi">
-                Budi
-            </label>
-
-            <label class="user-item">
-                <input type="checkbox"
-                       class="recipient"
-                       value="Cici">
-                Cici
-            </label>
-
-            <label class="user-item">
-                <input type="checkbox"
-                       class="recipient"
-                       value="Dedi">
-                Dedi
-            </label>
-
+        <div class="user-list" id="user-list">
+            
         </div>
 
         <div class="modal-footer">
-            <button id="saveBtn">
+            <button id="saveBtn" onclick="saveRecipients()">
                 Simpan
             </button>
         </div>
 
     </div>
 
+</div>
+
+<div class="modal" id="uploadCSVmodal">
+    <div class="modal-content">
+        <h2>Upload CSV</h2>
+
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="csvFile" accept=".csv" hidden>
+
+            <div class="upload-icon">📄</div>
+            <p>Drag & Drop CSV di sini</p>
+            <span>atau</span>
+
+            <button type="button" onclick="document.getElementById('csvFile').click()">
+                Pilih File
+            </button>
+
+            <div class="selected-file" id="selectedFile">
+                Belum ada file dipilih
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeUploadCSVModal()">Batal</button>
+            <button class="btn-primary">Upload</button>
+        </div>
+    </div>
 </div>
