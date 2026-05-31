@@ -1,5 +1,11 @@
-const API_URL = "http://localhost:3000/api/cms_player";
-const API_CATALOG_URL = "http://localhost:3000/api/admin";
+const BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://the-saonline.vercel.app";
+
+const API_URL = `${BASE_URL}/api/cms_player`;
+const API_CATALOG_URL = `${BASE_URL}/api/admin`;
+const API_REGISTER_URL = `${BASE_URL}/api/register`;
 
 let currentEditingUserId = null;
 let currentPlayerData = null;
@@ -91,6 +97,31 @@ async function apiCatalogRequest(body) {
   }
 }
 
+
+async function apiRegisterRequest(body) {
+  console.log("API Register Request Body:", body);
+  try {
+    const response = await fetch(API_REGISTER_URL, {
+      method: "POST",
+      body: JSON.stringify(body)
+    });
+
+    const result =
+      await response.json();
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Registration failed"
+      );
+    }
+    return result;
+  } catch (err) {
+    console.error(
+      "API Register Request Error:",
+      err
+    );
+    return null;
+  }
+}
 // =========================
 // FETCH PLAYERS
 // =========================
@@ -130,7 +161,7 @@ function renderListPlayers(
     row.innerHTML = `
       <td>${player.username}</td>
       <td>${player.email}</td>
-      <td>Admin</td>
+      <td>Player</td>
 
       <td>
         <button
@@ -522,15 +553,10 @@ function renderInventory(
 
     weaponList.innerHTML += `
       <li>
+        <input type="checkbox" id="${eq.id}" class="equipment-checkbox" />
         ${eq.catalog.name}
         (Lvl ${eq.level},
         ${eq.star}★)
-
-        <button
-          onclick="removeWeapon(${index})"
-        >
-          Remove
-        </button>
       </li>
     `;
   });
@@ -540,14 +566,9 @@ function renderInventory(
 
     itemList.innerHTML += `
       <li>
+        <input type="checkbox" id="${item.id}" class="item-checkbox" />
         ${item.catalog.name}
         (${item.quantity})
-
-        <button
-          onclick="removeItem(${index})"
-        >
-          Remove
-        </button>
       </li>
     `;
   });
@@ -574,6 +595,7 @@ function renderPartners(partners = []) {
 
     partnerList.innerHTML += `
       <li>
+        <input type="checkbox" id="${partner.id}" class="partner-checkbox" />
         ${catalog.name || "Unknown"}
         (Lvl ${partner.level || 0},
         ${partner.star || 0}★)
@@ -600,12 +622,6 @@ function renderPartners(partners = []) {
 
           </div>
         </div>
-
-        <button
-          onclick="removePartner(${index})"
-        >
-          Remove
-        </button>
       </li>
     `;
   });
@@ -932,11 +948,8 @@ window.addItemRow =
     "dynamic-row";
 
   div.innerHTML = `
-    <input
-      type="text"
-      class="item-name"
-      placeholder="Item Name"
-    >
+    <select class="addItemSelect" style="width:100%;">
+    </select>
 
     <input
       type="number"
@@ -953,6 +966,21 @@ window.addItemRow =
   `;
 
   container.appendChild(div);
+
+  const selectEqNew = $(div).find(".addItemSelect");
+
+  currentCatalogItems.forEach(item => {
+    selectEqNew.append(
+      new Option(
+        item.name,
+        item.id
+      )
+    );
+  });
+
+  selectEqNew.select2({
+    dropdownParent: $("#addItemModal")
+  });
 };
 
 window.addPartnerRow =
@@ -970,11 +998,8 @@ window.addPartnerRow =
     "dynamic-row";
 
   div.innerHTML = `
-    <input
-      type="text"
-      class="partner-name"
-      placeholder="Partner Name"
-    >
+    <select class="addPartnerSelect" style="width:100%;">
+    </select>
 
     <input
       type="number"
@@ -997,6 +1022,21 @@ window.addPartnerRow =
   `;
 
   container.appendChild(div);
+
+  const selectEqNew = $(div).find(".addPartnerSelect");
+
+  currentCatalogPartners.forEach(partner => {
+    selectEqNew.append(
+      new Option(
+        partner.name,
+        partner.id
+      )
+    );
+  });
+
+  selectEqNew.select2({
+    dropdownParent: $("#addPartnerModal")
+  });
 };
 
 // =========================
@@ -1223,4 +1263,248 @@ window.closeAddPartnerModal =
       "addPartnerModal"
     )
     .style.display = "none";
+};
+
+// =========================
+// SAVE NEW DATA
+// =========================
+window.saveNewData = async function(type) {
+  let playerId = currentEditingUserId;
+  let payload = {};
+  let equipments = [];
+  let items = [];
+  let partners = [];
+
+  if (type === "equipment") {
+
+    document.querySelectorAll("#equipment-new .dynamic-row").forEach(row => {
+
+      equipments.push({
+        player_id: playerId,
+        equipment_id: row.querySelector("select").value,
+        level: Number(
+          row.querySelector(".equipment-level").value
+        ),
+        star: Number(
+          row.querySelector(".equipment-star").value
+        )
+      });
+    });
+    console.log("New Equipments:", equipments);
+  } else if (type === "item") {
+    document.querySelectorAll("#items-new .dynamic-row").forEach(row => {
+      items.push({
+        player_id: playerId,
+        item_id: row.querySelector("select").value,
+        quantity: Number(
+          row.querySelector("input[type='number']").value
+        )
+      });
+    });
+    console.log("New Items:", items);
+  } else if (type === "partner") {
+    document.querySelectorAll("#partners-new .dynamic-row").forEach(row => {
+      partners.push({
+        player_id: playerId,
+        partner_id: row.querySelector("select").value,
+        level: Number(
+          row.querySelector(".partner-level").value
+        ),
+        star: Number(
+          row.querySelector(".partner-star").value
+        )
+      });
+    });
+    console.log("New Partners:", partners);
+  }
+
+  const tableMap = {
+    equipment: "player_equipments",
+    item: "player_items",
+    partner: "player_partners"
+  };
+
+  payload = {
+    data:
+    type === "equipment"
+      ? equipments
+      : type === "item"
+      ? items
+      : partners
+  };
+    
+
+  console.log("Save New Data Payload:", payload);
+  const confirmSave = confirm(
+      "Are you sure you want to save these changes?"
+  );
+
+  if (!confirmSave) {
+    return;
+  }
+
+  try {
+    await apiRequest({
+      action: "insertNewData",
+      table: tableMap[type],
+      ...payload
+    });
+    alert("Changes saved successfully!");
+  } catch (error) {
+    console.error("Error saving changes:", error);
+    alert("Failed to save changes.");
+  } finally {
+    if (type === "equipment") {
+      closeAddEquipmentModal();
+    } else if (type === "item") {
+      closeAddItemModal();
+    } else if (type === "partner") {
+      closeAddPartnerModal();
+    }
+    viewUser(currentEditingUserId);
+  }
+};
+
+// =========================
+// DELETE SELECTED DATA
+// =========================
+window.deleteSelectedData = async function(type) {
+  let selectedIds = [];
+  if (type === "equipment") {
+    document.querySelectorAll(".equipment-checkbox:checked").forEach(checkbox => {
+      selectedIds.push(checkbox.id);
+    });
+  } else if (type === "item") {
+    document.querySelectorAll(".item-checkbox:checked").forEach(checkbox => {
+      selectedIds.push(checkbox.id);
+    });
+  } else if (type === "partner") {
+    document.querySelectorAll(".partner-checkbox:checked").forEach(checkbox => {
+      selectedIds.push(checkbox.id);
+    });
+  }
+
+  if (selectedIds.length === 0) {
+    alert("Please select at least one item to delete.");
+    return;
+  }
+  console.log("Selected IDs for Deletion:", selectedIds);
+
+  const tableMap = {
+    equipment: "player_equipments",
+    item: "player_items",
+    partner: "player_partners"
+  };
+
+  const confirmDelete = confirm(
+    `Are you sure you want to delete ${selectedIds.length} selected ${
+      type === "equipment"
+        ? "equipments"
+        : type === "item"
+        ? "items"
+        : "partners"
+    }?`
+  );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  try {
+    await apiRequest({
+      action: "deleteData",
+      table: tableMap[type],
+      ids: selectedIds
+    });
+    alert("Selected data deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting data:", error);
+    alert("Failed to delete selected data.");
+  } finally {
+    viewUser(currentEditingUserId);
+  }
+}
+
+// =========================
+// ADD NEW USER
+// =========================
+window.openAddUserModal = async function() {
+  document
+    .getElementById(
+      "addUserModal"
+    )
+    .style.display = "flex";
+};
+
+window.closeAddUserModal =
+  function() {
+  document
+    .getElementById(
+      "addUserModal"
+    )
+    .style.display = "none";
+};
+
+window.saveNewUser = async function() {
+  const username = document.getElementById("newUsername").value;
+  const password = document.getElementById("newPassword").value;
+  const soulTrait = document.getElementById("newSoulTrait").value;
+  if (!username || !password) {
+    alert("All fields are required.");
+    return;
+  }
+  
+  
+  try {
+    // 1. register thru API
+    let registerResponse = await apiRegisterRequest({
+      username,
+      password
+    });
+
+    let newUserId = registerResponse.userId;
+    // 2. add to player profile with default values
+    const payload = {
+      data: {
+      player_id: newUserId,
+      name: username,
+      level: 1,
+      col: 0,
+      arcana_gems: 0,
+      soul_trait: soulTrait,
+      avatar: ""
+      }
+    };
+
+    await apiRequest({
+      action: "insertNewData",
+      table: "player_profiles",
+      ...payload
+    });
+
+    // search for stat with soultrait
+    
+
+    await apiRequest({
+      action: "insertNewData",
+      table: "player_stats",
+      data: {
+        player_id: newUserId,
+        atk: 0,
+        def: 0,
+        max_hp: 100,
+        max_mp: 50,
+        crit_pct: 0,
+        crit_dmg: 0
+      }
+    });
+    
+  } catch (error) {
+    console.error("Error registering new user:", error);
+    alert("Failed to register new user.");
+    return;
+  } finally {
+    closeAddUserModal();
+    initUserPage();
+  }
 };

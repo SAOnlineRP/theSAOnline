@@ -82,109 +82,6 @@ export default async function handler(req, res) {
     }
 
     // =========================
-    // GET DATA PROFILE
-    // =========================
-    if (action === "getProfilePlayer") {
-
-      let query = supabase
-        .from(table)
-        .select("*")
-        .eq("player_id", player_id)
-        .single();
-
-      const {
-        data,
-        error
-      } = await query;
-
-      if (error) {
-        return res.status(500).json({
-          error: error.message
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        data
-      });
-    }
-
-    // =========================
-    // GET EQUIPMENT PLAYER
-    // =========================
-    if (action === "getEquipmentPlayer") {
-      let query = supabase
-        .from("player_equipments")
-        .select("*, catalog:catalog_equipments (id, name, link_photo)")
-        .eq("player_id", player_id);
-      
-      const {
-        data,
-        error
-      } = await query;
-
-      if (error) {
-        return res.status(500).json({
-          error: error.message
-        });
-      }
-      return res.status(200).json({
-        success: true,
-        data
-      });
-    }
-
-    // =========================
-    // GET ITEM PLAYER
-    // =========================
-    if (action === "getItemsPlayer") {
-      let query = supabase
-        .from("player_items")
-        .select("*, catalog:catalog_items (id, name, desc, link_photo)")
-        .eq("player_id", player_id);
-      
-      const {
-        data,
-        error
-      } = await query;
-
-      if (error) {
-        return res.status(500).json({
-          error: error.message
-        });
-      }
-      return res.status(200).json({
-        success: true,
-        data
-      });
-    }
-
-    // =========================
-    // GET PARTNER PLAYER
-    // =========================
-    if (action === "getPartnersPlayer") {
-      let query = supabase
-        .from("player_partners")
-        .select("*, catalog:catalog_partners (id, name, link_photo, stats)")
-        .eq("player_id", player_id);
-      
-      const {
-        data,
-        error
-      } = await query;
-
-      if (error) {
-        return res.status(500).json({
-          error: error.message
-        });
-      }
-      return res.status(200).json({
-        success: true,
-        data
-      });
-    }
-
-    // =========================
     // GET FULL PLAYER DATA
     // =========================
     if (action === "getFullPlayerData") {
@@ -399,6 +296,102 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         success: true
+      });
+    }
+
+    // =========================
+    // INSERT NEW DATAS 
+    // =========================
+    if (action === "insertNewData") {
+      try{
+        const {
+          table,
+          data
+        } = body;
+
+        console.log("TABLE:", table);
+        console.log("DATA:", data);
+        const { error } = await supabase
+          .from(table)
+          .insert(data);
+        
+        if (error) {
+          console.error("INSERT ERROR:", error);
+          return res.status(500).json({
+
+            error: error.message
+          });
+        }
+        return res.status(200).json({
+          success: true,
+          message: "Data inserted successfully"
+        });
+      } catch (err) {
+        console.error("INSERT ERROR:", err);
+
+        return res.json(
+          { error: err.message },
+          { status: 500 }
+        );
+      }
+      
+    }
+
+    // =========================
+    // DELETE DATAS
+    // =========================
+    if (action === "deleteData") {
+      const { table, ids } = body;
+
+      let query = supabase
+        .from(table)
+        .delete()
+        .in("id", ids);
+
+      if (table === "player_equipments") {
+        query = query.select(`
+          *,
+          catalog:catalog_equipments (
+            id,
+            name,
+            link_photo
+          )
+        `);
+      } else if (table === "player_items") {
+        query = query.select(`
+          *,
+          catalog:catalog_items (
+            id,
+            name,
+            desc,
+            link_photo
+          )
+        `);
+      } else if (table === "player_partners") {
+        query = query.select(`
+          *,
+          catalog:catalog_partners (
+            id,
+            name,
+            link_photo,
+            stats
+          )
+        `);
+      } else {
+        query = query.select("*");
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        return res.status(500).json({
+          error: error.message
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data
       });
     }
 

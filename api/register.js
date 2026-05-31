@@ -14,9 +14,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  try {
-    const { username, password } = req.body;
+  console.log("Received registration request:", req.body);
 
+  try {
+    const body =
+      typeof req.body === "string"
+        ? JSON.parse(req.body)
+        : req.body;
+
+    const { username, password } = body;
+    console.log("Registration data:", { username, password });
     if (!username || !password) {
       return res.status(400).json({ error: "Username dan password wajib diisi" });
     }
@@ -31,6 +38,9 @@ export default async function handler(req, res) {
       email: pseudoEmail,
       password,
     });
+
+    console.log("SIGNUP DATA:", data);
+    console.log("SIGNUP ERROR:", error);
 
     if (error) {
       return res.status(400).json({ error: error.message });
@@ -47,6 +57,7 @@ export default async function handler(req, res) {
       .insert({
         id: user.id,
         username: username.toLowerCase(),
+        email: pseudoEmail,
       });
 
     if (profileError) {

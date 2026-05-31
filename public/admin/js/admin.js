@@ -29,22 +29,33 @@ async function loadPage(page) {
 menuItems.forEach((item) => {
 
   item.addEventListener("click", async () => {
-
+    item.parentElement.querySelectorAll(".menu-item").forEach((sibling) => {
+      sibling.classList.remove("active");
+    });
+    item.parentElement.querySelectorAll(".submenu-item").forEach((sibling) => {
+      sibling.classList.remove("active");
+    });
+    
     const page = item.dataset.page;
 
     await loadPage(page);
 
     if (page === "partners") {
+      item.parentElement.querySelector(".menu-click").classList.add('active');
+      
       initPartnersPage();
     } else if (page === "skills") {
       initSkillsPage();
     } else if (page === "soul_traits") {
+      item.parentElement.querySelector(".menu-click").classList.add('active');
+      
       initSoulTraitsPage();
     } else if (page === "equipments") {
       initEquipmentsPage();
     } else if (page === "items") {
       initItemsPage();
     } else if (page === "users") {
+      item.classList.add('active');
       initUserPage();
     }
 
@@ -71,7 +82,33 @@ expandButtons.forEach(btn => {
 });
 
 // ======================
+// LOGOUT
+// ======================
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("access_token");
+  window.location.href = "admin-login.html";
+});
+
+// ======================
+// CHECK LOGIN
+// ======================
+
+function checkLogin() {
+  const token =
+    localStorage.getItem("access_token");
+
+  if (!token) {
+    window.location.href = "admin-login.html";
+    return false;
+  }
+
+  return true;
+}
+
+// ======================
 // DEFAULT PAGE
 // ======================
 
-loadPage("overview");
+if (checkLogin()) {
+  loadPage("overview");
+}

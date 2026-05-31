@@ -8,6 +8,9 @@
         <div class="panel-card">
             <div class="panel-head">
                 <h3>Users</h3>
+                <button class="admin-btn primary-btn" onclick="openAddUserModal()">
+                    Add New User
+                </button>
             </div>
 
             <div class="table-wrapper">
@@ -78,9 +81,15 @@
             <div class="inventory-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                     <h4>Equipments</h4>
-                    <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddEquipmentModal()">
-                        + 
-                    </button>
+                    <div>
+                        <button style="padding:2px 8px; margin-bottom:5px;" onclick="deleteSelectedData('equipment')">
+                            -
+                        </button>
+                        <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddEquipmentModal()">
+                            +
+                        </button>
+                    </div>
+                    
                 </div>
                 
                 <ul id="weaponList"></ul>
@@ -89,9 +98,14 @@
             <div class="inventory-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                     <h4>Items</h4>
-                    <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddItemModal()">
-                        + 
-                    </button>
+                    <div>
+                        <button style="padding:2px 8px; margin-bottom:5px;" onclick="deleteSelectedData('item')">
+                            -
+                        </button>
+                        <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddItemModal()">
+                            +
+                        </button>
+                    </div>
                 </div>
                 <ul id="itemList"></ul>
             </div>
@@ -99,9 +113,14 @@
             <div class="inventory-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                     <h4>Partners</h4>
-                    <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddPartnerModal()">
-                        + 
-                    </button>
+                    <div>
+                        <button style="padding:2px 8px; margin-bottom:5px;" onclick="deleteSelectedData('partner')">
+                            -
+                        </button>
+                        <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddPartnerModal()">
+                            + 
+                        </button>
+                    </div>
                 </div>
                 <ul id="partnerList"></ul>
             </div>
@@ -277,8 +296,8 @@
             <button class="admin-btn" onclick="closeAddEquipmentModal()">
                 Cancel
             </button>
-            <button class="admin-btn primary-btn" onclick="addNewEquipment()">
-                Add Equipment
+            <button class="admin-btn primary-btn" onclick="saveNewData('equipment')">
+                Save Equipment
             </button>
         </div>
     </div>
@@ -321,8 +340,8 @@
             <button class="admin-btn" onclick="closeAddItemModal()">
                 Cancel
             </button>
-            <button class="admin-btn primary-btn" onclick="addNewItem()">
-                Add Item
+            <button class="admin-btn primary-btn" onclick="saveNewData('item')">
+                Save Item
             </button>
         </div>
     </div>
@@ -365,8 +384,55 @@
             <button class="admin-btn" onclick="closeAddPartnerModal()">
                 Cancel
             </button>
-            <button class="admin-btn primary-btn" onclick="addNewPartner()">
-                Add Partner
+            <button class="admin-btn primary-btn" onclick="saveNewData('partner')">
+                Save Partner
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ADD USER MODAL -->
+<div id="addUserModal" class="modal">
+    <div class="modal-content add-user-modal" style="width:unset;">
+        <div id="overlayModalUser" class="table-overlay hidden">
+            <div class="spinner"></div>
+        </div>
+        <span class="close-btn" onclick="closeAddUserModal()">
+            ✕
+        </span>
+        <div style="display:flex;align-items:center;margin-bottom:12px;gap:10px;">
+            <h2>
+                Add User
+            </h2>
+        </div>
+        <div id="users-new">
+            <div class="form-add-grid dynamic-row">
+                <input
+                    type="text"
+                    id="newUsername"
+                    class="user-username"
+                    placeholder="Username"
+                >
+                <input
+                    type="password"
+                    id="newPassword"
+                    class="user-password"
+                    placeholder="Password"
+                >
+                <select id="newSoulTrait">
+                    <option value="">Select Soul Trait</option>
+                    <option value="Soul of the Brave">Soul of the Brave</option>
+                    <option value="Soul of the Swift">Soul of the Swift</option>
+                    <option value="Soul of the Wise">Soul of the Wise</option>
+                </select>
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+            <button class="admin-btn" onclick="closeAddUserModal()">
+                Cancel
+            </button>
+            <button class="admin-btn primary-btn" onclick="saveNewUser()">
+                Save User
             </button>
         </div>
     </div>
