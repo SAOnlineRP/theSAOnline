@@ -195,7 +195,7 @@
                 <div class="card">
                     <p class="card-title">Story 1-1</p>
                     <div class="box">
-                        <button class="button-event">Masuk Story</button>
+                        <button class="button-event" onclick="goToStory()">Masuk Story</button>
                     </div>
                 </div>
 
@@ -209,21 +209,21 @@
                 <div class="card">
                     <p class="card-title">Story 1-2</p>
                     <div class="box">
-                        <button class="button-event">Masuk Story</button>
+                        <button class="button-event" onclick="goToStory()">Masuk Story</button>
                     </div>
                 </div>
 
                 <div class="card">
                     <p class="card-title">Battle 1-2</p>
                     <div class="box">
-                        <button class="button-event">Masuk Battle</button>
+                        <button class="button-event" onclick="goToParty()">Masuk Battle</button>
                     </div>
                 </div>
 
                 <div class="card">
                     <p class="card-title">Story 1-3</p>
                     <div class="box">
-                        <button class="button-event">Masuk Story</button>
+                        <button class="button-event" onclick="goToStory()">Masuk Story</button>
                     </div>
                 </div>
             </div>
@@ -236,6 +236,10 @@
 
         function goHome() {
         window.location.href = "menu.html";
+        }
+
+        function goToStory() {
+        window.location.href = "quest-story.html";
         }
 
         function goToParty() {

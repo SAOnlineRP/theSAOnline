@@ -59,34 +59,69 @@
             margin-bottom: 30px;
             font-size: 40px;
         }
-        .quest-title {
-            color: #00ddff;
-            text-shadow: 0 0 10px #00ddff, 0 0 20px #00ddff, 0 0 30px #00ddff;
-        }
-        .story-content {
-            color: #fff;
-            font-size: 18px;
-            line-height: 1.6;
-            padding: 0 20px;
-            max-width: 800px;
-            margin: 0 auto;
+
+        .topbar-left {
+            display: flex;
+            gap: 18px;
+            color: #000;
+            align-items: center;
         }
 
+        .topbar-left button {
+            border: none;
+            background: none;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        
+
+        .content {
+            min-height: 75%;
+            background: #215b7a;
+            border-radius: 10px;
+            box-shadow:
+            inset 0 0 18px rgba(255,255,255,0.04),
+            0 10px 28px rgba(0,0,0,0.35);
+
+            overflow-x: auto; /* penting */
+            overflow-y: hidden;
+            padding: 15px;
+
+            justify-content: center; /* ini bikin center atas-bawah */
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="https://cdn.discordapp.com/attachments/1130794410866449458/1130794411224897342/unknown.png" alt="Background Image" class="bg-image" />
+        <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
         <div class="topbar">
-            <div class="quest-title">QUEST: THE LOST SWORD</div>
+            <div class="topbar-left">
+                <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+                <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+            </div>
+
         </div>
-        <div class="story-content">
-            <p>In the kingdom of Eldoria, a legendary sword known as "The Lost Blade" has been missing for centuries. It is said that whoever wields the sword will gain immense power and control over the elements. Many adventurers have tried to find it, but none have succeeded.</p>
-            <p>You are a brave adventurer who has heard rumors about the sword's location. Your journey begins in the bustling town of Silverbrook, where you must gather information from the locals and prepare for the challenges ahead.</p>
-            <p>As you explore Silverbrook, you encounter various characters who provide clues about the sword's whereabouts. Some say it is hidden in the ancient ruins of Darkwood Forest, while others believe it is guarded by a powerful dragon in the mountains.</p>
-            <p>Your quest will take you through treacherous terrains, dangerous dungeons, and encounters with mythical creatures. Along the way, you will need to solve puzzles, defeat enemies, and make crucial decisions that will shape your destiny.</p>
-            <p>Will you be able to find The Lost Blade and harness its power? The fate of Eldoria rests in your hands.</p>
+        <div class="content">
+            <div class="title">The Beginning</div>
+
+            
         </div>
     </div>
+    <script>
+        function goBack() {
+        window.history.back();
+        }
+
+        function goHome() {
+        window.location.href = "menu.html";
+        }
+
+        function goToParty() {
+        window.location.href = "party.html";
+        }
+    </script>
 </body>
 </html>
+
