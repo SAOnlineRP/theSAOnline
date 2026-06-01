@@ -435,7 +435,7 @@ class Battle {
             queueBox.appendChild(div);
             });
 
-            while (queueBox.children.length < 5) {
+            while (queueBox.children.length < 3) {
             const emptyDiv = document.createElement("div");
             emptyDiv.className = "turn-avatar-box";
             queueBox.appendChild(emptyDiv);

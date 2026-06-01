@@ -328,18 +328,69 @@
       object-fit: cover;
       border-radius: 8px;
     }
+
+    @media (max-width: 768px) {
+      .enemy-area{
+        flex-direction: column;
+      }
+      .enemy-photo{
+        height: 140px;
+        width: 140px;
+      }
+      .bottom-bar{
+        flex-direction: column;
+        align-items: center;
+      }
+
+      button{
+        padding: 6px;
+      }
+      
+      .sidebar{
+        width: 100px;
+      }
+
+      .status-card{
+        min-width: unset;
+        width: 100%;
+      }
+
+      .top-bar{
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: flex-start;
+      }
+
+      .turn-area {
+        flex-wrap: wrap;
+      }
+
+      .turn{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+      }
+
+      .turn-indicator{
+          font-size: 14px;
+          font-weight: bold;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="game-screen">
 
     <div class="top-bar">
-      <div class="left-icons">
-        <button onclick="goBack()">Back</button>
-        <button onclick="goHome()">Home</button>
-      </div>
-      <button id="open-log-btn">Battle Log</button>
-      <div class="turn-area">
+      <div style="display: flex; gap: 10px">
+        <div class="left-icons">
+          <button onclick="goBack()">Back</button>
+          <button onclick="goHome()">Home</button>
+        </div>
+        <button id="open-log-btn">Battle Log</button>
         <div class="turn">
           TURN<br><strong id="turn-number">1</strong>
         </div>
@@ -348,6 +399,9 @@
           <div id="current-turn-avatar" class="turn-avatar-box"></div>
           <div class="turn-indicator">Hero A's turn</div>
         </div>
+      </div>
+      <div class="turn-area">
+        
 
         <div class="next">
           <div id="next-turn-avatar" class="square turn-avatar-box"></div>
@@ -357,17 +411,22 @@
         <div class="queue" id="turn-queue">
           <div class="turn-avatar-box"></div>
           <div class="turn-avatar-box"></div>
-          <div class="turn-avatar-box"></div>
-          <div class="turn-avatar-box"></div>
-          <div class="turn-avatar-box"></div>
         </div>
       </div>
     </div>
 
     <div class="main-layout">
       <div class="sidebar left">
-        <div class="label">list enemies</div>
-        <div class="bar"></div>
+        <div>
+          <div class="label">list enemies</div>
+          <div class="bar"></div>
+        </div>
+        <div class="sidebar right">
+            <div class="label">list party members</div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
       </div>
 
       <div class="center-area">
@@ -388,13 +447,6 @@
             <div class="stat enemy-def">DEF: 0</div>
           </div>
         </div>
-      </div>
-
-      <div class="sidebar right">
-        <div class="label">list party members</div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
       </div>
     </div>
 
