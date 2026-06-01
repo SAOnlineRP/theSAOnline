@@ -358,6 +358,225 @@ body {
     background: linear-gradient(90deg, transparent, rgba(24,184,255,0.1), transparent);
 }
 
+.popup-menu {
+    position: absolute;
+    min-width: 220px;
+
+    background:
+        linear-gradient(135deg, rgba(24,184,255,0.16), transparent 32%),
+        radial-gradient(circle at center, var(--panel-mid), var(--panel-dark));
+
+    border: 1px solid var(--border-soft);
+    color: white;
+
+    box-shadow:
+        inset 0 0 18px rgba(255,255,255,0.04),
+        0 0 18px rgba(24,184,255,0.12),
+        0 14px 30px rgba(0,0,0,0.45);
+
+    backdrop-filter: blur(6px);
+    z-index: 999;
+     opacity: 0;
+    transform: translateY(-10px);
+    transition: .2s;
+}
+
+.popup-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.popup-menu.hidden {
+    display: none;
+}
+
+.popup-item {
+    padding: 12px 16px;
+    cursor: pointer;
+}
+
+.popup-item:hover {
+    background: rgba(24,184,255,0.15);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.7);
+    backdrop-filter: blur(6px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+.sao-modal {
+    background:
+        linear-gradient(135deg, rgba(24,184,255,0.16), transparent 32%),
+        radial-gradient(circle at center, var(--panel-mid), var(--panel-dark));
+
+    border: 1px solid var(--border-soft);
+    color: white;
+
+    box-shadow:
+        inset 0 0 18px rgba(255,255,255,0.04),
+        0 0 18px rgba(24,184,255,0.12),
+        0 14px 30px rgba(0,0,0,0.45);
+
+    backdrop-filter: blur(6px);
+
+    width: 400px;
+    max-width: 90%;
+    border-radius: 8px;
+    animation: modalOpen .3s ease;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px;
+
+    border-bottom: 1px solid rgba(24,184,255,.3);
+}
+
+.modal-header span {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #18b8ff;
+    text-shadow: 0 0 10px rgba(24,184,255,.7);
+}
+
+.modal-header button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.quest-item {
+    padding: 15px;
+    margin-bottom: 10px;
+
+    border: 1px solid rgba(24,184,255,.2);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(24,184,255,.1),
+            transparent
+        );
+
+    transition: .2s;
+    display: flex;
+    justify-content: space-between;
+}
+
+.quest-item:hover {
+    transform: translateX(6px);
+
+    border-color: rgba(24,184,255,.7);
+
+    box-shadow:
+        0 0 15px rgba(24,184,255,.25);
+}
+
+.task-title {
+    min-width: 140px;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.quest-status {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.quest-status.clear {
+    color: #52ff8f;
+    box-shadow: 0 0 10px rgba(82,255,143,.5);
+}
+
+.quest-status.pending {
+    color: #ffcc4d;
+    box-shadow: 0 0 10px rgba(255,204,77,.5);
+}
+
+.quest-status.failed {
+    color: #ff6b6b;
+    box-shadow: 0 0 10px rgba(255,107,107,.5);
+}
+
+.modal-footer {
+    padding: 20px;
+    text-align: right;
+}
+
+.sao-btn {
+    padding: 12px 30px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(24,184,255,.25),
+            rgba(24,184,255,.05)
+        );
+
+    border: 1px solid #18b8ff;
+
+    color: white;
+
+    cursor: pointer;
+
+    text-shadow:
+        0 0 8px rgba(24,184,255,.8);
+
+    transition: .2s;
+}
+
+.sao-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(24,184,255,.4);
+}
+
+@keyframes modalOpen {
+    from {
+        opacity: 0;
+        transform: scale(.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 @media (max-width: 900px) {
     .menu-panel {
     width: 360px;

@@ -185,6 +185,7 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
     padding: 15px;
     border-radius: 30px;
     color: #362f2c;
+    cursor: pointer;
 }
 .photo-info .desc-item{
     display: flex;
@@ -265,6 +266,35 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
     cursor: pointer;
     border-radius: 5px;
 }
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+    display: none; /* default hidden */
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+}
+
+.close-button {
+    float: right;
+    cursor: pointer;
+    font-size: 24px;
+}
 @media (max-width: 768px) {
     .container {
         margin: 10px 10px;
@@ -326,7 +356,7 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
     }
     
     .capacity {
-        font-size: 18px;
+        font-size: 18px !important;
         padding: 4px 8px;
     }
 

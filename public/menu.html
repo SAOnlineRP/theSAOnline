@@ -35,12 +35,13 @@
                 <div class="gold-row">🪙 <span id="col">10000</span></div>
                 <div class="gold-row">💎 <span id="arcana-gem">50</span></div>
             </div>
+            
         </div>
-
+        <div id="popup-menu" class="popup-menu hidden"></div>
         <div class="top-right">
             <button class="icon-btn hud-panel" onclick="goToFriends()">👥</button>
-            <button class="icon-btn hud-panel">📋</button>
-            <button class="icon-btn hud-panel">🎁</button>
+            <button class="icon-btn hud-panel" onclick="openPopup(event, 'dailytask')" >📋</button>
+            <button class="icon-btn hud-panel" onclick="openPopup(event, 'gift')">🎁</button>
         </div>
     </div>
 
@@ -88,6 +89,64 @@
       LOGOUT
     </button>
 
+    <!-- DAILY QUEST MODAL -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div class="sao-modal">
+          <div class="modal-header">
+              <span>DAILY QUEST</span>
+              <button onclick="closeModal()">✕</button>
+          </div>
+
+          <div class="modal-body">
+              <div class="quest-item">
+                <div class="task-title">
+                    Login Today
+                </div>
+                <div class="quest-progress-text">
+                  1 / 1
+                </div>
+
+                <div class="quest-status clear">
+                    ✓
+                </div>
+              </div>
+
+              <div class="quest-item">
+                <div class="task-title">
+                    Clear 5 Dungeons
+                </div>
+
+                <div class="quest-progress-text">
+                  2 / 5
+                </div>
+
+                <div class="quest-status pending">
+                    ○
+                </div>
+              </div>
+
+              <div class="quest-item">
+                <div class="task-title">
+                    Defeat 10 Bosses
+                </div>
+
+                <div class="quest-progress-text">
+                  0 / 10
+                </div>
+
+                <div class="quest-status failed">
+                    ✗
+                </div> 
+              </div>
+          </div>
+
+          <div class="modal-footer">
+              <button class="sao-btn">
+                  CLAIM ALL
+              </button>
+          </div>
+      </div>
+  </div>
   </main>
 
   <script type="module">
@@ -236,6 +295,68 @@
       await logout();
     }
 
+    function openPopup(event, type) {
+      const popup = document.getElementById("popup-menu");
+
+      const btn = event.currentTarget;
+      const rect = btn.getBoundingClientRect();
+      const parentRect = document
+      .querySelector(".game-screen")
+      .getBoundingClientRect();
+
+      let html = "";
+
+      if (type === "gift") {
+          html = `
+              <div class="popup-item">Claim Gift</div>
+              <div class="popup-item">Gift History</div>
+          `;
+      }
+
+      if (type === "dailytask") {
+          html = `
+              <div class="popup-item" onclick="closePopup(); openModal()">Daily Quest</div>
+              <div class="popup-item">Weekly Quest</div>
+          `;
+      }
+
+      popup.innerHTML = html;
+
+      const popupRect = popup.getBoundingClientRect();
+
+      let left = rect.left - parentRect.left;
+
+      const maxLeft =
+          parentRect.width - popupRect.width - 10;
+
+      if (left > maxLeft) {
+          left = maxLeft;
+      }
+
+      popup.style.top =
+        `${rect.bottom - parentRect.top + 8}px`;
+
+      popup.style.left = `${left}px`;
+
+      popup.classList.remove("hidden");
+
+      setTimeout(() => {
+          popup.classList.add("show");
+      }, 10);
+    }
+
+    function openModal() {
+        document
+            .getElementById("modal-overlay")
+            .classList.remove("hidden");
+    }
+
+    function closeModal() {
+        document
+            .getElementById("modal-overlay")
+            .classList.add("hidden");
+    }
+
     window.goToQuest = goToQuest;
     window.goToParty = goToParty;
     window.goToSummon = goToSummon;
@@ -247,6 +368,12 @@
     window.goToBlackSmith = goToBlackSmith;
     window.showText = showText;
     window.handleLogout = handleLogout;
+    window.openPopup = openPopup;
+    window.closePopup = () => {
+      document.getElementById("popup-menu").classList.add("hidden");
+    };
+    window.openModal = openModal;
+    window.closeModal = closeModal;
 
     async function init() {
       try {

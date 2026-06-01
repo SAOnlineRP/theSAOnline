@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story UI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-top: #003973;
+            --bg-mid: #11375d;
+            --bg-bottom: #020813;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif !important;
+        }
+
+        body {
+            min-height: 100vh;
+            background-size: cover;
+            background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
+        }
+
+        .container {
+            height: 100vh;              /* patok ke tinggi layar */
+            width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+            max-width: 100%;
+            margin: 0 auto;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(600px, 60vw);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+            filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
+            z-index: -1;
+        }
+
+        /* top bar */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            font-size: 40px;
+        }
+        .quest-title {
+            color: #00ddff;
+            text-shadow: 0 0 10px #00ddff, 0 0 20px #00ddff, 0 0 30px #00ddff;
+        }
+        .story-content {
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.6;
+            padding: 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://cdn.discordapp.com/attachments/1130794410866449458/1130794411224897342/unknown.png" alt="Background Image" class="bg-image" />
+        <div class="topbar">
+            <div class="quest-title">QUEST: THE LOST SWORD</div>
+        </div>
+        <div class="story-content">
+            <p>In the kingdom of Eldoria, a legendary sword known as "The Lost Blade" has been missing for centuries. It is said that whoever wields the sword will gain immense power and control over the elements. Many adventurers have tried to find it, but none have succeeded.</p>
+            <p>You are a brave adventurer who has heard rumors about the sword's location. Your journey begins in the bustling town of Silverbrook, where you must gather information from the locals and prepare for the challenges ahead.</p>
+            <p>As you explore Silverbrook, you encounter various characters who provide clues about the sword's whereabouts. Some say it is hidden in the ancient ruins of Darkwood Forest, while others believe it is guarded by a powerful dragon in the mountains.</p>
+            <p>Your quest will take you through treacherous terrains, dangerous dungeons, and encounters with mythical creatures. Along the way, you will need to solve puzzles, defeat enemies, and make crucial decisions that will shape your destiny.</p>
+            <p>Will you be able to find The Lost Blade and harness its power? The fate of Eldoria rests in your hands.</p>
+        </div>
+    </div>
+</body>
+</html>
