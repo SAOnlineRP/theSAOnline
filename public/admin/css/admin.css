@@ -687,6 +687,16 @@ input:focus {
     flex: 1;
 }
 
+.header-row{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.header-row p {
+  flex: 1;
+}
+
 .inventory-card {
     overflow: visible;
 }

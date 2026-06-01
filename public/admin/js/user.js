@@ -9,9 +9,11 @@ const API_REGISTER_URL = `${BASE_URL}/api/register`;
 
 let currentEditingUserId = null;
 let currentPlayerData = null;
+let currentPlayers = [];
 let currentCatalogEquipments = [];
 let currentCatalogItems = [];
 let currentCatalogPartners = [];
+let currentCatalogST = [];
 
 // =========================
 // API HELPER
@@ -134,6 +136,17 @@ async function fetchListPlayers() {
   });
 }
 
+// ===========
+// FETCH CATALOG SOUL TRAIT 
+// ===========
+
+async function fetchCatalogSoulTrait(){
+  return await apiCatalogRequest({
+    table: "catalog_soul_traits",
+    action: "getAll"
+  })
+}
+
 async function fetchFullPlayerData(userId) {
 
   return await apiRequest({
@@ -177,6 +190,20 @@ function renderListPlayers(
   });
 }
 
+// =======
+// render soul trait 
+// =======
+function renderSoulTraint(soultraits, selectST) {
+  selectST.append(new Option('', ''));
+  soultraits.forEach(eq => {
+    selectST.append(
+      new Option(eq.name, eq.id)
+    );
+  });
+
+  $(selectST).trigger('change');
+}
+
 // =========================
 // INIT PAGE
 // =========================
@@ -185,9 +212,37 @@ async function initUserPage() {
 
   $(document).ready(function () {
       $('.addEquipmentSelect').select2({
+        placeholder: "Select an equipment",
+        allowClear: true,
         dropdownParent: $('#addEquipmentModal')
     });
   });
+
+  $(document).ready(function () {
+      $('.addItemSelect').select2({
+        placeholder: "Select an item",
+        allowClear: true,
+        dropdownParent: $('#addItemModal')
+    });
+  });
+
+  $(document).ready(function () {
+      $('.addPartnerSelect').select2({
+        placeholder: "Select a partner",
+        allowClear: true,
+        dropdownParent: $('#addPartnerModal')
+    });
+  });
+
+  $(document).ready(function () {
+      $('#newSoulTrait').select2({
+        placeholder: "Select a soul trait",
+        allowClear: true,
+        dropdownParent: $('#addUserModal')
+    });
+  });
+
+  const selectST = document.getElementById('newSoulTrait');
 
   const listPlayersBody =
     document.getElementById(
@@ -206,18 +261,33 @@ async function initUserPage() {
       !isLoading
     );
   }
+  const btnNewUser = document.getElementById("btnAddNewUser");
 
   try {
 
     setTableLoading(true);
+    
+    btnNewUser.disabled = true;
+    btnNewUser.textContent = "Loading...";
 
     const players =
       await fetchListPlayers();
+
+    currentPlayers = players;
+
+    console.log("players ", players);
 
     renderListPlayers(
       players || [],
       listPlayersBody
     );
+
+    const soultraits = await fetchCatalogSoulTrait();
+
+    renderSoulTraint(
+      soultraits || [],
+      selectST
+    )
 
   } catch (err) {
 
@@ -229,6 +299,8 @@ async function initUserPage() {
   } finally {
 
     setTableLoading(false);
+    btnNewUser.disabled = false;
+    btnNewUser.textContent = "Add New User";
   }
 
   // =========================
@@ -328,6 +400,9 @@ async function initUserPage() {
         items || [],
         partners || []
       );
+
+      populateStatsToggle(stats || []);
+      console.log("stats ", stats);
 
     } catch (err) {
 
@@ -687,6 +762,7 @@ function populateEditForm(
   ).value =
     stats.crit_dmg || 0;
 
+
   // TABS
 
   populateEquipmentTab(
@@ -700,6 +776,32 @@ function populateEditForm(
   populatePartnersTab(
     partners
   );
+}
+
+function populateStatsToggle(stats){
+  document.getElementById(
+    "userAtk"
+  ).innerHTML =
+    stats.atk || 0;
+
+  document.getElementById(
+    "userDef"
+  ).innerHTML =
+    stats.def || 0;
+
+  document.getElementById("userHp").innerHTML =
+    stats.max_hp || 0;
+
+  document.getElementById("userMp").innerHTML =
+    stats.max_mp || 0;
+
+  document.getElementById("userCritRate").innerHTML =
+    stats.crit_pct || 0;
+
+  document.getElementById(
+    "userCritDmg"
+  ).innerHTML =
+    stats.crit_dmg || 0;
 }
 
 // =========================
@@ -717,6 +819,10 @@ function populateEquipmentTab(
 
   container.innerHTML = "";
 
+  const divHeader = document.createElement("div");
+  divHeader.className = "header-row";
+  divHeader.innerHTML = `<p>Name</p><p>Level</p><p>Star</p>`
+  container.appendChild(divHeader);
   equipments.forEach((eq) => {
     const div =
       document.createElement("div");
@@ -743,13 +849,6 @@ function populateEquipmentTab(
         type="number"
         value="${eq.star}"
       >
-
-      <button
-        class="admin-btn danger-btn"
-        onclick="this.parentElement.remove()"
-      >
-        X
-      </button>
     `;
 
     container.appendChild(div);
@@ -770,6 +869,11 @@ function populateItemsTab(
     );
 
   container.innerHTML = "";
+
+  const divHeader = document.createElement("div");
+  divHeader.className = "header-row";
+  divHeader.innerHTML = `<p>Name</p><p>Amount</p>`
+  container.appendChild(divHeader);
 
   items.forEach((item) => {
 
@@ -792,12 +896,6 @@ function populateItemsTab(
         value="${item.quantity}"
       >
 
-      <button
-        class="admin-btn danger-btn"
-        onclick="this.parentElement.remove()"
-      >
-        X
-      </button>
     `;
 
     container.appendChild(div);
@@ -818,6 +916,11 @@ function populatePartnersTab(
     );
 
   container.innerHTML = "";
+
+  const divHeader = document.createElement("div");
+  divHeader.className = "header-row";
+  divHeader.innerHTML = `<p>Name</p><p>Level</p><p>Star</p>`
+  container.appendChild(divHeader);
 
   partners.forEach((partner) => {
 
@@ -849,12 +952,6 @@ function populatePartnersTab(
         max="5"
       >
 
-      <button
-        class="admin-btn danger-btn"
-        onclick="this.parentElement.remove()"
-      >
-        X
-      </button>
     `;
 
     container.appendChild(div);
@@ -881,6 +978,7 @@ window.addEquipmentRow =
 
   div.innerHTML = `
     <select class="addEquipmentSelect" style="width:100%;">
+      <option></option>
     </select>
 
     <input
@@ -909,6 +1007,8 @@ window.addEquipmentRow =
 
   const selectEqNew = $(div).find(".addEquipmentSelect");
 
+  selectEqNew.append(new Option('', ''));
+
   currentCatalogEquipments.forEach(eq => {
     selectEqNew.append(
       new Option(
@@ -919,7 +1019,9 @@ window.addEquipmentRow =
   });
 
   selectEqNew.select2({
-    dropdownParent: $("#addEquipmentModal")
+    dropdownParent: $("#addEquipmentModal"),
+    placeholder: 'Select an equipment',
+    allowClear: true
   });
 };
 
@@ -939,6 +1041,7 @@ window.addItemRow =
 
   div.innerHTML = `
     <select class="addItemSelect" style="width:100%;">
+      <option></option>
     </select>
 
     <input
@@ -959,6 +1062,8 @@ window.addItemRow =
 
   const selectEqNew = $(div).find(".addItemSelect");
 
+  selectEqNew.append(new Option('', ''));
+
   currentCatalogItems.forEach(item => {
     selectEqNew.append(
       new Option(
@@ -969,7 +1074,9 @@ window.addItemRow =
   });
 
   selectEqNew.select2({
-    dropdownParent: $("#addItemModal")
+    dropdownParent: $("#addItemModal"),
+    placeholder: 'Select an item',
+    allowClear: true
   });
 };
 
@@ -989,6 +1096,7 @@ window.addPartnerRow =
 
   div.innerHTML = `
     <select class="addPartnerSelect" style="width:100%;">
+      <option></option>
     </select>
 
     <input
@@ -1015,6 +1123,8 @@ window.addPartnerRow =
 
   const selectEqNew = $(div).find(".addPartnerSelect");
 
+  selectEqNew.append(new Option('', ''));
+
   currentCatalogPartners.forEach(partner => {
     selectEqNew.append(
       new Option(
@@ -1025,7 +1135,9 @@ window.addPartnerRow =
   });
 
   selectEqNew.select2({
-    dropdownParent: $("#addPartnerModal")
+    dropdownParent: $("#addPartnerModal"),
+    placeholder: 'Select a partner',
+    allowClear: true
   });
 };
 
@@ -1086,6 +1198,8 @@ window.openAddEquipmentModal = async function() {
     const selectEq = $(".addEquipmentSelect");
 
     selectEq.empty();
+
+    selectEq.append(new Option('', ''));
 
     currentCatalogEquipments.forEach(eq => {
       selectEq.append(
@@ -1159,6 +1273,8 @@ window.openAddItemModal = async function() {
 
     selectItem.empty();
 
+    selectItem.append(new Option('', ''));
+
     currentCatalogItems.forEach(item => {
       selectItem.append(
         new Option(
@@ -1225,6 +1341,8 @@ window.openAddPartnerModal = async function() {
     const selectPartner = $(".addPartnerSelect");
 
     selectPartner.empty();
+
+    selectPartner.append(new Option('', ''));
 
     currentCatalogPartners.forEach(partner => {
       selectPartner.append(

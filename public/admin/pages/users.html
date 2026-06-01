@@ -8,7 +8,7 @@
         <div class="panel-card">
             <div class="panel-head">
                 <h3>Users</h3>
-                <button class="admin-btn primary-btn" onclick="openAddUserModal()">
+                <button class="admin-btn primary-btn" id="btnAddNewUser" onclick="openAddUserModal()">
                     Add New User
                 </button>
             </div>
@@ -287,7 +287,7 @@
                 <input
                     type="number"
                     class="equipment-star"
-                    placeholder="Level"
+                    placeholder="Star"
                     min="1"
                 >
             </div>
@@ -371,8 +371,14 @@
 
                 <input
                     type="number"
-                    class="partner-qty"
-                    placeholder="Amount"
+                    class="partner-level"
+                    placeholder="Level"
+                    min="1"
+                >
+                <input
+                    type="number"
+                    class="partner-star"
+                    placeholder="Star"
                     min="1"
                 >
             </div>
@@ -417,10 +423,6 @@
                     placeholder="Password"
                 >
                 <select id="newSoulTrait">
-                    <option value="">Select Soul Trait</option>
-                    <option value="Soul of the Brave">Soul of the Brave</option>
-                    <option value="Soul of the Swift">Soul of the Swift</option>
-                    <option value="Soul of the Wise">Soul of the Wise</option>
                 </select>
             </div>
         </div>

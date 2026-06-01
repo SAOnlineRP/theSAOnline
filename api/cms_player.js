@@ -8,7 +8,8 @@ const allowedTables = [
   "player_equipments",
   "player_items",
   "player_badges",
-  "player_friendships"
+  "player_friendships",
+  "player_gifts"
 ];
 
 export default async function handler(req, res) {
@@ -392,6 +393,57 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         data
+      });
+    }
+
+    // =====
+    // UPDATE SELECTED 
+    // =====
+    if (action === "updateSelectedData") {
+      const { table, column, ids, amount } = body;
+      let query = supabase
+        .from(table)
+        .update({
+          [column]: amount
+        })
+        .in("player_id", ids);
+      
+      const { error } = await query;
+
+      if (error) {
+        return res.status(500).json({
+          error: error.message
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Data updated successfully"
+      });
+    }
+
+
+
+    // =====
+    // INSERT BATCH GIFTS
+    // =====
+    if (action === "insertToSelected") {
+      const { table, data } = body;
+      let query = supabase
+        .from("player_gifts")
+        .insert(data);
+      
+      const { error } = await query;
+
+      if (error) {
+        return res.status(500).json({
+          error: error.message
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Data updated successfully"
       });
     }
 
