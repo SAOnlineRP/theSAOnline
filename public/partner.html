@@ -288,6 +288,53 @@
             height: 100%;
             background-size: cover;
         }
+
+        .name-section{
+            display: flex; 
+            justify-content: space-between;
+        }
+
+        .levelup-partner{
+            display: flex; 
+            justify-content: space-between;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                margin-top: 70px;
+                height: unset;
+                align-items: center;
+                flex-direction: column;
+            }
+
+            .list-partner{
+                min-width: 90%;
+                flex-direction: row;
+            }
+
+            .topbar-right{
+                align-items: center;
+            }
+
+            .currency-box{
+                height: 25px;
+                font-size: 25px;
+                padding: 0px 0px;
+            }
+            
+            .info-partner{
+                flex-direction: column;
+            }
+
+            .name-section{
+                flex-direction: column;
+            }
+
+            .levelup-partner{
+                justify-content: unset;
+                gap: 10px;
+            }
+        } 
     </style>
 </head>
 <body>
@@ -305,14 +352,25 @@
         </div>
         </div>
         <div class="content">
+            <div class="list-partner">
+                <div class="partner-option">
+                    <img src="/img/partners/kirito.png">
+                </div>
+                <div class="partner-option">
+                    <img src="/img/partners/asuna.png">
+                </div>
+                <div class="partner-option">
+                    <img src="/img/partners/klein.png">
+                </div>
+            </div>
             <div class="info-partner">
                 <div class="detail-partner">
                     <div>   
-                        <div style="display: flex; justify-content: space-between;">
+                        <div class="name-section">
                             <div>
                                 <h3 class="nama-partner">Kirito Kazugaya</h3>
                             </div>
-                            <div class="levelup-partner" style="display: flex; justify-content: space-between;">
+                            <div class="levelup-partner">
                                 <h3 class="level-partner">Lv. 100</h3>
                                 <button><img src="/img/star-up.png" style="width: 25px; height: 25px;"></button>
                             </div>
@@ -353,17 +411,6 @@
                 </div>
                 <div class="foto-partner">
                     <img src="/img/character_kirito.png">
-                </div>
-            </div>
-            <div class="list-partner">
-                <div class="partner-option">
-                    <img src="/img/partners/kirito.png">
-                </div>
-                <div class="partner-option">
-                    <img src="/img/partners/asuna.png">
-                </div>
-                <div class="partner-option">
-                    <img src="/img/partners/klein.png">
                 </div>
             </div>
         </div>
