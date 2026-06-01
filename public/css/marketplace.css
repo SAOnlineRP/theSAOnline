@@ -59,7 +59,7 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
 .topbar-left button {
     border: none;
     background: none;
-    font-size: 40px;
+    font-size: 35px;
     cursor: pointer;
 }
 
@@ -295,6 +295,17 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
         gap: 5px;
         text-align: center;
         margin-right: 10px;
+    }
+
+    .topbar-right{
+        gap: 2px;
+        align-items: center;
+    }
+
+    .currency-box{
+        height: 25px;
+        font-size: 25px;
+        padding: 0px 0px;
     }
 
     .info-player {
