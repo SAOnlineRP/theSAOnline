@@ -42,19 +42,281 @@ export default async function handler(req, res) {
     } = body;
     
     // =========================
-    // GET profile milik user login
+    // GET data player milik user login
     // =========================
     if (action === "getDataPlayer") {
         const { data, error } = await supabase
           .from(table)
           .select("*")
           .eq("player_id", user.id)
-          .single();
 
         if (error) {
           return res.status(500).json({ error: error.message });
         }
         return res.status(200).json({ data });
+    }
+
+    // =========================
+    // GET profile milik user login
+    // =========================
+    if (action === "getProfile") {
+        // PROFILE
+        const { data: profile, error: profileError } =
+            await supabase
+            .from("player_profiles")
+            .select("*")
+            .eq("player_id", user.id)
+            .single();
+
+        if (profileError) {
+            return res.status(500).json({
+            error: profileError.message
+            });
+        }
+
+        // STATS
+        const { data: stats, error: statsError } =
+            await supabase
+            .from("player_stats")
+            .select("*")
+            .eq("player_id", user.id)
+            .single();
+
+        if (statsError) {
+            return res.status(500).json({
+            error: statsError.message
+            });
+        }
+
+        // BADGES
+        const { data: badges, error: badgesError } =
+            await supabase
+            .from("player_badges")
+            .select(`*,
+                catalog:catalog_badges (
+                id,
+                name
+                )`)
+            .eq("player_id", user.id);
+
+        if (badgesError) {
+            return res.status(500).json({
+            error: badgesError.message
+            });
+        }
+
+        // EQUIPPED
+        const { data: equipped, error: equippedError } = await supabase
+            .from("player_equipped")
+            .select(`
+            *,
+            right_arm:player_equipments!player_equipped_right_arm_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            left_arm:player_equipments!player_equipped_left_arm_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            lower:player_equipments!player_equipped_lower_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            upper:player_equipments!player_equipped_upper_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            first_partner:player_partners!player_equipped_first_partner_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_partners (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            second_partner:player_partners!player_equipped_second_partner_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_partners (
+                id,
+                name,
+                link_photo
+                )
+            )
+            `)
+            .eq("player_id", user.id)
+            .maybeSingle();
+
+        if (equippedError) {
+            return res.status(500).json({ error: equippedError.message });
+        }
+
+        // return full data
+        return res.status(200).json({
+            success: true,
+            data: {
+                profile,
+                stats,
+                badges,
+                equipped
+            }
+        });
+    }
+
+    // =========================
+    // GET equipped items for the logged-in user
+    // =========================
+    if (action === "getEquipped") {
+        // EQUIPPED
+        const { data: equipped, error: equippedError } = await supabase
+            .from("player_equipped")
+            .select(`
+            *,
+            right_arm:player_equipments!player_equipped_right_arm_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            left_arm:player_equipments!player_equipped_left_arm_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            lower:player_equipments!player_equipped_lower_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            upper:player_equipments!player_equipped_upper_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            first_partner:player_partners!player_equipped_first_partner_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_partners (
+                id,
+                name,
+                link_photo
+                )
+            ),
+            second_partner:player_partners!player_equipped_second_partner_fkey (
+                id,
+                level,
+                star,
+                catalog:catalog_partners (
+                id,
+                name,
+                link_photo
+                )
+            )
+            `)
+            .eq("player_id", user.id)
+            .maybeSingle();
+
+        if (equippedError) {
+            return res.status(500).json({ error: equippedError.message });
+        }
+
+        // EQUIPMENTS
+        const { data: equipments, error: equipmentsError } =
+            await supabase
+            .from("player_equipments")
+            .select(`
+                *,
+                catalog:catalog_equipments (
+                id,
+                name,
+                link_photo
+                )
+            `)
+            .eq("player_id", player_id);
+
+        if (equipmentsError) {
+            return res.status(500).json({
+            error: equipmentsError.message
+            });
+        }
+
+        // PARTNERS
+        const { data: partners, error: partnersError } =
+            await supabase
+            .from("player_partners")
+            .select(`
+                *,
+                catalog:catalog_partners (
+                id,
+                name,
+                link_photo,
+                stats
+                )
+            `)
+            .eq("player_id", player_id);
+
+        if (partnersError) {
+            return res.status(500).json({
+            error: partnersError.message
+            });
+        }
+
+        // return full data
+        return res.status(200).json({
+            success: true,
+            data: {
+                equipped,
+                equipments,
+                partners
+            }
+        });
     }
   } catch (error) {
     console.error("Error in player_data API:", error);
