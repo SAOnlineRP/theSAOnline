@@ -120,7 +120,7 @@ export default async function handler(req, res) {
     }
 
     if(action === "update") {
-
+        
         const { data, error } = await supabase
         .from(table)
         .update(body.data)

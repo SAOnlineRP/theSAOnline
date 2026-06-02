@@ -45,19 +45,19 @@ function renderSoulTraits(soulTraits, tableBody) {
             return `
                 <tr>
                     <td>${soulTrait.name}</td>
-                    <td>${JSON.stringify(soulTrait.stats)}</td>
-                    <td>${JSON.stringify(soulTrait.growth)}</td>
+                    <td>ATK : ${soulTrait.stat_atk || 0}, DEF : ${soulTrait.stat_def || 0}, MAX_HP : ${soulTrait.stat_max_hp || 0}, MAX_MP : ${soulTrait.stat_max_mp || 0}, CRIT_DMG : ${soulTrait.stat_crit_dmg || 0}, CRIT_RATE : ${soulTrait.stat_crit_pct || 0}%</td>
+                    <td>ATK : ${soulTrait.growth_atk || 0}, DEF : ${soulTrait.growth_def || 0}, MAX_HP : ${soulTrait.growth_max_hp || 0}, MAX_MP : ${soulTrait.growth_max_mp || 0}, CRIT_DMG : ${soulTrait.growth_crit_dmg || 0}, CRIT_RATE : ${soulTrait.growth_crit_pct || 0}%</td>
                     <td>${soulTrait.skill_name ?? soulTrait.skillName}</td>
                     <td>${soulTrait.skill_mp_cost ?? soulTrait.skillMpCost}</td>
                     <td>${soulTrait.effects}</td>
                     <td>
                         <button type="button"
-                            class="edit-btn"
+                            class="table-btn edit edit-btn"
                             data-id="${soulTrait.id}">
                             Edit
                         </button>
                         <button 
-                            class="delete-btn"
+                            class="table-btn delete delete-btn"
                             data-id="${soulTrait.id}"
                         >
                             Delete
@@ -74,11 +74,30 @@ function fillSoulTraitForm(soulTrait) {
     document.getElementById("soulTraitName").value =
         soulTrait.name;
 
-    document.getElementById("soulTraitStats").value =
-        JSON.stringify(soulTrait.stats);
-
-    document.getElementById("soulTraitGrowth").value =
-        JSON.stringify(soulTrait.growth);
+    document.getElementById("soulTraitATK").value =
+        soulTrait.stat_atk || 0;
+    document.getElementById("soulTraitDEF").value =
+        soulTrait.stat_def || 0;
+    document.getElementById("soulTraitMAX_HP").value =
+        soulTrait.stat_max_hp || 0;
+    document.getElementById("soulTraitMAX_MP").value =
+        soulTrait.stat_max_mp || 0;
+    document.getElementById("soulTraitCRIT_DMG").value =
+        soulTrait.stat_crit_dmg || 0;
+    document.getElementById("soulTraitCRIT_PCT").value =
+        soulTrait.stat_crit_pct || 0;
+    document.getElementById("soulTraitGrowthATK").value =
+        soulTrait.growth_atk || 0;
+    document.getElementById("soulTraitGrowthDEF").value =
+        soulTrait.growth_def || 0;
+    document.getElementById("soulTraitGrowthMAX_HP").value =
+        soulTrait.growth_max_hp || 0;
+    document.getElementById("soulTraitGrowthMAX_MP").value =
+        soulTrait.growth_max_mp || 0;
+    document.getElementById("soulTraitGrowthCRIT_DMG").value =
+        soulTrait.growth_crit_dmg || 0;
+    document.getElementById("soulTraitGrowthCRIT_PCT").value =
+        soulTrait.growth_crit_pct || 0;
 
     document.getElementById("soulTraitSkillName").value =
         soulTrait.skillName ?? soulTrait.skill_name;
@@ -252,7 +271,7 @@ async function initSoulTraitsPage() {
             try {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/catalog_soul_traits",
+                    "http://localhost:3000/api/admin",
                     {
                         method: "DELETE",
 
@@ -263,7 +282,9 @@ async function initSoulTraitsPage() {
                         },
 
                         body: JSON.stringify({
-                            id: soulTraitId,
+                            action: "delete",
+                            table: "catalog_soul_traits",
+                            id: soulTraitId
                         }),
                     }
                 );
@@ -309,13 +330,42 @@ async function initSoulTraitsPage() {
         const formData = {
             name: document.getElementById("soulTraitName").value,
 
-            stats: JSON.parse(
-                document.getElementById("soulTraitStats").value
-            ),
-
-            growth: JSON.parse(
-                document.getElementById("soulTraitGrowth").value
-            ),
+            stat_atk: parseFloat(
+                document.getElementById("soulTraitATK").value
+            ) || 0,
+            stat_def: parseFloat(
+                document.getElementById("soulTraitDEF").value
+            ) || 0,
+            stat_max_hp: parseFloat(
+                document.getElementById("soulTraitMAX_HP").value
+            ) || 0,
+            stat_max_mp: parseFloat(
+                document.getElementById("soulTraitMAX_MP").value
+            ) || 0,
+            stat_crit_dmg: parseFloat(
+                document.getElementById("soulTraitCRIT_DMG").value
+            ) || 0,
+            stat_crit_pct: parseFloat(
+                document.getElementById("soulTraitCRIT_PCT").value
+            ) || 0,
+            growth_atk: parseFloat(
+                document.getElementById("soulTraitGrowthATK").value
+            ) || 0,
+            growth_def: parseFloat(
+                document.getElementById("soulTraitGrowthDEF").value
+            ) || 0,
+            growth_max_hp: parseFloat(
+                document.getElementById("soulTraitGrowthMAX_HP").value
+            ) || 0,
+            growth_max_mp: parseFloat(
+                document.getElementById("soulTraitGrowthMAX_MP").value
+            ) || 0,
+            growth_crit_dmg: parseFloat(
+                document.getElementById("soulTraitGrowthCRIT_DMG").value
+            ) || 0,
+            growth_crit_pct: parseFloat(
+                document.getElementById("soulTraitGrowthCRIT_PCT").value
+            ) || 0,
 
             skill_name:
                 document.getElementById("soulTraitSkillName")
@@ -341,7 +391,7 @@ async function initSoulTraitsPage() {
             if (editingSoulTraitId !== null) {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/catalog_soul_traits",
+                    "http://localhost:3000/api/admin",
                     {
                         method: "PUT",
 
@@ -352,13 +402,19 @@ async function initSoulTraitsPage() {
                         },
 
                         body: JSON.stringify({
+                            action: "update",
+                            table: "catalog_soul_traits",
                             id: editingSoulTraitId,
-                            ...formData,
+                            data: formData,
                         }),
                     }
                 );
 
                 const result = await response.json();
+
+
+                //const text = await response.text();
+                //console.log(text);
 
                 if (!response.ok) {
                     throw new Error(result.error);
@@ -371,7 +427,7 @@ async function initSoulTraitsPage() {
             else {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/catalog_soul_traits",
+                    "http://localhost:3000/api/admin",
                     {
                         method: "POST",
 
@@ -381,7 +437,11 @@ async function initSoulTraitsPage() {
                             Authorization: `Bearer ${token}`,
                         },
 
-                        body: JSON.stringify(formData),
+                        body: JSON.stringify({
+                            action: "create",
+                            table: "catalog_soul_traits",
+                            data: formData
+                        }),
                     }
                 );
 

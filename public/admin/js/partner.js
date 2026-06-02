@@ -47,10 +47,22 @@ function renderListPartners(partners, tableBody) {
             return `
                 <tr>
                     <td>${partner.name}</td>
+                    <td>ATK : ${partner.atk || 0}, DEF : ${partner.def || 0}, MAX_HP : ${partner.max_hp || 0}, MAX_MP : ${partner.max_mp || 0}, CRIT_DMG : ${partner.crit_dmg || 0}, CRIT_RATE : ${partner.crit_pct || 0}%</td>
                     <td>${JSON.stringify(skills)}</td>
                     <td>
-                        <button>Edit</button>
+                        <button type="button"
+                            class="table-btn edit edit-btn"
+                            data-id="${partner.id}">
+                            Edit
+                        </button>
+                        <button 
+                            class="table-btn delete delete-btn"
+                            data-id="${partner.id}"
+                        >
+                            Delete
+                        </button>
                     </td>
+                    
                 </tr>
             `;
         })

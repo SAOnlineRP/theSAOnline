@@ -45,8 +45,17 @@ function renderItems(items, tableBody) {
                     <td>${item.name}</td>
                     <td>${item.desc}</td>
                     <td>
-                        <button class="table-btn edit">Edit</button>
-                        <button class="table-btn delete">Delete</button>
+                        <button type="button"
+                            class="table-btn edit edit-btn"
+                            data-id="${item.id}">
+                            Edit
+                        </button>
+                        <button 
+                            class="table-btn delete delete-btn"
+                            data-id="${item.id}"
+                        >
+                            Delete
+                        </button>
                     </td>
                 </tr>
             `;

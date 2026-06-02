@@ -46,7 +46,17 @@ function renderSkills(skills, tableBody) {
                     <td>${skill.mp_cost}</td>
                     <td>${JSON.stringify(skill.effects)}</td>
                     <td>
-                        <button>Edit</button>
+                        <button type="button"
+                            class="table-btn edit edit-btn"
+                            data-id="${skill.id}">
+                            Edit
+                        </button>
+                        <button 
+                            class="table-btn delete delete-btn"
+                            data-id="${skill.id}"
+                        >
+                            Delete
+                        </button>
                     </td>
                 </tr>
             `;

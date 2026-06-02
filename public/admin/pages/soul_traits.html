@@ -39,19 +39,59 @@
 
         <h2>Add New Soul Trait</h2>
         <div class="modal-body">
-            <form id="soulTraitForm">
-                <div class="form-grid">
+            <form id="soulTraitForm" style="overflow: visible;">
+                <div class="form-grid" style="max-height: 220px; overflow-y: auto;">
                     <div class="form-group">
                         <label for="soulTraitName">Name:</label>
                         <input type="text" id="soulTraitName" name="soulTraitName" required />
                     </div>
                     <div class="form-group">
-                        <label for="soulTraitStats">Stats:</label>
-                        <input type="text" id="soulTraitStats" name="soulTraitStats" />
+                        <label for="soulTraitATK">ATK:</label>
+                        <input type="text" id="soulTraitATK" name="soulTraitATK" />
                     </div>
                     <div class="form-group">
-                        <label for="soulTraitGrowth">Growth:</label>
-                        <input type="text" id="soulTraitGrowth" name="soulTraitGrowth" />
+                        <label for="soulTraitDEF">DEF:</label>
+                        <input type="text" id="soulTraitDEF" name="soulTraitDEF" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitMAX_HP">MAX_HP:</label>
+                        <input type="text" id="soulTraitMAX_HP" name="soulTraitMAX_HP" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitMAX_MP">MAX_MP:</label>
+                        <input type="text" id="soulTraitMAX_MP" name="soulTraitMAX_MP" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitCRIT_DMG">CRIT DMG:</label>
+                        <input type="text" id="soulTraitCRIT_DMG" name="soulTraitCRIT_DMG" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitCRIT_PCT">CRIT RATE (%):</label>
+                        <input type="text" id="soulTraitCRIT_PCT" name="soulTraitCRIT_PCT" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitGrowthATK">Growth ATK:</label>
+                        <input type="text" id="soulTraitGrowthATK" name="soulTraitGrowthATK" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitGrowthDEF">Growth DEF:</label>
+                        <input type="text" id="soulTraitGrowthDEF" name="soulTraitGrowthDEF" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitGrowthMAX_HP">Growth MAX HP:</label>
+                        <input type="text" id="soulTraitGrowthMAX_HP" name="soulTraitGrowthMAX_HP" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitGrowthMAX_MP">Growth MAX MP:</label>
+                        <input type="text" id="soulTraitGrowthMAX_MP" name="soulTraitGrowthMAX_MP" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitGrowthCRIT_DMG">Growth CRIT DMG:</label>
+                        <input type="text" id="soulTraitGrowthCRIT_DMG" name="soulTraitGrowthCRIT_DMG" />
+                    </div>
+                    <div class="form-group">
+                        <label for="soulTraitGrowthCRIT_PCT">Growth CRIT RATE (%):</label>
+                        <input type="text" id="soulTraitGrowthCRIT_PCT" name="soulTraitGrowthCRIT_PCT" />
                     </div>
                     <div class="form-group">
                         <label for="soulTraitSkillName">Skill Name:</label>

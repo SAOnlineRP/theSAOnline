@@ -45,7 +45,7 @@ function renderEquipments(equipments, tableBody) {
                     <td>${equipment.name}</td>
                     <td>${equipment.position}</td>
                     <td>${equipment.type}</td>
-                    <td>${JSON.stringify(equipment.stats)}</td>
+                    <td>ATK : ${equipment.atk || 0}, DEF : ${equipment.def || 0}, MAX_HP : ${equipment.max_hp || 0}</td>
                     <td>
                         <button class="table-btn edit">Edit</button>
                         <button class="table-btn delete">Delete</button>
