@@ -48,7 +48,6 @@ menuItems.forEach((item) => {
       initSkillsPage();
     } else if (page === "soul_traits") {
       item.parentElement.querySelector(".menu-click").classList.add('active');
-      
       initSoulTraitsPage();
     } else if (page === "equipments") {
       initEquipmentsPage();
@@ -60,6 +59,10 @@ menuItems.forEach((item) => {
     } else if (page === "share") {
       item.classList.add('active');
       initSharePage();
+    } else if (page === "summon_pools") {
+      item.classList.add('active');
+    } else if (page === "marketplace") {
+      item.classList.add('active');
     }
 
   });
