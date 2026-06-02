@@ -126,12 +126,18 @@
             </div>
             <!-- ACCOUNT -->
             <div class="inventory-card">
-                <h4>Account Info</h4>
-                <ul>
-                    <li>Email: player1@mail.com</li>
-                    <li>Status: Active</li>
-                    <li>Role: User</li>
-                </ul>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <h4>Badges</h4>
+                    <div>
+                        <button style="padding:2px 8px; margin-bottom:5px;" onclick="deleteSelectedData('badge')">
+                            -
+                        </button>
+                        <button style="padding:2px 5px; margin-bottom:5px;" onclick="openAddBadgeModal()">
+                            + 
+                        </button>
+                    </div>
+                </div>
+                <ul id="badgeList"></ul>
             </div>
         </div>
     </div>
@@ -389,6 +395,43 @@
             </button>
             <button class="admin-btn primary-btn" onclick="saveNewData('partner')">
                 Save Partner
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="addBadgeModal" class="modal">
+    <div class="modal-content add-badge-modal" style="width:unset;">
+        <div id="overlayModalBadge" class="table-overlay hidden">
+            <div class="spinner"></div>
+        </div>
+        <span class="close-btn" onclick="closeAddBadgeModal()">
+            ✕
+        </span>
+        <div style="display:flex;align-items:center;margin-bottom:12px;gap:10px;">
+            <h2>
+                Add Badge
+            </h2>
+            <button onclick="addBadgeRow()">
+                + Add New
+            </button>
+        </div>
+        <div id="badges-new">
+            <div class="form-add-grid dynamic-row">
+                
+                <select class="addBadgeSelect" style="width:100%;">
+                    <option value="badge1">Badge 1</option>
+                    <option value="badge2">Badge 2</option>
+                    <option value="badge3">Badge 3</option>
+                </select>
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;">
+            <button class="admin-btn" onclick="closeAddBadgeModal()">
+                Cancel
+            </button>
+            <button class="admin-btn primary-btn" onclick="saveNewData('badge')">
+                Save Badge
             </button>
         </div>
     </div>

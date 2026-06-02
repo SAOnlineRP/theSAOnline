@@ -14,6 +14,7 @@ let currentCatalogEquipments = [];
 let currentCatalogItems = [];
 let currentCatalogPartners = [];
 let currentCatalogST = [];
+let currentCatalogBadges = [];
 
 // =========================
 // API HELPER
@@ -235,6 +236,14 @@ async function initUserPage() {
   });
 
   $(document).ready(function () {
+      $('.addBadgeSelect').select2({
+        placeholder: "Select a badge",
+        allowClear: true,
+        dropdownParent: $('#addBadgeModal')
+    });
+  });
+
+  $(document).ready(function () {
       $('#newSoulTrait').select2({
         placeholder: "Select a soul trait",
         allowClear: true,
@@ -350,6 +359,7 @@ async function initUserPage() {
         equipments,
         items,
         partners,
+        badges
       } = currentPlayerData;
 
       // HIDE LIST
@@ -391,6 +401,10 @@ async function initUserPage() {
 
       renderPartners(
         partners || []
+      );
+
+      renderBadges(
+        badges || []
       );
 
       populateEditForm(
@@ -687,6 +701,20 @@ function renderPartners(partners = []) {
 
           </div>
         </div>
+      </li>
+    `;
+  });
+}
+
+function renderBadges(badges = []) {
+  const badgeList =
+    document.getElementById("badgeList");
+    badgeList.innerHTML = "";
+    badges.forEach((badge) => {
+    badgeList.innerHTML += `
+      <li>
+        <input type="checkbox" id="${badge.id}" class="badge-checkbox" />
+        ${badge.catalog.name}
       </li>
     `;
   });
@@ -1141,6 +1169,55 @@ window.addPartnerRow =
   });
 };
 
+window.addBadgeRow =
+  function() {
+
+  const container =
+    document.getElementById(
+      "badges-new"
+    );
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    "dynamic-row";
+
+  div.innerHTML = `
+    <select class="addBadgeSelect" style="width:100%;">
+      <option></option>
+    </select>
+
+    <button
+      class="admin-btn danger-btn"
+      onclick="this.parentElement.remove()"
+    >
+      X
+    </button>
+  `;
+
+  container.appendChild(div);
+
+  const selectEqNew = $(div).find(".addBadgeSelect");
+
+  selectEqNew.append(new Option('', ''));
+
+  currentCatalogBadges.forEach(badge => {
+    selectEqNew.append(
+      new Option(
+        badge.name,
+        badge.id
+      )
+    );
+  });
+
+  selectEqNew.select2({
+    dropdownParent: $("#addBadgeModal"),
+    placeholder: 'Select a badge',
+    allowClear: true
+  });
+};
+
 // =========================
 // TOGGLE STATS
 // =========================
@@ -1373,6 +1450,75 @@ window.closeAddPartnerModal =
     .style.display = "none";
 };
 
+window.openAddBadgeModal = async function() {
+  document
+    .getElementById(
+      "addBadgeModal"
+    )
+    .style.display = "flex";
+
+  function setModalLoading(isLoading) {
+
+    document
+      .getElementById(
+        "overlayModalBadge"
+      )
+      .classList.toggle(
+        "hidden",
+        !isLoading
+      );
+  }
+
+  if (currentCatalogBadges.length > 0) {
+    console.log("Use cache");
+    return;
+  }
+
+  try {
+    setModalLoading(true);
+    var response = await apiCatalogRequest({
+      table: "catalog_badges",
+      action: "getAll",
+    });
+    
+
+    currentCatalogBadges = response || [];
+
+    const selectBadge = $(".addBadgeSelect");
+
+    selectBadge.empty();
+
+    selectBadge.append(new Option('', ''));
+
+    currentCatalogBadges.forEach(badge => {
+      selectBadge.append(
+        new Option(
+          badge.name,
+          badge.id
+        )
+      );
+    });
+
+    selectBadge.trigger("change");
+  } catch (err) {
+    console.error(
+      "Open Add Badge Modal Error:",
+      err
+    );
+  } finally {
+    setModalLoading(false);
+  }
+};
+
+window.closeAddBadgeModal =
+  function() {
+  document
+    .getElementById(
+      "addBadgeModal"
+    )
+    .style.display = "none";
+};
+
 // =========================
 // SAVE NEW DATA
 // =========================
@@ -1382,6 +1528,7 @@ window.saveNewData = async function(type) {
   let equipments = [];
   let items = [];
   let partners = [];
+  let badges = [];
 
   if (type === "equipment") {
 
@@ -1424,12 +1571,21 @@ window.saveNewData = async function(type) {
       });
     });
     console.log("New Partners:", partners);
+  } else if (type === "badge") {
+    document.querySelectorAll("#badges-new .dynamic-row").forEach(row => {
+      badges.push({
+        player_id: playerId,
+        badge_id: row.querySelector("select").value
+      });
+    });
+    console.log("New Badges:", badges);
   }
 
   const tableMap = {
     equipment: "player_equipments",
     item: "player_items",
-    partner: "player_partners"
+    partner: "player_partners",
+    badge: "player_badges"
   };
 
   payload = {
@@ -1438,7 +1594,9 @@ window.saveNewData = async function(type) {
       ? equipments
       : type === "item"
       ? items
-      : partners
+      : type === "partner"
+      ? partners
+      : badges
   };
     
 
@@ -1468,6 +1626,8 @@ window.saveNewData = async function(type) {
       closeAddItemModal();
     } else if (type === "partner") {
       closeAddPartnerModal();
+    } else if (type === "badge") {
+      closeAddBadgeModal();
     }
     viewUser(currentEditingUserId);
   }
@@ -1490,6 +1650,10 @@ window.deleteSelectedData = async function(type) {
     document.querySelectorAll(".partner-checkbox:checked").forEach(checkbox => {
       selectedIds.push(checkbox.id);
     });
+  } else if (type === "badge") {
+    document.querySelectorAll(".badge-checkbox:checked").forEach(checkbox => {
+      selectedIds.push(checkbox.id);
+    });
   }
 
   if (selectedIds.length === 0) {
@@ -1501,7 +1665,8 @@ window.deleteSelectedData = async function(type) {
   const tableMap = {
     equipment: "player_equipments",
     item: "player_items",
-    partner: "player_partners"
+    partner: "player_partners",
+    badge: "player_badges"
   };
 
   const confirmDelete = confirm(
@@ -1510,7 +1675,9 @@ window.deleteSelectedData = async function(type) {
         ? "equipments"
         : type === "item"
         ? "items"
-        : "partners"
+        : type === "partner"
+        ? "partners"
+        : "badges"
     }?`
   );
 

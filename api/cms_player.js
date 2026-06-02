@@ -181,7 +181,11 @@ export default async function handler(req, res) {
       const { data: badges, error: badgesError } =
         await supabase
           .from("player_badges")
-          .select("*")
+          .select(`*,
+            catalog:catalog_badges (
+              id,
+              name
+            )`)
           .eq("player_id", player_id);
 
       if (badgesError) {
