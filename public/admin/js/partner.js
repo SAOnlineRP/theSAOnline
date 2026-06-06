@@ -8,7 +8,7 @@ async function fetchPartners() {
             localStorage.getItem("access_token");
 
         const response = await fetch(
-            "http://localhost:3000/api/admin",
+            `${BASE_URL}/api/admin`,
             {
                 method: "POST",
 
@@ -208,7 +208,7 @@ async function initPartnersPage() {
             try {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "DELETE",
 
@@ -283,7 +283,7 @@ async function initPartnersPage() {
             if (editingPartnerId !== null) {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "PUT",
 
@@ -319,7 +319,7 @@ async function initPartnersPage() {
             else {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "POST",
 

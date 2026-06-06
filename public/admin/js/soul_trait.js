@@ -8,7 +8,7 @@ async function fetchSoulTraits() {
             localStorage.getItem("access_token");
 
         const response = await fetch(
-            "http://localhost:3000/api/admin",
+            `${BASE_URL}/api/admin`,
             {
                 method: "POST",
 
@@ -271,7 +271,7 @@ async function initSoulTraitsPage() {
             try {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "DELETE",
 
@@ -391,7 +391,7 @@ async function initSoulTraitsPage() {
             if (editingSoulTraitId !== null) {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "PUT",
 
@@ -427,7 +427,7 @@ async function initSoulTraitsPage() {
             else {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "POST",
 

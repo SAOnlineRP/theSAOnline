@@ -6,7 +6,7 @@ async function fetchSkills() {
             localStorage.getItem("access_token");
 
         const response = await fetch(
-            "http://localhost:3000/api/admin",
+            `${BASE_URL}/api/admin`,
             {
                 method: "POST",
 
@@ -195,7 +195,7 @@ async function initSkillsPage() {
             try {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "DELETE",
 
@@ -264,7 +264,7 @@ async function initSkillsPage() {
             if (editingSkillId !== null) {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "PUT",
 
@@ -300,7 +300,7 @@ async function initSkillsPage() {
             else {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "POST",
 
