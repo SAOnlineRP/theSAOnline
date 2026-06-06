@@ -43,10 +43,15 @@ export default async function handler(req, res) {
             .select(`
             id,
             name,
+            atk,
+            def,
+            max_hp,
+            max_mp,
+            duplicate_shard_reward,
             catalog_partner_skills (
                 catalog_skills (
-                id,
-                name
+                    id,
+                    name
                 )
             )
             `);

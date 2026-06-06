@@ -166,7 +166,10 @@ export default async function handler(req, res) {
               id,
               name,
               link_photo,
-              stats
+              atk,
+              def,
+              max_hp,
+              max_mp
             )
           `)
           .eq("player_id", player_id);

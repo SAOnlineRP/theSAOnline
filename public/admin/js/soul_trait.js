@@ -49,7 +49,7 @@ function renderSoulTraits(soulTraits, tableBody) {
                     <td>ATK : ${soulTrait.growth_atk || 0}, DEF : ${soulTrait.growth_def || 0}, MAX_HP : ${soulTrait.growth_max_hp || 0}, MAX_MP : ${soulTrait.growth_max_mp || 0}, CRIT_DMG : ${soulTrait.growth_crit_dmg || 0}, CRIT_RATE : ${soulTrait.growth_crit_pct || 0}%</td>
                     <td>${soulTrait.skill_name ?? soulTrait.skillName}</td>
                     <td>${soulTrait.skill_mp_cost ?? soulTrait.skillMpCost}</td>
-                    <td>${soulTrait.effects}</td>
+                    <td>${JSON.stringify(soulTrait.effects || [])}</td>
                     <td>
                         <button type="button"
                             class="table-btn edit edit-btn"

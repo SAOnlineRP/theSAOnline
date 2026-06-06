@@ -2,7 +2,7 @@
     <div class="panel-card">
         <div class="panel-head">
         <h3>Skills</h3>
-        <button class="admin-btn primary-btn" id="openModal">+ Add Skill</button>
+        <button class="admin-btn primary-btn" id="openSkillModal">+ Add Skill</button>
         </div>
 
         <div class="table-wrapper">
@@ -24,3 +24,47 @@
         </div>
     </div>
 </section>
+<!-- modal -->
+<div class="modal" id="skillModal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" id="closeSkillModal">
+        &times;
+        </span>
+
+        <h2>Add New Skill</h2>
+        <div class="modal-body">
+            <form id="skillForm" style="overflow: visible;">
+                <div class="form-grid" style="max-height: 220px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label for="skillName">Name:</label>
+                        <input type="text" id="skillName" name="skillName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="mpCost">MP Cost:</label>
+                        <input type="text" id="mpCost" name="mpCost" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="effects">Effects:</label>
+                        <input type="text" id="effects" name="effects" required />
+                    </div>
+                </div>
+                <button
+                    type="submit"
+                    class="admin-btn primary-btn"
+                    id="saveSkillBtn"
+                >
+                    <span class="btn-text">Save</span>
+
+                    <span class="btn-loading hidden">
+                        <span class="spinner"></span>
+                        Saving...
+                    </span>
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>

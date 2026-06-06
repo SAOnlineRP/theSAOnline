@@ -1,3 +1,5 @@
+let editingPartnerId = null;
+
 async function fetchPartners() {
 
     try {
@@ -47,7 +49,7 @@ function renderListPartners(partners, tableBody) {
             return `
                 <tr>
                     <td>${partner.name}</td>
-                    <td>ATK : ${partner.atk || 0}, DEF : ${partner.def || 0}, MAX_HP : ${partner.max_hp || 0}, MAX_MP : ${partner.max_mp || 0}, CRIT_DMG : ${partner.crit_dmg || 0}, CRIT_RATE : ${partner.crit_pct || 0}%</td>
+                    <td>ATK : ${partner.atk || 0}, DEF : ${partner.def || 0}, MAX_HP : ${partner.max_hp || 0}, MAX_MP : ${partner.max_mp || 0}</td>
                     <td>${JSON.stringify(skills)}</td>
                     <td>
                         <button type="button"
@@ -69,19 +71,36 @@ function renderListPartners(partners, tableBody) {
         .join("");
 }
 
+function fillPartnerForm(partner) {
+
+    document.getElementById("partnerName").value = partner.name || "";
+    document.getElementById("statAtk").value = partner.atk || 0;
+    document.getElementById("statDef").value = partner.def || 0;
+    document.getElementById("statMaxHP").value = partner.max_hp || 0;
+    document.getElementById("statMaxMP").value = partner.max_mp || 0;
+    document.getElementById("statShard").value = partner.reward_shard || 0;
+}
+
 async function initPartnersPage() {
+    let partners = [];
 
-    const modal =
-        document.getElementById("myModal");
+    const modalPartner =
+        document.getElementById("partnerModal");
 
-    const openBtn =
-        document.getElementById("openModal");
+    const openBtnPartner =
+        document.getElementById("openPartnerModal");
 
-    const closeBtn =
-        document.getElementById("closeModal");
+    const closeBtnPartner =
+        document.getElementById("closePartnerModal");
 
     const partnersTableBody =
         document.getElementById("partnersTableBody");
+
+    const partnerForm =
+        document.getElementById("partnerForm");
+
+    const modalTitle =
+        modalPartner.querySelector("h2");
 
     const tableOverlayLoading =
         document.getElementById(
@@ -100,12 +119,17 @@ async function initPartnersPage() {
 
         setTableLoading(true);
         // fetch data API
-        const partners =
+        const partnersResponse =
             await fetchPartners();
         
-        console.log(partners['data']);
+        partners = Array.isArray(partnersResponse)
+            ? partnersResponse
+            : partnersResponse?.data || [];
 
-        renderListPartners(partners['data'], partnersTableBody);
+        renderListPartners(
+            partners,
+            partnersTableBody
+        );
     } catch (error) {
 
         console.error(error);
@@ -115,19 +139,240 @@ async function initPartnersPage() {
     }
 
     // buka modal
-    openBtn.addEventListener("click", () => {
-        modal.style.display = "flex";
+    openBtnPartner.addEventListener("click", () => {
+        editingPartnerId = null;
+
+        modalTitle.textContent = "Add New Partner";
+
+        partnerForm.reset();
+
+        modalPartner.style.display = "flex";
     });
 
     // tutup modal
-    closeBtn.addEventListener("click", () => {
-        modal.style.display = "none";
+    closeBtnPartner.addEventListener("click", () => {
+        modalPartner.style.display = "none";
+    });
+
+    partnersTableBody.addEventListener("click", async (e) => {
+
+        // =====================
+        // EDIT
+        // =====================
+        const editButton = e.target.closest(".edit-btn");
+
+        if (editButton) {
+            editingPartnerId = editButton.dataset.id;
+             const partner = partners.find(
+                (item) => item.id === editingPartnerId
+            );
+
+            if (!partner) {
+                console.error(
+                    "Partner not found for ID:",
+                    editingPartnerId
+                );
+
+                return;
+            }
+
+            modalTitle.textContent = "Edit Partner";
+            fillPartnerForm(partner);
+            modalPartner.style.display = "flex";
+        }
+
+        // =====================
+        // DELETE
+        // =====================
+        const deleteButton = e.target.closest(".delete-btn");
+
+        if (deleteButton) {
+
+            const confirmed =
+                confirm("Delete this partner?");
+
+            if (!confirmed) {
+                return;
+            }
+
+            const token =
+                localStorage.getItem("access_token");
+
+            const partnerId = deleteButton.dataset.id;
+
+            try {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/admin",
+                    {
+                        method: "DELETE",
+
+                        headers: {
+                            "Content-Type": "application/json",
+
+                            Authorization: `Bearer ${token}`,
+                        },
+
+                        body: JSON.stringify({
+                            action: "delete",
+                            table: "catalog_partners",
+                            id: partnerId
+                        }),
+                    }
+                );
+
+                const result =
+                    await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+
+                const partnersResponse =
+                    await fetchPartners();
+
+                const updatedPartners =
+                    Array.isArray(partnersResponse)
+                        ? partnersResponse
+                        : partnersResponse?.data || [];
+
+                renderListPartners(
+                    updatedPartners,
+                    partnersTableBody
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+            }
+        }
+    });
+
+    
+
+    partnerForm.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        setSaveLoading(true);
+
+        const token =
+            localStorage.getItem("access_token");
+
+        const formData = {
+            name: document.getElementById("partnerName").value,
+            atk: parseInt(document.getElementById("partnerAtk").value) || 0,
+            def: parseInt(document.getElementById("partnerDef").value) || 0,
+            max_hp: parseInt(document.getElementById("partnerMaxHp").value) || 0,
+            max_mp: parseInt(document.getElementById("partnerMaxMp").value) || 0,
+            reward_shard: parseInt(document.getElementById("partnerShard").value) || 0,
+        };
+
+        try {
+
+            // =====================
+            // EDIT
+            // =====================
+            if (editingPartnerId !== null) {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/admin",
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json",
+
+                            Authorization: `Bearer ${token}`,
+                        },
+
+                        body: JSON.stringify({
+                            action: "update",
+                            table: "catalog_partners",
+                            id: editingPartnerId,
+                            data: formData,
+                        }),
+                    }
+                );
+
+                const result = await response.json();
+
+
+                //const text = await response.text();
+                //console.log(text);
+
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+            }
+
+            // =====================
+            // ADD
+            // =====================
+            else {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/admin",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json",
+
+                            Authorization: `Bearer ${token}`,
+                        },
+
+                        body: JSON.stringify({
+                            action: "create",
+                            table: "catalog_partners",
+                            data: formData
+                        }),
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+            }
+
+            // reload data
+            const partnersResponse =
+                await fetchPartners();
+
+            partners = Array.isArray(partnersResponse)
+                ? partnersResponse
+                : partnersResponse?.data || [];
+
+            renderListPartners(
+                partners,
+                partnersTableBody
+            );
+
+            modalPartner.style.display = "none";
+
+            partnerForm.reset();
+
+            editingPartnerId = null;
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+        } finally {
+
+            setSaveLoading(false);
+        }
     });
 
     // klik luar modal
     window.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.style.display = "none";
+        if (e.target === modalPartner) {
+            modalPartner.style.display = "none";
         }
     });
 }

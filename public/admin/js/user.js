@@ -669,9 +669,6 @@ function renderPartners(partners = []) {
     const catalog =
       partner.catalog || {};
 
-    const stats =
-      catalog.stats || {};
-
     partnerList.innerHTML += `
       <li>
         <input type="checkbox" id="${partner.id}" class="partner-checkbox" />
@@ -680,26 +677,21 @@ function renderPartners(partners = []) {
         ${partner.star || 0}★)
 
         <div class="tooltip">
-          Stats
-
-          <div class="tooltiptext">
 
             <div>
               ATK:
-              ${stats.atk || 0}
+              ${partner.cur_atk || 0}
             </div>
 
             <div>
               HP:
-              ${stats.hp || 0}
+              ${partner.cur_hp || 0}
             </div>
 
             <div>
               DEF:
-              ${stats.def || 0}
+              ${partner.cur_def || 0}
             </div>
-
-          </div>
         </div>
       </li>
     `;

@@ -2,7 +2,7 @@
     <div class="panel-card">
         <div class="panel-head">
         <h3>Equipments</h3>
-        <button class="admin-btn primary-btn">+ Add Equipment</button>
+        <button class="admin-btn primary-btn" id="openEquipmentModal">+ Add Equipment</button>
         </div>
 
         <div class="table-wrapper">
@@ -26,3 +26,59 @@
         </div>
     </div>
 </section>
+<!-- modal -->
+<div class="modal" id="equipmentModal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" id="closeEquipmentModal">
+        &times;
+        </span>
+
+        <h2>Add New Equipment</h2>
+        <div class="modal-body">
+            <form id="equipmentForm" style="overflow: visible;">
+                <div class="form-grid" style="max-height: 220px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label for="equipmentName">Name:</label>
+                        <input type="text" id="equipmentName" name="equipmentName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="equipmentPosition">Position:</label>
+                        <input type="text" id="equipmentPosition" name="equipmentPosition" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="equipmentType">Type:</label>
+                        <input type="text" id="equipmentType" name="equipmentType" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="equipmentATK">ATK:</label>
+                        <input type="text" id="equipmentATK" name="equipmentATK" />
+                    </div>
+                    <div class="form-group">
+                        <label for="equipmentDEF">DEF:</label>
+                        <input type="text" id="equipmentDEF" name="equipmentDEF" />
+                    </div>
+                    <div class="form-group">
+                        <label for="equipmentMAX_HP">MAX_HP:</label>
+                        <input type="text" id="equipmentMAX_HP" name="equipmentMAX_HP" />
+                    </div>
+                    
+                </div>
+                <button
+                    type="submit"
+                    class="admin-btn primary-btn"
+                    id="saveEquipmentBtn"
+                >
+                    <span class="btn-text">Save</span>
+
+                    <span class="btn-loading hidden">
+                        <span class="spinner"></span>
+                        Saving...
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
