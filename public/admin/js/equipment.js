@@ -8,7 +8,7 @@ async function fetchEquipments() {
             localStorage.getItem("access_token");
 
         const response = await fetch(
-            "http://localhost:3000/api/admin",
+            `${BASE_URL}/api/admin`,
             {
                 method: "POST",
 
@@ -209,7 +209,7 @@ async function initEquipmentsPage() {
             try {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "DELETE",
 
@@ -288,7 +288,7 @@ async function initEquipmentsPage() {
             if (editingEquipmentId !== null) {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "PUT",
 
@@ -324,7 +324,7 @@ async function initEquipmentsPage() {
             else {
 
                 const response = await fetch(
-                    "http://localhost:3000/api/admin",
+                    `${BASE_URL}/api/admin`,
                     {
                         method: "POST",
 
