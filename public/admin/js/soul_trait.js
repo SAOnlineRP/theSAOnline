@@ -186,7 +186,7 @@ async function initSoulTraitsPage() {
             soulTraits,
             soulTraitsTableBody
         );
-
+        let table = new DataTable('#soulTraitsTable');
     } catch (error) {
 
         console.error(error);

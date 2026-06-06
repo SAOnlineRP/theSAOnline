@@ -63,6 +63,9 @@ menuItems.forEach((item) => {
       item.classList.add('active');
     } else if (page === "marketplace") {
       item.classList.add('active');
+    } else if (page === "tasks") {
+      item.classList.add('active');
+      initTasksPage();
     }
 
   });

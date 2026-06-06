@@ -84,6 +84,8 @@ function fillPartnerForm(partner) {
 async function initPartnersPage() {
     let partners = [];
 
+    
+
     const modalPartner =
         document.getElementById("partnerModal");
 
@@ -130,12 +132,14 @@ async function initPartnersPage() {
             partners,
             partnersTableBody
         );
+        let table = new DataTable('#partnersTable');
     } catch (error) {
 
         console.error(error);
     } finally {
 
         setTableLoading(false);
+        
     }
 
     // buka modal

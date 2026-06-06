@@ -123,7 +123,7 @@ async function initItemsPage() {
             items,
             itemsTableBody
         );
-
+        let table = new DataTable('#itemsTable');
     } catch (error) {
 
         console.error(error);

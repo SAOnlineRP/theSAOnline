@@ -120,7 +120,7 @@ async function initSkillsPage() {
             skills,
             skillsTableBody
         );
-
+        let table = new DataTable('#skillsTable');
     } catch (error) {
 
         console.error(error);

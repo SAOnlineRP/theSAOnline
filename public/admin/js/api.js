@@ -1,7 +1,4 @@
-const BASE_URL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://the-saonline.vercel.app";
+const BASE_URL = "http://localhost:3000";
 
 const API_URL = `${BASE_URL}/api`;
 const API_CATALOG_URL = `${BASE_URL}/api/admin`;

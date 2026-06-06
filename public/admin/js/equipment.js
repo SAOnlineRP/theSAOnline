@@ -124,7 +124,7 @@ async function initEquipmentsPage() {
             equipments,
             equipmentsTableBody
         );
-
+        let table = new DataTable('#equipmentsTable');
     } catch (error) {
 
         console.error(error);

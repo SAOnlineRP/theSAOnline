@@ -1,3 +1,153 @@
 <section id="tasks" class="content-section">
-    <h2>TASKS</h2>
+    <div class="panel-card">
+        <div class="panel-head">
+        <h3>Task</h3>
+        <button class="admin-btn primary-btn" id="openTaskModal">+ Add Task</button>
+        </div>
+
+        <div class="table-wrapper">
+            <div id="tableTasksOverlayLoading" class="table-overlay hidden">
+                <div class="spinner"></div>
+            </div>
+            <table id="tasksTable" class="admin-table">
+                <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="tasksTableBody">
+                    <tr>
+                        <td>Example Task 1</td>
+                        <td>This is an example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 2</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 3</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 4</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 5</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 6</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 7</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 8</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 9</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 10</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Example Task 11</td>
+                        <td>This is another example task description.</td>
+                        <td>
+                            <button class="admin-btn secondary-btn edit-btn">Edit</button>
+                            <button class="admin-btn danger-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
+
+<!-- modal -->
+<div class="modal" id="taskModal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" id="closeTaskModal">
+        &times;
+        </span>
+
+        <h2>Add New Task</h2>
+        <div class="modal-body">
+            <form id="taskForm" style="overflow: visible;">
+                <div class="form-grid" style="max-height: 220px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label for="taskName">Name:</label>
+                        <input type="text" id="taskName" name="taskName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Description:</label>
+                        <input type="text" id="taskDescription" name="taskDescription" required />
+                    </div>
+                </div>
+                <button
+                    type="submit"
+                    class="admin-btn primary-btn"
+                    id="saveTaskBtn"
+                >
+                    <span class="btn-text">Save</span>
+
+                    <span class="btn-loading hidden">
+                        <span class="spinner"></span>
+                        Saving...
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
