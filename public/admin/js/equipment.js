@@ -44,6 +44,7 @@ function renderEquipments(equipments, tableBody) {
         .map((equipment) => {
             return `
                 <tr>
+                    <td><img src="${equipment.link_photo || 'https://via.placeholder.com/50'}" alt="${equipment.name}" width="50" height="50"></td>
                     <td>${equipment.name}</td>
                     <td>${equipment.position}</td>
                     <td>${equipment.type}</td>

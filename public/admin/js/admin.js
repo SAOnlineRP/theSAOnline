@@ -41,17 +41,20 @@ menuItems.forEach((item) => {
     await loadPage(page);
 
     if (page === "partners") {
-      item.parentElement.querySelector(".menu-click").classList.add('active');
-      
+      console.log(item);
+      item.classList.add('active');
       initPartnersPage();
     } else if (page === "skills") {
+      item.classList.add('active');
       initSkillsPage();
     } else if (page === "soul_traits") {
-      item.parentElement.querySelector(".menu-click").classList.add('active');
+      item.classList.add('active');
       initSoulTraitsPage();
     } else if (page === "equipments") {
+      item.classList.add('active');
       initEquipmentsPage();
     } else if (page === "items") {
+      item.classList.add('active');
       initItemsPage();
     } else if (page === "users") {
       item.classList.add('active');
@@ -61,8 +64,10 @@ menuItems.forEach((item) => {
       initSharePage();
     } else if (page === "summon_pools") {
       item.classList.add('active');
-    } else if (page === "marketplace") {
+      initSummonPoolsPage();
+    } else if (page === "merchant") {
       item.classList.add('active');
+      initMerchantPage();
     } else if (page === "tasks") {
       item.classList.add('active');
       initTasksPage();
