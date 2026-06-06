@@ -48,6 +48,7 @@ function renderListPartners(partners, tableBody) {
 
             return `
                 <tr>
+                    <td><img src="${partner.link_ava || 'https://via.placeholder.com/50'}" alt="${partner.name}" width="50" height="50"></td>
                     <td>${partner.name}</td>
                     <td>ATK : ${partner.atk || 0}, DEF : ${partner.def || 0}, MAX_HP : ${partner.max_hp || 0}, MAX_MP : ${partner.max_mp || 0}</td>
                     <td>${JSON.stringify(skills)}</td>
