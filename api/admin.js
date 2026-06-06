@@ -48,6 +48,8 @@ export default async function handler(req, res) {
             max_hp,
             max_mp,
             duplicate_shard_reward,
+            link_ava,
+            link_photo,
             catalog_partner_skills (
                 catalog_skills (
                     id,
