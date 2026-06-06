@@ -1,3 +1,6 @@
+let editingSkillId = null;
+let selectedSkillIds = new Set();
+
 async function fetchSkills() {
 
     try {
@@ -42,6 +45,11 @@ function renderSkills(skills, tableBody) {
         .map((skill) => {
             return `
                 <tr>
+                    <td><input 
+                        type="checkbox" 
+                        class="task-checkbox selectTaskCheckbox"
+                        data-id="${skill.id}"
+                    ></td>
                     <td>${skill.name}</td>
                     <td>${skill.mp_cost}</td>
                     <td>${JSON.stringify(skill.effects)}</td>
@@ -70,6 +78,21 @@ function fillSkillForm(skill) {
     document.getElementById("mpCost").value = skill.mp_cost || 0;
     document.getElementById("effects").value = JSON.stringify(skill.effects || []);
 }
+
+function updateDeleteSkillsButton() {
+
+    const deleteBtn =
+        document.getElementById("deleteSelectedSkillsBtn");
+
+    deleteBtn.classList.toggle(
+        "hidden",
+        selectedSkillIds.size === 0
+    );
+
+    deleteBtn.textContent =
+        `Delete Selected (${selectedSkillIds.size})`;
+}
+
 
 async function initSkillsPage() {
     let skills = [];
@@ -120,7 +143,7 @@ async function initSkillsPage() {
             skills,
             skillsTableBody
         );
-        let table = new DataTable('#skillsTable');
+        
     } catch (error) {
 
         console.error(error);
@@ -129,6 +152,119 @@ async function initSkillsPage() {
 
         setTableLoading(false);
     }
+
+    let table = new DataTable('#skillsTable', {
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ]
+    });
+
+    document.getElementById('selectAllSkills').addEventListener('change', function () {
+
+        const checked = this.checked;
+
+        table.rows().every(function () {
+            const node = this.node();
+
+            const checkbox = node.querySelector('.task-checkbox');
+
+            if (checkbox) {
+
+                checkbox.checked = checked;
+
+                const id = checkbox.dataset.id;
+
+                if (checked) {
+                    selectedSkillIds.add(id);
+                } else {
+                    selectedSkillIds.delete(id);
+                }
+            }
+        });
+
+        updateDeleteSkillsButton();   
+    });
+
+    document.addEventListener('change', (e) => {
+
+        if (!e.target.classList.contains('task-checkbox')) {
+            return;
+        }
+
+        console.log("checkbox changed");
+
+        const id = e.target.dataset.id;
+
+        if (e.target.checked) {
+            selectedSkillIds.add(id);
+        } else {
+            selectedSkillIds.delete(id);
+        }
+
+        console.log(selectedSkillIds);
+
+        updateDeleteSkillsButton();
+    });
+
+    document.getElementById("deleteSelectedSkillsBtn").addEventListener("click", async () => {
+
+        if (selectedSkillIds.size === 0) {
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete ${selectedSkillIds.size} skill(s)?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+        console.log("Deleting IDs:", selectedSkillIds);
+
+        /*const token =
+            localStorage.getItem("access_token");
+
+        try {
+
+            const response = await fetch(
+                `${BASE_URL}/api/admin`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "bulkDelete",
+                        table: "catalog_skills",
+                        ids: [...selectedSkillIds]
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error);
+            }
+
+            alert("Deleted successfully");
+
+            selectedSkillIds.clear();
+
+            location.reload();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+        }*/
+
+    });
 
     // buka modal
     openBtnSkill.addEventListener("click", () => {

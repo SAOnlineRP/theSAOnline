@@ -1,4 +1,5 @@
 let editingItemId = null;
+let selectedItemIds = new Set();
 
 async function fetchItems() {
 
@@ -44,6 +45,7 @@ function renderItems(items, tableBody) {
         .map((item) => {
             return `
                 <tr>
+                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${item.id}"></td>
                     <td><img src="${item.link_photo || 'https://via.placeholder.com/50'}" alt="${item.name}" width="50" height="50"></td>
                     <td>${item.name}</td>
                     <td>${item.desc}</td>
@@ -73,6 +75,20 @@ function fillItemForm(item) {
 
     document.getElementById("itemDescription").value =
         item.desc || "";
+}
+
+function updateDeleteItemsButton() {
+
+    const deleteBtn =
+        document.getElementById("deleteSelectedItemsBtn");
+
+    deleteBtn.classList.toggle(
+        "hidden",
+        selectedItemIds.size === 0
+    );
+
+    deleteBtn.textContent =
+        `Delete Selected (${selectedItemIds.size})`;
 }
 
 async function initItemsPage() {
@@ -124,7 +140,7 @@ async function initItemsPage() {
             items,
             itemsTableBody
         );
-        let table = new DataTable('#itemsTable');
+        
     } catch (error) {
 
         console.error(error);
@@ -133,6 +149,119 @@ async function initItemsPage() {
 
         setTableLoading(false);
     }
+
+    let table = new DataTable('#itemsTable', {
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ]
+    });
+
+    document.getElementById('selectAllItemTasks').addEventListener('change', function () {
+
+        const checked = this.checked;
+
+        table.rows().every(function () {
+            const node = this.node();
+
+            const checkbox = node.querySelector('.task-checkbox');
+
+            if (checkbox) {
+
+                checkbox.checked = checked;
+
+                const id = checkbox.dataset.id;
+
+                if (checked) {
+                    selectedItemIds.add(id);
+                } else {
+                    selectedItemIds.delete(id);
+                }
+            }
+        });
+
+        updateDeleteItemsButton();   
+    });
+
+    document.addEventListener('change', (e) => {
+
+        if (!e.target.classList.contains('task-checkbox')) {
+            return;
+        }
+
+        console.log("checkbox changed");
+
+        const id = e.target.dataset.id;
+
+        if (e.target.checked) {
+            selectedItemIds.add(id);
+        } else {
+            selectedItemIds.delete(id);
+        }
+
+        console.log(selectedItemIds);
+
+        updateDeleteItemsButton();
+    });
+
+    document.getElementById("deleteSelectedItemsBtn").addEventListener("click", async () => {
+
+        if (selectedItemIds.size === 0) {
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete ${selectedItemIds.size} item(s)?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+        console.log("Deleting IDs:", selectedItemIds);
+
+        /*const token =
+            localStorage.getItem("access_token");
+
+        try {
+
+            const response = await fetch(
+                `${BASE_URL}/api/admin`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "bulkDelete",
+                        table: "catalog_items",
+                        ids: [...selectedItemIds]
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error);
+            }
+
+            alert("Deleted successfully");
+
+            selectedItemIds.clear();
+
+            location.reload();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+        }*/
+
+    });
 
     // buka modal
     openBtnItem.addEventListener("click", () => {

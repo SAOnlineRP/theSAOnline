@@ -1,8 +1,13 @@
 <section id="skills" class="content-section">
     <div class="panel-card">
         <div class="panel-head">
-        <h3>Skills</h3>
-        <button class="admin-btn primary-btn" id="openSkillModal">+ Add Skill</button>
+            <h3>Skills</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedSkillsBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openSkillModal">+ Add Skill</button>
+            </div>
         </div>
 
         <div class="table-wrapper">
@@ -12,6 +17,7 @@
             <table id="skillsTable" class="admin-table">
                 <thead>
                 <tr>
+                    <th><input type="checkbox" id="selectAllSkills"></th>
                     <th>Name</th>
                     <th>MP Cost</th>
                     <th>Effects</th>

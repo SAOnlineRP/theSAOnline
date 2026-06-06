@@ -1,8 +1,13 @@
 <section id="partners" class="content-section">
     <div class="panel-card">
         <div class="panel-head">
-        <h3>Partners</h3>
-        <button class="admin-btn primary-btn" id="openPartnerModal">+ Add Partner</button>
+            <h3>Partners</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedPartnersBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openPartnerModal">+ Add Partner</button>
+            </div>
         </div>
 
         <div class="table-wrapper">
@@ -12,6 +17,7 @@
             <table id="partnersTable" class="admin-table">
                 <thead>
                 <tr>
+                    <th><input type="checkbox" id="selectAllPartnerTasks"></th>
                     <th>Photo</th>
                     <th>Name</th>
                     <th>Stats</th>

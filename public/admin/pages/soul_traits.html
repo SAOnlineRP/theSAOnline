@@ -1,8 +1,13 @@
 <section id="soul_traits" class="content-section">
     <div class="panel-card">
         <div class="panel-head">
-        <h3>Soul Traits</h3>
-        <button class="admin-btn primary-btn" id="openSoulTraitModal">+ Add Soul Trait</button>
+            <h3>Soul Traits</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedSoulTraitsBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openSoulTraitModal">+ Add Soul Trait</button>
+            </div>
         </div>
 
         <div class="table-wrapper">
@@ -12,6 +17,7 @@
             <table id="soulTraitsTable" class="admin-table">
                 <thead>
                 <tr>
+                    <th><input type="checkbox" id="selectAllSoulTraits"></th>
                     <th>Name</th>
                     <th>Stats</th>
                     <th>Growth</th>

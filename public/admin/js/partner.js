@@ -1,4 +1,5 @@
 let editingPartnerId = null;
+let selectedPartnerIds = new Set();
 
 async function fetchPartners() {
 
@@ -48,6 +49,7 @@ function renderListPartners(partners, tableBody) {
 
             return `
                 <tr>
+                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${partner.id}"></td>
                     <td><img src="${partner.link_ava || 'https://via.placeholder.com/50'}" alt="${partner.name}" width="50" height="50"></td>
                     <td>${partner.name}</td>
                     <td>ATK : ${partner.atk || 0}, DEF : ${partner.def || 0}, MAX_HP : ${partner.max_hp || 0}, MAX_MP : ${partner.max_mp || 0}</td>
@@ -81,6 +83,21 @@ function fillPartnerForm(partner) {
     document.getElementById("statMaxMP").value = partner.max_mp || 0;
     document.getElementById("statShard").value = partner.reward_shard || 0;
 }
+
+function updateDeletePartnersButton() {
+
+    const deleteBtn =
+        document.getElementById("deleteSelectedPartnersBtn");
+
+    deleteBtn.classList.toggle(
+        "hidden",
+        selectedPartnerIds.size === 0
+    );
+
+    deleteBtn.textContent =
+        `Delete Selected (${selectedPartnerIds.size})`;
+}
+
 
 async function initPartnersPage() {
     let partners = [];
@@ -133,7 +150,7 @@ async function initPartnersPage() {
             partners,
             partnersTableBody
         );
-        let table = new DataTable('#partnersTable');
+        
     } catch (error) {
 
         console.error(error);
@@ -142,6 +159,119 @@ async function initPartnersPage() {
         setTableLoading(false);
         
     }
+
+    let table = new DataTable('#partnersTable', {
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ]
+    });
+
+    document.getElementById('selectAllPartnerTasks').addEventListener('change', function () {
+
+        const checked = this.checked;
+
+        table.rows().every(function () {
+            const node = this.node();
+
+            const checkbox = node.querySelector('.task-checkbox');
+
+            if (checkbox) {
+
+                checkbox.checked = checked;
+
+                const id = checkbox.dataset.id;
+
+                if (checked) {
+                    selectedPartnerIds.add(id);
+                } else {
+                    selectedPartnerIds.delete(id);
+                }
+            }
+        });
+
+        updateDeletePartnersButton();   
+    });
+
+    document.addEventListener('change', (e) => {
+
+        if (!e.target.classList.contains('task-checkbox')) {
+            return;
+        }
+
+        console.log("checkbox changed");
+
+        const id = e.target.dataset.id;
+
+        if (e.target.checked) {
+            selectedPartnerIds.add(id);
+        } else {
+            selectedPartnerIds.delete(id);
+        }
+
+        console.log(selectedPartnerIds);
+
+        updateDeletePartnersButton();
+    });
+
+    document.getElementById("deleteSelectedPartnersBtn").addEventListener("click", async () => {
+
+        if (selectedPartnerIds.size === 0) {
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete ${selectedPartnerIds.size} partner(s)?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+        console.log("Deleting IDs:", selectedPartnerIds);
+
+        /*const token =
+            localStorage.getItem("access_token");
+
+        try {
+
+            const response = await fetch(
+                `${BASE_URL}/api/admin`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "bulkDelete",
+                        table: "catalog_partners",
+                        ids: [...selectedPartnerIds]
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error);
+            }
+
+            alert("Deleted successfully");
+
+            selectedPartnerIds.clear();
+
+            location.reload();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+        }*/
+
+    });
 
     // buka modal
     openBtnPartner.addEventListener("click", () => {

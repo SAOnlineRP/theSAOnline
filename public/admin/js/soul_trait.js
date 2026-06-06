@@ -1,4 +1,5 @@
 let editingSoulTraitId = null;
+let selectedSoulTraitIds = new Set();
 
 async function fetchSoulTraits() {
 
@@ -44,6 +45,7 @@ function renderSoulTraits(soulTraits, tableBody) {
         .map((soulTrait) => {
             return `
                 <tr>
+                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${soulTrait.id}"></td>
                     <td>${soulTrait.name}</td>
                     <td>ATK : ${soulTrait.stat_atk || 0}, DEF : ${soulTrait.stat_def || 0}, MAX_HP : ${soulTrait.stat_max_hp || 0}, MAX_MP : ${soulTrait.stat_max_mp || 0}, CRIT_DMG : ${soulTrait.stat_crit_dmg || 0}, CRIT_RATE : ${soulTrait.stat_crit_pct || 0}%</td>
                     <td>ATK : ${soulTrait.growth_atk || 0}, DEF : ${soulTrait.growth_def || 0}, MAX_HP : ${soulTrait.growth_max_hp || 0}, MAX_MP : ${soulTrait.growth_max_mp || 0}, CRIT_DMG : ${soulTrait.growth_crit_dmg || 0}, CRIT_RATE : ${soulTrait.growth_crit_pct || 0}%</td>
@@ -107,6 +109,20 @@ function fillSoulTraitForm(soulTrait) {
 
     document.getElementById("soulTraitEffects").value =
         soulTrait.effects;
+}
+
+function updateDeleteSoulTraitsButton() {
+
+    const deleteBtn =
+        document.getElementById("deleteSelectedSoulTraitsBtn");
+
+    deleteBtn.classList.toggle(
+        "hidden",
+        selectedSoulTraitIds.size === 0
+    );
+
+    deleteBtn.textContent =
+        `Delete Selected (${selectedSoulTraitIds.size})`;
 }
 
 async function initSoulTraitsPage() {
@@ -186,7 +202,7 @@ async function initSoulTraitsPage() {
             soulTraits,
             soulTraitsTableBody
         );
-        let table = new DataTable('#soulTraitsTable');
+        
     } catch (error) {
 
         console.error(error);
@@ -195,6 +211,119 @@ async function initSoulTraitsPage() {
 
         setTableLoading(false);
     }
+
+    let table = new DataTable('#soulTraitsTable', {
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ]
+    });
+
+    document.getElementById('selectAllSoulTraits').addEventListener('change', function () {
+
+        const checked = this.checked;
+
+        table.rows().every(function () {
+            const node = this.node();
+
+            const checkbox = node.querySelector('.task-checkbox');
+
+            if (checkbox) {
+
+                checkbox.checked = checked;
+
+                const id = checkbox.dataset.id;
+
+                if (checked) {
+                    selectedSoulTraitIds.add(id);
+                } else {
+                    selectedSoulTraitIds.delete(id);
+                }
+            }
+        });
+
+        updateDeleteSoulTraitsButton();   
+    });
+
+    document.addEventListener('change', (e) => {
+
+        if (!e.target.classList.contains('task-checkbox')) {
+            return;
+        }
+
+        console.log("checkbox changed");
+
+        const id = e.target.dataset.id;
+
+        if (e.target.checked) {
+            selectedSoulTraitIds.add(id);
+        } else {
+            selectedSoulTraitIds.delete(id);
+        }
+
+        console.log(selectedSoulTraitIds);
+
+        updateDeleteSoulTraitsButton();
+    });
+
+    document.getElementById("deleteSelectedSoulTraitsBtn").addEventListener("click", async () => {
+
+        if (selectedSoulTraitIds.size === 0) {
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete ${selectedSoulTraitIds.size} soul trait(s)?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+        console.log("Deleting IDs:", selectedSoulTraitIds);
+
+        /*const token =
+            localStorage.getItem("access_token");
+
+        try {
+
+            const response = await fetch(
+                `${BASE_URL}/api/admin`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "bulkDelete",
+                        table: "catalog_soul_traits",
+                        ids: [...selectedSoulTraitIds]
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error);
+            }
+
+            alert("Deleted successfully");
+
+            selectedSoulTraitIds.clear();
+
+            location.reload();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+        }*/
+
+    });
 
     // buka modal
     openBtnSoulTrait.addEventListener("click", () => {

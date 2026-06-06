@@ -1,8 +1,13 @@
 <section id="items" class="content-section">
     <div class="panel-card">
         <div class="panel-head">
-        <h3>Items</h3>
-        <button class="admin-btn primary-btn" id="openItemModal">+ Add Item</button>
+            <h3>Items</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedItemsBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openItemModal">+ Add Item</button>
+            </div>
         </div>
 
         <div class="table-wrapper">
@@ -12,6 +17,7 @@
             <table id="itemsTable" class="admin-table">
                 <thead>
                 <tr>
+                    <th><input type="checkbox" id="selectAllItemTasks"></th>
                     <th>Photo</th>
                     <th>Item Name</th>
                     <th>Description</th>

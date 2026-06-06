@@ -1,4 +1,5 @@
 let editingEquipmentId = null;
+let selectedEqIds = new Set();
 
 async function fetchEquipments() {
 
@@ -44,6 +45,7 @@ function renderEquipments(equipments, tableBody) {
         .map((equipment) => {
             return `
                 <tr>
+                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${equipment.id}"></td>
                     <td><img src="${equipment.link_photo || 'https://via.placeholder.com/50'}" alt="${equipment.name}" width="50" height="50"></td>
                     <td>${equipment.name}</td>
                     <td>${equipment.position}</td>
@@ -74,6 +76,20 @@ function fillEquipmentForm(equipment) {
         equipment.def || 0;
     document.getElementById("equipmentMAX_HP").value =
         equipment.max_hp || 0;
+}
+
+function updateDeleteButton() {
+
+    const deleteBtn =
+        document.getElementById("deleteSelectedEqBtn");
+
+    deleteBtn.classList.toggle(
+        "hidden",
+        selectedEqIds.size === 0
+    );
+
+    deleteBtn.textContent =
+        `Delete Selected (${selectedEqIds.size})`;
 }
 
 async function initEquipmentsPage() {
@@ -125,7 +141,7 @@ async function initEquipmentsPage() {
             equipments,
             equipmentsTableBody
         );
-        let table = new DataTable('#equipmentsTable');
+        
     } catch (error) {
 
         console.error(error);
@@ -134,6 +150,118 @@ async function initEquipmentsPage() {
 
         setTableLoading(false);
     }
+
+    let table = new DataTable('#equipmentsTable', {
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ]
+    });
+    document.getElementById('selectAllTasks').addEventListener('change', function () {
+
+        const checked = this.checked;
+
+        table.rows().every(function () {
+            const node = this.node();
+
+            const checkbox = node.querySelector('.task-checkbox');
+
+            if (checkbox) {
+
+                checkbox.checked = checked;
+
+                const id = checkbox.dataset.id;
+
+                if (checked) {
+                    selectedEqIds.add(id);
+                } else {
+                    selectedEqIds.delete(id);
+                }
+            }
+        });
+
+        updateDeleteButton();   
+    });
+
+    document.addEventListener('change', (e) => {
+
+        if (!e.target.classList.contains('task-checkbox')) {
+            return;
+        }
+
+        console.log("checkbox changed");
+
+        const id = e.target.dataset.id;
+
+        if (e.target.checked) {
+            selectedEqIds.add(id);
+        } else {
+            selectedEqIds.delete(id);
+        }
+
+        console.log(selectedEqIds);
+
+        updateDeleteButton();
+    });
+
+    document.getElementById("deleteSelectedEqBtn").addEventListener("click", async () => {
+
+        if (selectedEqIds.size === 0) {
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete ${selectedEqIds.size} equipment(s)?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+        console.log("Deleting IDs:", selectedEqIds);
+
+        /*const token =
+            localStorage.getItem("access_token");
+
+        try {
+
+            const response = await fetch(
+                `${BASE_URL}/api/admin`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "bulkDelete",
+                        table: "catalog_equipments",
+                        ids: [...selectedEqIds]
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error);
+            }
+
+            alert("Deleted successfully");
+
+            selectedEqIds.clear();
+
+            location.reload();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+        }*/
+
+    });
     // buka modal
     openBtnEquipment.addEventListener("click", () => {
 
