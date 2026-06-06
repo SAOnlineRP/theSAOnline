@@ -1,12 +1,3 @@
-const BASE_URL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://the-saonline.vercel.app";
-
-const API_URL = `${BASE_URL}/api/cms_player`;
-const API_CATALOG_URL = `${BASE_URL}/api/admin`;
-const API_REGISTER_URL = `${BASE_URL}/api/register`;
-
 let currentEditingUserId = null;
 let currentPlayerData = null;
 let currentPlayers = [];
@@ -15,91 +6,6 @@ let currentCatalogItems = [];
 let currentCatalogPartners = [];
 let currentCatalogST = [];
 let currentCatalogBadges = [];
-
-// =========================
-// API HELPER
-// =========================
-
-async function apiRequest(body) {
-
-  const token =
-    localStorage.getItem("access_token");
-
-  try {
-
-    const response = await fetch(API_URL, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-
-      body: JSON.stringify(body),
-    });
-
-    const result =
-      await response.json();
-
-    if (!result.success) {
-      throw new Error(
-        result.error || "API Error"
-      );
-    }
-
-    return result.data;
-
-  } catch (err) {
-
-    console.error(
-      "API Request Error:",
-      err
-    );
-
-    return null;
-  }
-}
-
-async function apiCatalogRequest(body) {
-
-  const token =
-    localStorage.getItem("access_token");
-
-  try {
-
-    const response = await fetch(API_CATALOG_URL, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-
-      body: JSON.stringify(body),
-    });
-
-    const result =
-      await response.json();
-
-    if (!result.success) {
-      throw new Error(
-        result.error || "API Error"
-      );
-    }
-
-    return result.data;
-
-  } catch (err) {
-
-    console.error(
-      "API Request Error:",
-      err
-    );
-
-    return null;
-  }
-}
-
 
 async function apiRegisterRequest(body) {
   console.log("API Register Request Body:", body);
