@@ -23,22 +23,26 @@
             display: flex;
         }
 
-        .modal-image {
-            max-width: 95vw;
-            max-height: 95vh;
-            object-fit: contain;
-        }
-
         .image-wrapper {
             position: relative;
             display: inline-block;
         }
 
+        .modal-image {
+            display: block;
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+        }
+
         .overlay-image {
             position: absolute;
-            top: 10px;
-            left: 180px;
-            height: stretch;
+            top: 0;
+            right: 180px;
+
+            height: 100%;
+            width: auto;
+
             z-index: 10;
         }
 
@@ -53,10 +57,8 @@
 
         /* Mobile */
         @media (max-width: 768px) {
-            .modal-image {
+            .image-wrapper {
                 transform: rotate(90deg);
-                max-width: 90vh;
-                max-height: 90vw;
             }
         }
     </style>
@@ -66,17 +68,19 @@
     <div id="imageModal" class="modal">
         <span class="close" onclick="closeImage()">✕</span>
 
-        <img
-        src="https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG"
-        alt="Background"
-        class="modal-image"
-        >
+        <div class="image-wrapper">
+            <img
+                src="https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG"
+                alt="Background"
+                class="modal-image"
+            >
 
-        <img
-            src="https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA"
-            alt="character"
-            class="overlay-image"
-        >
+            <img
+                src="https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA"
+                alt="Character"
+                class="overlay-image"
+            >
+        </div>
     </div>
 <script>
     function openImage() {
