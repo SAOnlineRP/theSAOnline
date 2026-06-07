@@ -1,25 +1,34 @@
 <section id="badges" class="content-section">
     <div class="panel-card">
         <div class="panel-head">
-        <h3>Badges</h3>
-        <button class="admin-btn primary-btn">+ Add Badge</button>
+            <h3>Badges</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedBadgesBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openBadgeModal">+ Add Badge</button>
+            </div>
         </div>
 
         <div class="table-wrapper">
-        <table id="badgesTable" class="admin-table">
-            <thead>
-            <tr>
-                <th><input type="checkbox" id="selectAllBadgeTasks"></th>
-                <th>Photo</th>
-                <th>Badge Name</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody id="badgesTableBody">
-            
-            </tbody>
-        </table>
+            <div id="tableBadgeOverlayLoading" class="table-overlay hidden">
+                <div class="spinner"></div>
+            </div>
+        
+            <table id="badgesTable" class="admin-table">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllBadgeTasks"></th>
+                    <th>Photo</th>
+                    <th>Badge Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="badgesTableBody">
+                
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

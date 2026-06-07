@@ -48,7 +48,8 @@ function renderMonsters(monsters, tableBody) {
                     <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${monster.id}"></td>
                     <td><img src="${monster.link_photo || 'https://via.placeholder.com/50'}" alt="${monster.name}" width="50" height="50"></td>
                     <td>${monster.name}</td>
-                    <td>${monster.description}</td>
+                    <td>${monster.type || 'N/A'}</td>
+                    <td>ATK: ${monster.atk || 'N/A'}, DEF: ${monster.def || 'N/A'}, HP: ${monster.max_hp || 'N/A'}, MP: ${monster.max_mp || 'N/A'}</td>
                     <td>
                         <button class="table-btn edit edit-btn" data-id="${monster.id}">Edit</button>
                         <button class="table-btn delete delete-btn" data-id="${monster.id}">Delete</button>
@@ -63,6 +64,9 @@ function fillMonsterForm(monster) {
 
     document.getElementById("monsterName").value =
         monster.name;
+
+    document.getElementById("monsterType").value =
+        monster.type || "";
 
     document.getElementById("monsterDescription").value =
         monster.description || "";
@@ -88,10 +92,10 @@ async function initMonstersPage() {
     const modalMonster =
         document.getElementById("monsterModal");
 
-    const openBtnEquipment =
+    const openBtnMonster =
         document.getElementById("openMonsterModal");
 
-    const closeBtnEquipment =
+    const closeBtnMonster =
         document.getElementById("closeMonsterModal");
 
     const monstersTableBody =
@@ -149,7 +153,7 @@ async function initMonstersPage() {
             }
         ]
     });
-    document.getElementById('selectAllMonsters').addEventListener('change', function () {
+    document.getElementById('selectAllMonsterTasks').addEventListener('change', function () {
 
         const checked = this.checked;
 

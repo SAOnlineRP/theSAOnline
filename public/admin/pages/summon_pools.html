@@ -1,3 +1,76 @@
 <section id="summon_pools" class="content-section">
-    <h2>Summon Pools</h2>
+    <div class="panel-card">
+        <div class="panel-head">
+            <h3>Summon Pools</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedSummonPoolsBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openSummonPoolModal">
+                    + Add Summon Pool
+                </button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <div id="tableSummonPoolOverlayLoading" class="table-overlay hidden">
+                <div class="spinner"></div>
+            </div>
+            <table id="summonPoolsTable" class="admin-table">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllSummonPools"></th>
+                    <th>Type</th>
+                    <th>Reward Type</th>
+                    <th>Rewards</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="summonPoolsTableBody">
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
+
+<!-- modal -->
+<div class="modal" id="summonPoolModal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" id="closeSummonPoolModal">
+        &times;
+        </span>
+
+        <h2>Add New Summon Pool</h2>
+        <div class="modal-body">
+            <form id="summonPoolForm" style="overflow: visible;">
+                <div class="form-grid" style="max-height: 220px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label for="summonPoolName">Name:</label>
+                        <input type="text" id="summonPoolName" name="summonPoolName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="summonPoolDescription">Description:</label>
+                        <input type="text" id="summonPoolDescription" name="summonPoolDescription" required />
+                    </div>
+                    
+                </div>
+                <button
+                    type="submit"
+                    class="admin-btn primary-btn"
+                    id="saveSummonPoolBtn"
+                >
+                    <span class="btn-text">Save</span>
+
+                    <span class="btn-loading hidden">
+                        <span class="spinner"></span>
+                        Saving...
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>

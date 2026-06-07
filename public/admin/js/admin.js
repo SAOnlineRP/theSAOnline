@@ -71,6 +71,15 @@ menuItems.forEach((item) => {
     } else if (page === "tasks") {
       item.classList.add('active');
       initTasksPage();
+    } else if (page === "badges") {
+      item.classList.add('active');
+      initBadgesPage();
+    } else if (page === "monsters") {
+      item.classList.add('active');
+      initMonstersPage();
+    } else if (page === "quests") {
+      item.classList.add('active');
+      initQuestsPage();
     }
 
   });

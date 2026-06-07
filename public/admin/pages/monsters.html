@@ -1,23 +1,36 @@
 <section id="monsters" class="content-section">
     <div class="panel-card">
         <div class="panel-head">
-        <h3>Monsters</h3>
-        <button class="admin-btn primary-btn">+ Add Monster</button>
+            <h3>Monsters</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedMonstersBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openMonsterModal">
+                    + Add Monster
+                </button>
+            </div>
         </div>
 
         <div class="table-wrapper">
-        <table id="monstersTable" class="admin-table">
-            <thead>
-            <tr>
-                <th>Monster Name</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody id="monstersTableBody">
-            
-            </tbody>
-        </table>
+            <div id="tableMonsterOverlayLoading" class="table-overlay hidden">
+                <div class="spinner"></div>
+            </div>
+            <table id="monstersTable" class="admin-table">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllMonsterTasks"></th>
+                    <th>Photo</th>
+                    <th>Monster Name</th>
+                    <th>Monster Type</th>
+                    <th>Monster Stats</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="monstersTableBody">
+                
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

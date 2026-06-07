@@ -6,7 +6,12 @@ const allowedTables = [
   "catalog_soul_traits",
   "catalog_items",
   "catalog_equipments",
-  "catalog_badges"
+  "catalog_badges",
+  "catalog_monsters",
+  "catalog_quests",
+  "catalog_tasks",
+  "summon_pools",
+  "merchant_items"
 ];
 
 export default async function handler(req, res) {

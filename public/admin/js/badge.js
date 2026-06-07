@@ -84,7 +84,7 @@ function updateDeleteBadgeButton() {
 
 async function initBadgesPage() {
     let badges = [];
-
+    console.log("Initializing Badges Page");
     const modalBadge =
         document.getElementById("badgeModal");
 

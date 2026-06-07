@@ -1,3 +1,77 @@
 <section id="quests" class="content-section">
-    <h2>QUESTS</h2>
+    <div class="panel-card">
+        <div class="panel-head">
+            <h3>Quests</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedQuestsBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openQuestModal">
+                    + Add Quest
+                </button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <div id="tableQuestOverlayLoading" class="table-overlay hidden">
+                <div class="spinner"></div>
+            </div>
+            <table id="questsTable" class="admin-table">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllQuests"></th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Quest Rewards</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="questsTableBody">
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
+
+<!-- modal -->
+<div class="modal" id="questModal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" id="closeQuestModal">
+        &times;
+        </span>
+
+        <h2>Add New Quest</h2>
+        <div class="modal-body">
+            <form id="questForm" style="overflow: visible;">
+                <div class="form-grid" style="max-height: 220px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label for="questName">Name:</label>
+                        <input type="text" id="questName" name="questName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="questDescription">Description:</label>
+                        <input type="text" id="questDescription" name="questDescription" required />
+                    </div>
+                    
+                </div>
+                <button
+                    type="submit"
+                    class="admin-btn primary-btn"
+                    id="saveQuestBtn"
+                >
+                    <span class="btn-text">Save</span>
+
+                    <span class="btn-loading hidden">
+                        <span class="spinner"></span>
+                        Saving...
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
