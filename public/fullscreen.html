@@ -44,6 +44,29 @@
             z-index: 10;
         }
 
+        .dialog-box {
+            position: absolute;
+            left: 50%;
+            bottom: 50px;
+            transform: translateX(-50%);
+
+            width: 80%;
+            max-width: 700px;
+
+            padding: 16px 20px;
+
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #4fc3f7;
+            border-radius: 12px;
+
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+
+            z-index: 15;
+        }
+
         .next-btn {
             position: absolute;
             bottom: 80px;
@@ -98,6 +121,10 @@
                 id="characterImage"
                 class="overlay-image"
             >
+
+            <div id="dialogBox" class="dialog-box">
+                Selamat datang di Aincrad!
+            </div>
 
             <button class="next-btn" onclick="nextCharacter()">
                 NEXT
