@@ -29,6 +29,19 @@
             object-fit: contain;
         }
 
+        .image-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .overlay-image {
+            position: absolute;
+            top: 10px;
+            left: 180px;
+            height: stretch;
+            z-index: 10;
+        }
+
         .close {
             position: absolute;
             top: 20px;
@@ -54,9 +67,15 @@
         <span class="close" onclick="closeImage()">✕</span>
 
         <img
-            src="https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG"
-            alt="Preview"
-            class="modal-image"
+        src="https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG"
+        alt="Background"
+        class="modal-image"
+        >
+
+        <img
+            src="https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA"
+            alt="character"
+            class="overlay-image"
         >
     </div>
 <script>
