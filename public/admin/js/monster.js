@@ -1,44 +1,6 @@
 let editingMonsterId = null;
 let selectedMonsterIds = new Set();
 
-async function fetchMonsters() {
-
-    try {
-
-        const token =
-            localStorage.getItem("access_token");
-
-        const response = await fetch(
-            `${BASE_URL}/api/admin`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ table: "catalog_monsters", action: "getAll" })
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Unauthorized");
-        }
-
-        const monsters =
-            await response.json();
-
-        return monsters;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
 function renderMonsters(monsters, tableBody) {
 
     tableBody.innerHTML = monsters
@@ -107,49 +69,88 @@ async function initMonstersPage() {
     const modalTitle =
         modalMonster.querySelector("h2");
 
-    const tableOverlayLoading =
-        document.getElementById(
-            "tableMonsterOverlayLoading"
-        );
-
-    function setTableLoading(isLoading) {
-
-        tableOverlayLoading.classList.toggle(
-            "hidden",
-            !isLoading
-        );
-    }
-
-    try {
-
-        setTableLoading(true);
-
-        const monstersResponse =
-            await fetchMonsters();
-
-        monsters = Array.isArray(monstersResponse)
-            ? monstersResponse
-            : monstersResponse?.data || [];
-
-        renderMonsters(
-            monsters,
-            monstersTableBody
-        );
-        
-    } catch (error) {
-
-        console.error(error);
-
-    } finally {
-
-        setTableLoading(false);
-    }
+    const token =
+        localStorage.getItem("access_token");
 
     let table = new DataTable('#monstersTable', {
-        columnDefs: [
+        ajax: {
+            url: `${BASE_URL}/api/admin`,
+            type: "POST",
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+
+            contentType: "application/json",
+
+            data: function () {
+                return JSON.stringify({
+                    action: "getAll",
+                    table: "catalog_monsters"
+                });
+            },
+
+            dataSrc: function (json) {
+                return Array.isArray(json)
+                    ? json
+                    : json?.data || [];
+            }
+        },
+
+        columns: [
             {
+                data: null,
                 orderable: false,
-                targets: 0
+                render: (data, type, row) => `
+                    <input
+                        type="checkbox"
+                        class="task-checkbox selectTaskCheckbox"
+                        data-id="${row.id}"
+                    >
+                `
+            },
+            {
+                data: null,
+                render: (data, type, row) => `
+                    <img
+                        src="${row.link_photo || 'https://via.placeholder.com/50'}"
+                        alt="${row.name}"
+                        width="150"
+                        height="50"
+                    >
+                `
+            },
+            {
+                data: "name"
+            },
+            {
+                data: "type"
+            },
+            {
+                data: null,
+                render: (data, type, row) =>
+                    `ATK : ${row.atk || 0},
+                    DEF : ${row.def || 0},
+                    MAX_HP : ${row.max_hp || 0},
+                    MAX_MP : ${row.max_mp || 0}`
+            },
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <button
+                        type="button"
+                        class="table-btn edit edit-btn"
+                        data-id="${row.id}">
+                        Edit
+                    </button>
+
+                    <button
+                        class="table-btn delete delete-btn"
+                        data-id="${row.id}">
+                        Delete
+                    </button>
+                `
             }
         ]
     });
@@ -185,8 +186,6 @@ async function initMonstersPage() {
             return;
         }
 
-        console.log("checkbox changed");
-
         const id = e.target.dataset.id;
 
         if (e.target.checked) {
@@ -215,9 +214,6 @@ async function initMonstersPage() {
         }
         console.log("Deleting IDs:", selectedMonsterIds);
 
-        /*const token =
-            localStorage.getItem("access_token");
-
         try {
 
             const response = await fetch(
@@ -242,18 +238,16 @@ async function initMonstersPage() {
                 throw new Error(result.error);
             }
 
-            alert("Deleted successfully");
-
             selectedMonsterIds.clear();
 
-            location.reload();
+            table.ajax.reload(null, false);
 
         } catch (error) {
 
             console.error(error);
 
             alert(error.message);
-        }*/
+        }
 
     });
     // buka modal
@@ -285,9 +279,11 @@ async function initMonstersPage() {
 
             const monsterId = editButton.dataset.id;
 
-            const monster = monsters.find(
-                (item) => item.id === monsterId
-            );
+            const row =
+                editButton.closest("tr");
+
+            const monster =
+                table.row(row).data();
 
             if (!monster) {
                 console.error(
@@ -323,9 +319,6 @@ async function initMonstersPage() {
                 return;
             }
 
-            const token =
-                localStorage.getItem("access_token");
-
             const monsterId = deleteButton.dataset.id;
 
             try {
@@ -356,18 +349,7 @@ async function initMonstersPage() {
                     throw new Error(result.error);
                 }
 
-                const monstersResponse =
-                    await fetchMonsters();
-
-                const updatedMonsters =
-                    Array.isArray(monstersResponse)
-                        ? monstersResponse
-                        : monstersResponse?.data || [];
-
-                renderMonsters(
-                    updatedMonsters,
-                    monstersTableBody
-                );
+                table.ajax.reload(null, false);
 
             } catch (error) {
 
@@ -383,9 +365,6 @@ async function initMonstersPage() {
         e.preventDefault();
 
         setSaveLoading(true);
-
-        const token =
-            localStorage.getItem("access_token");
 
         const formData = {
             name: document.getElementById("monsterName").value,
@@ -420,10 +399,6 @@ async function initMonstersPage() {
                 );
 
                 const result = await response.json();
-
-
-                //const text = await response.text();
-                //console.log(text);
 
                 if (!response.ok) {
                     throw new Error(result.error);
@@ -462,17 +437,7 @@ async function initMonstersPage() {
             }
 
             // reload data
-            const monstersResponse =
-                await fetchMonsters();
-
-            monsters = Array.isArray(monstersResponse)
-                ? monstersResponse
-                : monstersResponse?.data || [];
-
-            renderMonsters(
-                monsters,
-                monstersTableBody
-            );
+            table.ajax.reload(null, false);
 
             modalMonster.style.display = "none";
 

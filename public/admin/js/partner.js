@@ -1,79 +1,6 @@
 let editingPartnerId = null;
 let selectedPartnerIds = new Set();
 
-async function fetchPartners() {
-
-    try {
-
-        const token =
-            localStorage.getItem("access_token");
-
-        const response = await fetch(
-            `${BASE_URL}/api/admin`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ table: "catalog_partners", action: "getAll" })
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Unauthorized");
-        }
-
-        const partners =
-            await response.json();
-
-        return partners;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
-function renderListPartners(partners, tableBody) {
-
-    tableBody.innerHTML = partners
-        .map((partner) => {
-
-            const skills = partner.catalog_partner_skills
-                .map(item => item.catalog_skills.name);
-
-            return `
-                <tr>
-                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${partner.id}"></td>
-                    <td><img src="${partner.link_ava || 'https://via.placeholder.com/50'}" alt="${partner.name}" width="50" height="50"></td>
-                    <td>${partner.name}</td>
-                    <td>ATK : ${partner.atk || 0}, DEF : ${partner.def || 0}, MAX_HP : ${partner.max_hp || 0}, MAX_MP : ${partner.max_mp || 0}</td>
-                    <td>${JSON.stringify(skills)}</td>
-                    <td>
-                        <button type="button"
-                            class="table-btn edit edit-btn"
-                            data-id="${partner.id}">
-                            Edit
-                        </button>
-                        <button 
-                            class="table-btn delete delete-btn"
-                            data-id="${partner.id}"
-                        >
-                            Delete
-                        </button>
-                    </td>
-                    
-                </tr>
-            `;
-        })
-        .join("");
-}
-
 function fillPartnerForm(partner) {
 
     document.getElementById("partnerName").value = partner.name || "";
@@ -102,8 +29,6 @@ function updateDeletePartnersButton() {
 async function initPartnersPage() {
     let partners = [];
 
-    
-
     const modalPartner =
         document.getElementById("partnerModal");
 
@@ -122,49 +47,104 @@ async function initPartnersPage() {
     const modalTitle =
         modalPartner.querySelector("h2");
 
-    const tableOverlayLoading =
-        document.getElementById(
-            "tablePartnerOverlayLoading"
-        );
-
-    function setTableLoading(isLoading) {
-
-        tableOverlayLoading.classList.toggle(
-            "hidden",
-            !isLoading
-        );
-    }
-    
-    try {
-
-        setTableLoading(true);
-        // fetch data API
-        const partnersResponse =
-            await fetchPartners();
-        
-        partners = Array.isArray(partnersResponse)
-            ? partnersResponse
-            : partnersResponse?.data || [];
-
-        renderListPartners(
-            partners,
-            partnersTableBody
-        );
-        
-    } catch (error) {
-
-        console.error(error);
-    } finally {
-
-        setTableLoading(false);
-        
-    }
+    const token =
+    localStorage.getItem("access_token");
 
     let table = new DataTable('#partnersTable', {
-        columnDefs: [
+        ajax: {
+            url: `${BASE_URL}/api/admin`,
+            type: 'POST',
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+
+            contentType: 'application/json',
+
+            data: function () {
+                return JSON.stringify({
+                    action: "getAll",
+                    table: "catalog_partners"
+                });
+            },
+
+            dataSrc: function (json) {
+                return Array.isArray(json)
+                    ? json
+                    : json?.data || [];
+            }
+        },
+
+        columns: [
             {
+                data: null,
                 orderable: false,
-                targets: 0
+                render: (data, type, row) => `
+                    <input
+                        type="checkbox"
+                        class="task-checkbox selectTaskCheckbox"
+                        data-id="${row.id}"
+                    >
+                `
+            },
+
+            {
+                data: null,
+                render: (data, type, row) => `
+                    <img
+                        src="${row.link_ava || 'https://via.placeholder.com/50'}"
+                        alt="${row.name}"
+                        width="50"
+                        height="50"
+                    >
+                `
+            },
+
+            {
+                data: 'name'
+            },
+
+            {
+                data: null,
+                render: (data, type, row) =>
+                    `ATK : ${row.atk || 0},
+                    DEF : ${row.def || 0},
+                    MAX_HP : ${row.max_hp || 0},
+                    MAX_MP : ${row.max_mp || 0}`
+            },
+
+            {
+                data: null,
+                render: (data, type, row) => {
+
+                    const skills =
+                        row.catalog_partner_skills
+                            ?.map(skill =>
+                                skill.catalog_skills.name
+                            ) || [];
+
+                    return JSON.stringify(skills);
+                }
+            },
+
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <button
+                        type="button"
+                        class="table-btn edit edit-btn"
+                        data-id="${row.id}">
+                        Edit
+                    </button>
+
+                    <button
+                        type="button"
+                        class="table-btn delete delete-btn"
+                        data-id="${row.id}">
+                        Delete
+                    </button>
+                `
             }
         ]
     });
@@ -231,9 +211,6 @@ async function initPartnersPage() {
         }
         console.log("Deleting IDs:", selectedPartnerIds);
 
-        /*const token =
-            localStorage.getItem("access_token");
-
         try {
 
             const response = await fetch(
@@ -245,7 +222,7 @@ async function initPartnersPage() {
                         Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
-                        action: "bulkDelete",
+                        action: "deleteBulk",
                         table: "catalog_partners",
                         ids: [...selectedPartnerIds]
                     })
@@ -258,18 +235,16 @@ async function initPartnersPage() {
                 throw new Error(result.error);
             }
 
-            alert("Deleted successfully");
-
             selectedPartnerIds.clear();
 
-            location.reload();
+            table.ajax.reload(null, false);
 
         } catch (error) {
 
             console.error(error);
 
             alert(error.message);
-        }*/
+        }
 
     });
 
@@ -298,9 +273,10 @@ async function initPartnersPage() {
 
         if (editButton) {
             editingPartnerId = editButton.dataset.id;
-             const partner = partners.find(
-                (item) => item.id === editingPartnerId
-            );
+            const row = editButton.closest("tr");
+
+            const partner =
+                table.row(row).data();
 
             if (!partner) {
                 console.error(
@@ -329,9 +305,6 @@ async function initPartnersPage() {
             if (!confirmed) {
                 return;
             }
-
-            const token =
-                localStorage.getItem("access_token");
 
             const partnerId = deleteButton.dataset.id;
 
@@ -363,18 +336,7 @@ async function initPartnersPage() {
                     throw new Error(result.error);
                 }
 
-                const partnersResponse =
-                    await fetchPartners();
-
-                const updatedPartners =
-                    Array.isArray(partnersResponse)
-                        ? partnersResponse
-                        : partnersResponse?.data || [];
-
-                renderListPartners(
-                    updatedPartners,
-                    partnersTableBody
-                );
+                table.ajax.reload(null, false);
 
             } catch (error) {
 
@@ -392,9 +354,6 @@ async function initPartnersPage() {
         e.preventDefault();
 
         setSaveLoading(true);
-
-        const token =
-            localStorage.getItem("access_token");
 
         const formData = {
             name: document.getElementById("partnerName").value,
@@ -434,10 +393,6 @@ async function initPartnersPage() {
 
                 const result = await response.json();
 
-
-                //const text = await response.text();
-                //console.log(text);
-
                 if (!response.ok) {
                     throw new Error(result.error);
                 }
@@ -475,17 +430,7 @@ async function initPartnersPage() {
             }
 
             // reload data
-            const partnersResponse =
-                await fetchPartners();
-
-            partners = Array.isArray(partnersResponse)
-                ? partnersResponse
-                : partnersResponse?.data || [];
-
-            renderListPartners(
-                partners,
-                partnersTableBody
-            );
+            table.ajax.reload(null, false);
 
             modalPartner.style.display = "none";
 

@@ -1,76 +1,6 @@
 let editingSoulTraitId = null;
 let selectedSoulTraitIds = new Set();
 
-async function fetchSoulTraits() {
-
-    try {
-
-        const token =
-            localStorage.getItem("access_token");
-
-        const response = await fetch(
-            `${BASE_URL}/api/admin`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ table: "catalog_soul_traits", action: "getAll" })
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Unauthorized");
-        }
-
-        const soulTraits =
-            await response.json();
-
-        return soulTraits;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
-function renderSoulTraits(soulTraits, tableBody) {
-
-    tableBody.innerHTML = soulTraits
-        .map((soulTrait) => {
-            return `
-                <tr>
-                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${soulTrait.id}"></td>
-                    <td>${soulTrait.name}</td>
-                    <td>ATK : ${soulTrait.stat_atk || 0}, DEF : ${soulTrait.stat_def || 0}, MAX_HP : ${soulTrait.stat_max_hp || 0}, MAX_MP : ${soulTrait.stat_max_mp || 0}, CRIT_DMG : ${soulTrait.stat_crit_dmg || 0}, CRIT_RATE : ${soulTrait.stat_crit_pct || 0}%</td>
-                    <td>ATK : ${soulTrait.growth_atk || 0}, DEF : ${soulTrait.growth_def || 0}, MAX_HP : ${soulTrait.growth_max_hp || 0}, MAX_MP : ${soulTrait.growth_max_mp || 0}, CRIT_DMG : ${soulTrait.growth_crit_dmg || 0}, CRIT_RATE : ${soulTrait.growth_crit_pct || 0}%</td>
-                    <td>${soulTrait.skill_name ?? soulTrait.skillName}</td>
-                    <td>${soulTrait.skill_mp_cost ?? soulTrait.skillMpCost}</td>
-                    <td>${JSON.stringify(soulTrait.effects || [])}</td>
-                    <td>
-                        <button type="button"
-                            class="table-btn edit edit-btn"
-                            data-id="${soulTrait.id}">
-                            Edit
-                        </button>
-                        <button 
-                            class="table-btn delete delete-btn"
-                            data-id="${soulTrait.id}"
-                        >
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            `;
-        })
-        .join("");
-}
-
 function fillSoulTraitForm(soulTrait) {
 
     document.getElementById("soulTraitName").value =
@@ -155,18 +85,7 @@ async function initSoulTraitsPage() {
     const saveBtnLoading =
         saveSoulTraitBtn.querySelector(".btn-loading");
 
-    const tableOverlayLoading =
-        document.getElementById(
-            "tableOverlayLoading"
-        );
 
-    function setTableLoading(isLoading) {
-
-        tableOverlayLoading.classList.toggle(
-            "hidden",
-            !isLoading
-        );
-    }
     function setSaveLoading(isLoading) {
 
         saveSoulTraitBtn.classList.toggle(
@@ -187,36 +106,101 @@ async function initSoulTraitsPage() {
         saveSoulTraitBtn.disabled = isLoading;
     }
 
-    try {
-
-        setTableLoading(true);
-
-        const soulTraitsResponse =
-            await fetchSoulTraits();
-
-        soulTraits = Array.isArray(soulTraitsResponse)
-            ? soulTraitsResponse
-            : soulTraitsResponse?.data || [];
-
-        renderSoulTraits(
-            soulTraits,
-            soulTraitsTableBody
-        );
-        
-    } catch (error) {
-
-        console.error(error);
-
-    } finally {
-
-        setTableLoading(false);
-    }
+    const token =
+    localStorage.getItem("access_token");
 
     let table = new DataTable('#soulTraitsTable', {
-        columnDefs: [
+        ajax: {
+            url: `${BASE_URL}/api/admin`,
+            type: "POST",
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+
+            contentType: "application/json",
+
+            data: function () {
+                return JSON.stringify({
+                    action: "getAll",
+                    table: "catalog_soul_traits"
+                });
+            },
+
+            dataSrc: function (json) {
+                return Array.isArray(json)
+                    ? json
+                    : json?.data || [];
+            }
+        },
+
+        columns: [
             {
+                data: null,
                 orderable: false,
-                targets: 0
+                render: (data, type, row) => `
+                    <input
+                        type="checkbox"
+                        class="task-checkbox selectTaskCheckbox"
+                        data-id="${row.id}"
+                    >
+                `
+            },
+            {
+                data: "name"
+            },
+            {
+                data: null,
+                render: (data, type, row) =>
+                    `ATK : ${row.stat_atk || 0},
+                    DEF : ${row.stat_def || 0},
+                    MAX_HP : ${row.stat_max_hp || 0},
+                    MAX_MP : ${row.stat_max_mp || 0},
+                    CRIT_DMG : ${row.stat_crit_dmg || 0},
+                    CRIT_RATE : ${row.stat_crit_pct || 0}%`
+            },
+            {
+                data: null,
+                render: (data, type, row) =>
+                    `ATK : ${row.growth_atk || 0},
+                    DEF : ${row.growth_def || 0},
+                    MAX_HP : ${row.growth_max_hp || 0},
+                    MAX_MP : ${row.growth_max_mp || 0},
+                    CRIT_DMG : ${row.growth_crit_dmg || 0},
+                    CRIT_RATE : ${row.growth_crit_pct || 0}%`
+            },
+            {
+                data: null,
+                render: (data, type, row) =>
+                    row.skill_name ?? row.skillName
+            },
+            {
+                data: null,
+                render: (data, type, row) =>
+                    row.skill_mp_cost ?? row.skillMpCost
+            },
+            {
+                data: null,
+                render: (data, type, row) =>
+                    JSON.stringify(row.effects || [])
+            },
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <button
+                        type="button"
+                        class="table-btn edit edit-btn"
+                        data-id="${row.id}">
+                        Edit
+                    </button>
+
+                    <button
+                        class="table-btn delete delete-btn"
+                        data-id="${row.id}">
+                        Delete
+                    </button>
+                `
             }
         ]
     });
@@ -283,9 +267,6 @@ async function initSoulTraitsPage() {
         }
         console.log("Deleting IDs:", selectedSoulTraitIds);
 
-        /*const token =
-            localStorage.getItem("access_token");
-
         try {
 
             const response = await fetch(
@@ -297,7 +278,7 @@ async function initSoulTraitsPage() {
                         Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
-                        action: "bulkDelete",
+                        action: "deleteBulk",
                         table: "catalog_soul_traits",
                         ids: [...selectedSoulTraitIds]
                     })
@@ -310,18 +291,16 @@ async function initSoulTraitsPage() {
                 throw new Error(result.error);
             }
 
-            alert("Deleted successfully");
+            selectedSoulTraitIds.clear()
 
-            selectedSoulTraitIds.clear();
-
-            location.reload();
+            table.ajax.reload(null, false);
 
         } catch (error) {
 
             console.error(error);
 
             alert(error.message);
-        }*/
+        }
 
     });
 
@@ -354,9 +333,10 @@ async function initSoulTraitsPage() {
 
             const soulTraitId = editButton.dataset.id;
 
-            const soulTrait = soulTraits.find(
-                (item) => item.id === soulTraitId
-            );
+            const row = editButton.closest("tr");
+
+            const soulTrait =
+                table.row(row).data();
 
             if (!soulTrait) {
                 console.error(
@@ -392,9 +372,6 @@ async function initSoulTraitsPage() {
                 return;
             }
 
-            const token =
-                localStorage.getItem("access_token");
-
             const soulTraitId = deleteButton.dataset.id;
 
             try {
@@ -425,18 +402,7 @@ async function initSoulTraitsPage() {
                     throw new Error(result.error);
                 }
 
-                const soulTraitsResponse =
-                    await fetchSoulTraits();
-
-                const updatedSoulTraits =
-                    Array.isArray(soulTraitsResponse)
-                        ? soulTraitsResponse
-                        : soulTraitsResponse?.data || [];
-
-                renderSoulTraits(
-                    updatedSoulTraits,
-                    soulTraitsTableBody
-                );
+                table.ajax.reload(null, false);
 
             } catch (error) {
 
@@ -452,9 +418,6 @@ async function initSoulTraitsPage() {
         e.preventDefault();
 
         setSaveLoading(true);
-
-        const token =
-            localStorage.getItem("access_token");
 
         const formData = {
             name: document.getElementById("soulTraitName").value,
@@ -541,10 +504,6 @@ async function initSoulTraitsPage() {
 
                 const result = await response.json();
 
-
-                //const text = await response.text();
-                //console.log(text);
-
                 if (!response.ok) {
                     throw new Error(result.error);
                 }
@@ -582,17 +541,7 @@ async function initSoulTraitsPage() {
             }
 
             // reload data
-            const soulTraitsResponse =
-                await fetchSoulTraits();
-
-            soulTraits = Array.isArray(soulTraitsResponse)
-                ? soulTraitsResponse
-                : soulTraitsResponse?.data || [];
-
-            renderSoulTraits(
-                soulTraits,
-                soulTraitsTableBody
-            );
+            table.ajax.reload(null, false);
 
             modalSoulTrait.style.display = "none";
 

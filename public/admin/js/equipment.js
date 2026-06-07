@@ -1,66 +1,6 @@
 let editingEquipmentId = null;
 let selectedEqIds = new Set();
 
-async function fetchEquipments() {
-
-    try {
-
-        const token =
-            localStorage.getItem("access_token");
-
-        const response = await fetch(
-            `${BASE_URL}/api/admin`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ table: "catalog_equipments", action: "getAll" })
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Unauthorized");
-        }
-
-        const equipments =
-            await response.json();
-
-        return equipments;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
-function renderEquipments(equipments, tableBody) {
-
-    tableBody.innerHTML = equipments
-        .map((equipment) => {
-            return `
-                <tr>
-                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${equipment.id}"></td>
-                    <td><img src="${equipment.link_photo || 'https://via.placeholder.com/50'}" alt="${equipment.name}" width="50" height="50"></td>
-                    <td>${equipment.name}</td>
-                    <td>${equipment.position}</td>
-                    <td>${equipment.type}</td>
-                    <td>ATK : ${equipment.atk || 0}, DEF : ${equipment.def || 0}, MAX_HP : ${equipment.max_hp || 0}</td>
-                    <td>
-                        <button class="table-btn edit edit-btn" data-id="${equipment.id}">Edit</button>
-                        <button class="table-btn delete delete-btn" data-id="${equipment.id}">Delete</button>
-                    </td>
-                </tr>
-            `;
-        })
-        .join("");
-}
-
 function fillEquipmentForm(equipment) {
 
     document.getElementById("equipmentName").value =
@@ -113,49 +53,101 @@ async function initEquipmentsPage() {
     const modalTitle =
         modalEquipment.querySelector("h2");
 
-    const tableOverlayLoading =
-        document.getElementById(
-            "tableEqOverlayLoading"
-        );
 
-    function setTableLoading(isLoading) {
-
-        tableOverlayLoading.classList.toggle(
-            "hidden",
-            !isLoading
-        );
-    }
-
-    try {
-
-        setTableLoading(true);
-
-        const equipmentsResponse =
-            await fetchEquipments();
-
-        equipments = Array.isArray(equipmentsResponse)
-            ? equipmentsResponse
-            : equipmentsResponse?.data || [];
-
-        renderEquipments(
-            equipments,
-            equipmentsTableBody
-        );
-        
-    } catch (error) {
-
-        console.error(error);
-
-    } finally {
-
-        setTableLoading(false);
-    }
+    const token =
+    localStorage.getItem("access_token");
 
     let table = new DataTable('#equipmentsTable', {
-        columnDefs: [
+        ajax: {
+            url: `${BASE_URL}/api/admin`,
+            type: 'POST',
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+
+            contentType: 'application/json',
+
+            data: function () {
+                return JSON.stringify({
+                    action: "getAll",
+                    table: "catalog_equipments"
+                });
+            },
+
+            dataSrc: function (json) {
+                return Array.isArray(json)
+                    ? json
+                    : json?.data || [];
+            }
+        },
+
+        order: [[2, 'asc']],
+
+        columns: [
             {
+                data: null,
                 orderable: false,
-                targets: 0
+                render: (data, type, row) => `
+                    <input
+                        type="checkbox"
+                        class="task-checkbox selectTaskCheckbox"
+                        data-id="${row.id}"
+                    >
+                `
+            },
+
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <img
+                        src="${row.link_photo || 'https://via.placeholder.com/50'}"
+                        alt="${row.name}"
+                        width="50"
+                        height="50"
+                    >
+                `
+            },
+
+            {
+                data: 'name'
+            },
+
+            {
+                data: 'position'
+            },
+
+            {
+                data: 'type'
+            },
+
+            {
+                data: null,
+                render: (data, type, row) =>
+                    `ATK : ${row.atk || 0},
+                    DEF : ${row.def || 0},
+                    MAX_HP : ${row.max_hp || 0}`
+            },
+
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <button
+                        type="button"
+                        class="table-btn edit edit-btn"
+                        data-id="${row.id}">
+                        Edit
+                    </button>
+
+                    <button
+                        type="button"
+                        class="table-btn delete delete-btn"
+                        data-id="${row.id}">
+                        Delete
+                    </button>
+                `
             }
         ]
     });
@@ -221,9 +213,6 @@ async function initEquipmentsPage() {
         }
         console.log("Deleting IDs:", selectedEqIds);
 
-        /*const token =
-            localStorage.getItem("access_token");
-
         try {
 
             const response = await fetch(
@@ -248,18 +237,16 @@ async function initEquipmentsPage() {
                 throw new Error(result.error);
             }
 
-            alert("Deleted successfully");
-
             selectedEqIds.clear();
 
-            location.reload();
+            table.ajax.reload(null, false);
 
         } catch (error) {
 
             console.error(error);
 
             alert(error.message);
-        }*/
+        };
 
     });
     // buka modal
@@ -291,9 +278,10 @@ async function initEquipmentsPage() {
 
             const equipmentId = editButton.dataset.id;
 
-            const equipment = equipments.find(
-                (item) => item.id === equipmentId
-            );
+            const row = editButton.closest("tr");
+
+            const equipment =
+                table.row(row).data();
 
             if (!equipment) {
                 console.error(
@@ -329,9 +317,6 @@ async function initEquipmentsPage() {
                 return;
             }
 
-            const token =
-                localStorage.getItem("access_token");
-
             const equipmentId = deleteButton.dataset.id;
 
             try {
@@ -362,18 +347,7 @@ async function initEquipmentsPage() {
                     throw new Error(result.error);
                 }
 
-                const equipmentsResponse =
-                    await fetchEquipments();
-
-                const updatedEquipments =
-                    Array.isArray(equipmentsResponse)
-                        ? equipmentsResponse
-                        : equipmentsResponse?.data || [];
-
-                renderEquipments(
-                    updatedEquipments,
-                    equipmentsTableBody
-                );
+                table.ajax.reload(null, false);
 
             } catch (error) {
 
@@ -389,9 +363,6 @@ async function initEquipmentsPage() {
         e.preventDefault();
 
         setSaveLoading(true);
-
-        const token =
-            localStorage.getItem("access_token");
 
         const formData = {
             name: document.getElementById("equipmentName").value,
@@ -437,10 +408,6 @@ async function initEquipmentsPage() {
 
                 const result = await response.json();
 
-
-                //const text = await response.text();
-                //console.log(text);
-
                 if (!response.ok) {
                     throw new Error(result.error);
                 }
@@ -478,17 +445,7 @@ async function initEquipmentsPage() {
             }
 
             // reload data
-            const equipmentsResponse =
-                await fetchEquipments();
-
-            equipments = Array.isArray(equipmentsResponse)
-                ? equipmentsResponse
-                : equipmentsResponse?.data || [];
-
-            renderEquipments(
-                equipments,
-                equipmentsTableBody
-            );
+            table.ajax.reload(null, false);
 
             modalEquipment.style.display = "none";
 

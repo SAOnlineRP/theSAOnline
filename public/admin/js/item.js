@@ -1,73 +1,6 @@
 let editingItemId = null;
 let selectedItemIds = new Set();
 
-async function fetchItems() {
-
-    try {
-
-        const token =
-            localStorage.getItem("access_token");
-
-        const response = await fetch(
-            `${BASE_URL}/api/admin`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ table: "catalog_items", action: "getAll" })
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Unauthorized");
-        }
-
-        const items =
-            await response.json();
-
-        return items;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
-function renderItems(items, tableBody) {
-
-    tableBody.innerHTML = items
-        .map((item) => {
-            return `
-                <tr>
-                    <td><input type="checkbox" class="task-checkbox selectTaskCheckbox" data-id="${item.id}"></td>
-                    <td><img src="${item.link_photo || 'https://via.placeholder.com/50'}" alt="${item.name}" width="50" height="50"></td>
-                    <td>${item.name}</td>
-                    <td>${item.desc}</td>
-                    <td>
-                        <button type="button"
-                            class="table-btn edit edit-btn"
-                            data-id="${item.id}">
-                            Edit
-                        </button>
-                        <button 
-                            class="table-btn delete delete-btn"
-                            data-id="${item.id}"
-                        >
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            `;
-        })
-        .join("");
-}
-
 function fillItemForm(item) {
 
     document.getElementById("itemName").value =
@@ -112,53 +45,92 @@ async function initItemsPage() {
     const modalTitle =
         modalItem.querySelector("h2");
 
-    const tableOverlayLoading =
-        document.getElementById(
-            "tableItemsOverlayLoading"
-        );
 
-    function setTableLoading(isLoading) {
-
-        tableOverlayLoading.classList.toggle(
-            "hidden",
-            !isLoading
-        );
-    }
-
-    try {
-
-        setTableLoading(true);
-
-        const itemsResponse =
-            await fetchItems();
-
-        items = Array.isArray(itemsResponse)
-            ? itemsResponse
-            : itemsResponse?.data || [];
-
-        renderItems(
-            items,
-            itemsTableBody
-        );
-        
-    } catch (error) {
-
-        console.error(error);
-
-    } finally {
-
-        setTableLoading(false);
-    }
+    const token =
+    localStorage.getItem("access_token");
 
     let table = new DataTable('#itemsTable', {
-        columnDefs: [
+        ajax: {
+            url: `${BASE_URL}/api/admin`,
+            type: 'POST',
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+
+            contentType: 'application/json',
+
+            data: function () {
+                return JSON.stringify({
+                    action: "getAll",
+                    table: "catalog_items"
+                });
+            },
+
+            dataSrc: function (json) {
+                return Array.isArray(json)
+                    ? json
+                    : json?.data || [];
+            }
+        },
+
+        order: [[2, 'asc']],
+
+        columns: [
             {
+                data: null,
                 orderable: false,
-                targets: 0
+                render: (data, type, row) => `
+                    <input
+                        type="checkbox"
+                        class="task-checkbox selectTaskCheckbox"
+                        data-id="${row.id}"
+                    >
+                `
+            },
+
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <img
+                        src="${row.link_photo || 'https://via.placeholder.com/50'}"
+                        alt="${row.name}"
+                        width="50"
+                        height="50"
+                    >
+                `
+            },
+
+            {
+                data: 'name'
+            },
+
+            {
+                data: 'desc'
+            },
+
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <button
+                        type="button"
+                        class="table-btn edit edit-btn"
+                        data-id="${row.id}">
+                        Edit
+                    </button>
+
+                    <button
+                        type="button"
+                        class="table-btn delete delete-btn"
+                        data-id="${row.id}">
+                        Delete
+                    </button>
+                `
             }
         ]
     });
-
     document.getElementById('selectAllItemTasks').addEventListener('change', function () {
 
         const checked = this.checked;
@@ -221,9 +193,6 @@ async function initItemsPage() {
         }
         console.log("Deleting IDs:", selectedItemIds);
 
-        /*const token =
-            localStorage.getItem("access_token");
-
         try {
 
             const response = await fetch(
@@ -252,14 +221,14 @@ async function initItemsPage() {
 
             selectedItemIds.clear();
 
-            location.reload();
+            table.ajax.reload(null, false);
 
         } catch (error) {
 
             console.error(error);
 
             alert(error.message);
-        }*/
+        }
 
     });
 
@@ -292,9 +261,11 @@ async function initItemsPage() {
 
             const itemId = editButton.dataset.id;
 
-            const item = items.find(
-                (i) => i.id === itemId
-            );
+            const row =
+                editButton.closest("tr");
+
+            const item =
+                table.row(row).data();
 
             if (!item) {
                 console.error(
@@ -330,9 +301,6 @@ async function initItemsPage() {
                 return;
             }
 
-            const token =
-                localStorage.getItem("access_token");
-
             const itemId = deleteButton.dataset.id;
 
             try {
@@ -363,18 +331,7 @@ async function initItemsPage() {
                     throw new Error(result.error);
                 }
 
-                const itemsResponse =
-                    await fetchItems();
-
-                const updatedItems =
-                    Array.isArray(itemsResponse)
-                        ? itemsResponse
-                        : itemsResponse?.data || [];
-
-                renderItems(
-                    updatedItems,
-                    itemsTableBody
-                );
+                table.ajax.reload(null, false);
 
             } catch (error) {
 
@@ -390,9 +347,6 @@ async function initItemsPage() {
         e.preventDefault();
 
         setSaveLoading(true);
-
-        const token =
-            localStorage.getItem("access_token");
 
         const formData = {
             name: document.getElementById("itemName").value,
@@ -469,17 +423,7 @@ async function initItemsPage() {
             }
 
             // reload data
-            const itemsResponse =
-                await fetchItems();
-
-            items = Array.isArray(itemsResponse)
-                ? itemsResponse
-                : itemsResponse?.data || [];
-
-            renderItems(
-                items,
-                itemsTableBody
-            );
+            table.ajax.reload(null, false);
 
             modalItem.style.display = "none";
 

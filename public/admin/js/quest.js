@@ -1,44 +1,6 @@
 let editingQuestId = null;
 let selectedQuestIds = new Set();
 
-async function fetchQuests() {
-
-    try {
-
-        const token =
-            localStorage.getItem("access_token");
-
-        const response = await fetch(
-            `${BASE_URL}/api/admin`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ table: "catalog_quests", action: "getAll" })
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Unauthorized");
-        }
-
-        const quests =
-            await response.json();
-
-        return quests;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
 function renderQuests(quests, tableBody) {
 
     tableBody.innerHTML = quests
@@ -104,49 +66,78 @@ async function initQuestsPage() {
     const modalTitle =
         modalQuest.querySelector("h2");
 
-    const tableOverlayLoading =
-        document.getElementById(
-            "tableQuestOverlayLoading"
-        );
-
-    function setTableLoading(isLoading) {
-
-        tableOverlayLoading.classList.toggle(
-            "hidden",
-            !isLoading
-        );
-    }
-
-    try {
-
-        setTableLoading(true);
-
-        const questsResponse =
-            await fetchQuests();
-
-        quests = Array.isArray(questsResponse)
-            ? questsResponse
-            : questsResponse?.data || [];
-
-        renderQuests(
-            quests,
-            questsTableBody
-        );
-        
-    } catch (error) {
-
-        console.error(error);
-
-    } finally {
-
-        setTableLoading(false);
-    }
+    const token =
+        localStorage.getItem("access_token");
 
     let table = new DataTable('#questsTable', {
-        columnDefs: [
+        ajax: {
+            url: `${BASE_URL}/api/admin`,
+            type: 'POST',
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+
+            contentType: 'application/json',
+
+            data: function () {
+                return JSON.stringify({
+                    action: "getAll",
+                    table: "catalog_quests"
+                });
+            },
+
+            dataSrc: function (json) {
+                return Array.isArray(json)
+                    ? json
+                    : json?.data || [];
+            }
+        },
+
+        columns: [
             {
+                data: null,
                 orderable: false,
-                targets: 0
+                render: (data, type, row) => `
+                    <input
+                        type="checkbox"
+                        class="task-checkbox selectTaskCheckbox"
+                        data-id="${row.id}"
+                    >
+                `
+            },
+            {
+                data: 'name'
+            },
+            {
+                data: 'desc'
+            },
+            {
+                data: null,
+                render: (data, type, row) =>
+                    `COL : ${row.reward_col || 0},
+                    GEMS : ${row.reward_gems || 0},
+                    VOUCHERS : ${row.reward_vouchers || 0}`
+            },
+
+            {
+                data: null,
+                orderable: false,
+                render: (data, type, row) => `
+                    <button
+                        type="button"
+                        class="table-btn edit edit-btn"
+                        data-id="${row.id}">
+                        Edit
+                    </button>
+
+                    <button
+                        type="button"
+                        class="table-btn delete delete-btn"
+                        data-id="${row.id}">
+                        Delete
+                    </button>
+                `
             }
         ]
     });
@@ -212,9 +203,6 @@ async function initQuestsPage() {
         }
         console.log("Deleting IDs:", selectedQuestIds);
 
-        /*const token =
-            localStorage.getItem("access_token");
-
         try {
 
             const response = await fetch(
@@ -250,7 +238,7 @@ async function initQuestsPage() {
             console.error(error);
 
             alert(error.message);
-        }*/
+        }
 
     });
     // buka modal
@@ -282,9 +270,11 @@ async function initQuestsPage() {
 
             const questId = editButton.dataset.id;
 
-            const quest = quests.find(
-                (item) => item.id === questId
-            );
+            const row =
+                editButton.closest("tr");
+
+            const quest =
+                table.row(row).data();
 
             if (!quest) {
                 console.error(
@@ -320,9 +310,6 @@ async function initQuestsPage() {
                 return;
             }
 
-            const token =
-                localStorage.getItem("access_token");
-
             const questId = deleteButton.dataset.id;
 
             try {
@@ -353,18 +340,7 @@ async function initQuestsPage() {
                     throw new Error(result.error);
                 }
 
-                const questsResponse =
-                    await fetchQuests();
-
-                const updatedQuests =
-                    Array.isArray(questsResponse)
-                        ? questsResponse
-                        : questsResponse?.data || [];
-
-                renderQuests(
-                    updatedQuests,
-                    questsTableBody
-                );
+                table.ajax.reload(null, false);
 
             } catch (error) {
 
@@ -380,9 +356,6 @@ async function initQuestsPage() {
         e.preventDefault();
 
         setSaveLoading(true);
-
-        const token =
-            localStorage.getItem("access_token");
 
         const formData = {
             name: document.getElementById("questName").value,
@@ -417,10 +390,6 @@ async function initQuestsPage() {
                 );
 
                 const result = await response.json();
-
-
-                //const text = await response.text();
-                //console.log(text);
 
                 if (!response.ok) {
                     throw new Error(result.error);
@@ -459,17 +428,7 @@ async function initQuestsPage() {
             }
 
             // reload data
-            const questsResponse =
-                await fetchQuests();
-
-            quests = Array.isArray(questsResponse)
-                ? questsResponse
-                : questsResponse?.data || [];
-
-            renderQuests(
-                quests,
-                questsTableBody
-            );
+            table.ajax.reload(null, false);
 
             modalQuest.style.display = "none";
 

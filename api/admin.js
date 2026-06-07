@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         ? JSON.parse(req.body)
         : req.body;
 
-    const { table, action, id } = body;
+    const { table, action, id, ids } = body;
 
     console.log(body);
 
@@ -70,7 +70,8 @@ export default async function handler(req, res) {
 
         const result = await supabase
             .from(table)
-            .select("*");
+            .select("*")
+            .order("created_at", { ascending: false });
 
         data = result.data;
         error = result.error;
@@ -111,6 +112,24 @@ export default async function handler(req, res) {
         return res.status(200).json({
             message: "Deleted successfully",
             data
+        });
+    }
+
+    if (action === "deleteBulk") {
+
+        const { error } = await supabase
+            .from(table)
+            .delete()
+            .in("id", ids);
+
+        if (error) {
+            return res.status(500).json({
+                error: error.message
+            });
+        }
+
+        return res.status(200).json({
+            message: "Deleted successfully"
         });
     }
 
