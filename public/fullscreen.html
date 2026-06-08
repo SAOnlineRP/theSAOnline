@@ -31,11 +31,13 @@
         .modal-image {
             display: block;
             object-fit: contain;
+            height: 675px;
+            width: 1200px;
         }
 
         .overlay-image-right {
             position: absolute;
-            top: 0;
+            top: 50px;
             right: 40px;
 
             height: 100%;
@@ -47,7 +49,7 @@
         .overlay-image-left {
             position: absolute;
             transform: scaleX(-1);
-            top: 0;
+            top: 50px;
             left: 40px;
 
             height: 100%;
@@ -63,20 +65,45 @@
             transform: translateX(-50%);
 
             width: 80%;
-            max-width: 700px;
+            max-width: 900px;
 
-            padding: 16px 20px;
+            padding: 30px 24px 20px;
 
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(10, 15, 30, 0.92);
             border: 2px solid #4fc3f7;
-            border-radius: 12px;
+            border-radius: 14px;
 
             color: white;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
+            font-family: "Orbitron", sans-serif;
+
+            box-shadow:
+                0 0 20px rgba(79,195,247,0.4),
+                inset 0 0 10px rgba(255,255,255,0.05);
 
             z-index: 15;
+        }
+
+        .speaker-name {
+            position: absolute;
+            top: -18px;
+            left: 20px;
+
+            padding: 6px 18px;
+
+            background: #4fc3f7;
+            color: #08111f;
+
+            font-weight: 700;
+            font-size: 14px;
+
+            border-radius: 8px;
+
+            box-shadow: 0 0 10px rgba(79,195,247,0.5);
+        }
+
+        #dialogText {
+            font-size: 18px;
+            line-height: 1.6;
         }
 
         .next-btn {
@@ -108,6 +135,37 @@
             z-index: 99;
         }
 
+        .narration-box {
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 70%;
+            max-width: 800px;
+
+            padding: 25px;
+
+            background: rgba(0,0,0,0.75);
+
+            border-radius: 12px;
+
+            color: white;
+
+            text-align: center;
+
+            font-size: 24px;
+            line-height: 1.8;
+
+            font-family: "Orbitron", sans-serif;
+
+            z-index: 20;
+
+            backdrop-filter: blur(4px);
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .image-wrapper {
@@ -126,46 +184,186 @@
 
         <div class="image-wrapper">
             <img
-                src="https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG"
+                id="backgroundImage"
+                src="img/bg-bg.jpg"
                 alt="Background"
                 class="modal-image"
-            >
+            />
 
             <img
-                src="https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA"
+                src="img/character_kirito.png"
                 alt="Character"
                 id="characterImageLeft"
                 class="overlay-image-left"
             >
 
             <img
-                src="https://lh3.googleusercontent.com/d/1oaGWmBXujU3mr4HAveUGE04SuPk9EOBB"
+                src="img/character_kiel.png"
                 alt="Character"
                 id="characterImageRight"
                 class="overlay-image-right"
             >
-
-            <div id="dialogBox" class="dialog-box">
-                Selamat datang di Aincrad!
+            <div id="narrationBox" class="narration-box">
+                Tahun 2022.
+                Sword Art Online akhirnya resmi dibuka.
             </div>
 
-            <button class="next-btn" onclick="nextCharacter()">
+            <div id="dialogBox" class="dialog-box">
+
+                <div id="speakerName" class="speaker-name">
+                    Kirito
+                </div>
+
+                <div id="dialogText">
+                    Selamat datang di Aincrad!
+                </div>
+
+            </div>
+
+            <button class="next-btn" onclick="nextStory()">
                 NEXT
             </button>
         </div>
     </div>
 <script>
+    const storyData = [
+        {
+            type: "narration",
+            background_url: "img/bg-bg.jpg",
+            text: "Tahun 2022."
+        },
+        {
+            type: "narration",
+            background_url: "img/bg-bg.jpg",
+            text: "Sword Art Online akhirnya resmi dibuka."
+        },
+        {
+            type: "dialog",
+            background_url: "img/bg-bg.jpg",
+            character_left_url: "img/character_kirito.png",
+            speaker: "Kirito",
+            text: "Selamat datang di Aincrad!"
+        },
+        {
+            type: "dialog",
+            character_left_url: "img/character_kirito.png",
+            speaker: "Kirito",
+            text: "Ini adalah dunia baru."
+        },
+        {
+            type: "dialog",
+            character_right_url: "img/character_kiel.png",
+            speaker: "Kiel",
+            text: "Aku siap bertarung."
+        }
+    ];
+    let currentIndex = 0;
+
+    const backgroundImage =
+        document.getElementById("backgroundImage");
+
+    const characterImageLeft =
+        document.getElementById("characterImageLeft");
+
+    const characterImageRight =
+        document.getElementById("characterImageRight");
+
+    const dialogBox =
+        document.getElementById("dialogBox");
+
+    const narrationBox =
+        document.getElementById("narrationBox");
+
+    const speakerName =
+        document.getElementById("speakerName");
+
+    const dialogText =
+        document.getElementById("dialogText");
+
+    function renderEntry() {
+
+        const entry = storyData[currentIndex];
+
+        if (!entry) {
+            closeImage();
+            return;
+        }
+
+        // reset karakter
+        characterImageLeft.style.display = "none";
+        characterImageRight.style.display = "none";
+
+        // background
+        if (entry.background_url) {
+            backgroundImage.src = entry.background_url;
+        }
+
+        // karakter kiri
+        if (entry.character_left_url) {
+            characterImageLeft.style.display = "block";
+            characterImageLeft.src = entry.character_left_url;
+        }
+
+        // karakter kanan
+        if (entry.character_right_url) {
+            characterImageRight.style.display = "block";
+            characterImageRight.src = entry.character_right_url;
+        }
+
+        // narration
+        if (entry.type === "narration") {
+
+            narrationBox.style.display =
+                "block";
+
+            dialogBox.style.display =
+                "none";
+
+            narrationBox.textContent =
+                entry.text;
+
+        }
+
+        // dialog
+        else {
+
+            narrationBox.style.display =
+                "none";
+
+            dialogBox.style.display =
+                "block";
+
+            speakerName.textContent =
+                entry.speaker;
+
+            dialogText.textContent =
+                entry.text;
+        }
+    }
+
+    function nextStory() {
+
+        currentIndex++;
+
+        renderEntry();
+    }
+
     function openImage() {
-    document.getElementById('imageModal').classList.add('show');
+
+        currentIndex = 0;
+
+        document
+            .getElementById("imageModal")
+            .classList.add("show");
+
+        renderEntry();
     }
 
     function closeImage() {
-        document.getElementById('imageModal').classList.remove('show');
-    }
 
-    function nextCharacter() {
-        document.getElementById("characterImage").src =
-            "https://lh3.googleusercontent.com/d/1RSZiiGzj98af673SSPihI596lsXGWbss";
+        document
+            .getElementById("imageModal")
+            .classList.remove("show");
     }
 </script>
 </body>
