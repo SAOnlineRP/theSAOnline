@@ -286,6 +286,7 @@
         {
             type: "dialog",
             character_right_url: "img/character_kiel.png",
+            audio_url: "audio/sword.mp3",
             speaker: "Kiel",
             text: "Aku siap bertarung."
         },
@@ -293,7 +294,7 @@
         {
             type: "dialog",
             character_right_url: "img/character_kiel.png",
-            audio_url: "audio/sword.mp3",
+            hide_left: true,
             speaker: "Kiel",
             text: "Kirito sudah pergi."
         },
@@ -332,6 +333,10 @@
         document.getElementById("storyVideo");
 
     const storyAudio = new Audio();
+    const bgmAudio = new Audio();
+
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.3; // 30%
 
     storyVideo.addEventListener("ended", () => {
 
@@ -409,6 +414,10 @@
                 entry.character_left_url;
         }
 
+        if (entry.hide_left){
+            characterImageLeft.style.display = "none";
+        }
+
         // =====================
         // CHARACTER RIGHT
         // =====================
@@ -421,13 +430,19 @@
                 entry.character_right_url;
         }
 
+        if (entry.hide_right){
+            characterImageRight.style.display = "none";
+        }
+
         if (entry.audio_url) {
+            console.log("play:", entry.audio_url);
             nextBtn.disabled = true;
 
             storyAudio.src = entry.audio_url;
 
             storyAudio.play()
-                .catch(err => console.log(err));
+                .then(() => console.log("audio play"))
+                .catch(err => console.error(err));
 
             storyAudio.onended = () => {
                 nextBtn.disabled = false;
@@ -493,6 +508,11 @@
 
         currentIndex = 0;
 
+        bgmAudio.src = "audio/bgm1.mp3";
+
+        bgmAudio.play()
+            .catch(err => console.log(err));
+
         document
             .getElementById("imageModal")
             .classList.add("show");
@@ -504,6 +524,9 @@
 
         storyVideo.pause();
         storyVideo.src = "";
+
+        bgmAudio.pause();
+        bgmAudio.currentTime = 0;
 
         document
             .getElementById("imageModal")
