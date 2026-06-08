@@ -33,10 +33,21 @@
             object-fit: contain;
         }
 
-        .overlay-image {
+        .overlay-image-right {
             position: absolute;
             top: 0;
-            right: 180px;
+            right: 140px;
+
+            height: 100%;
+            width: auto;
+
+            z-index: 10;
+        }
+
+        .overlay-image-left {
+            position: absolute;
+            top: 0;
+            left: 140px;
 
             height: 100%;
             width: auto;
@@ -101,6 +112,9 @@
             .image-wrapper {
                 transform: rotate(90deg);
             }
+            .next-btn {
+                bottom:60px;
+            }
         }
     </style>
 <body>
@@ -120,7 +134,14 @@
                 src="https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA"
                 alt="Character"
                 id="characterImage"
-                class="overlay-image"
+                class="overlay-image-left"
+            >
+
+            <img
+                src="https://lh3.googleusercontent.com/d/1oaGWmBXujU3mr4HAveUGE04SuPk9EOBB"
+                alt="Character"
+                id="characterImage"
+                class="overlay-image-right"
             >
 
             <div id="dialogBox" class="dialog-box">
