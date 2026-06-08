@@ -10,7 +10,7 @@ const allowedTables = [
   "catalog_monsters",
   "catalog_quests",
   "catalog_tasks",
-  "summon_pools",
+  "summon_pool",
   "merchant_items"
 ];
 
@@ -43,28 +43,35 @@ export default async function handler(req, res) {
 
         if (table === "catalog_partners") {
 
-        const result = await supabase
-            .from("catalog_partners")
-            .select(`
-            id,
-            name,
-            atk,
-            def,
-            max_hp,
-            max_mp,
-            duplicate_shard_reward,
-            link_ava,
-            link_photo,
-            catalog_partner_skills (
-                catalog_skills (
-                    id,
-                    name
+            const result = await supabase
+                .from("catalog_partners")
+                .select(`
+                id,
+                name,
+                atk,
+                def,
+                max_hp,
+                max_mp,
+                duplicate_shard_reward,
+                link_ava,
+                link_photo,
+                catalog_partner_skills (
+                    catalog_skills (
+                        id,
+                        name
+                    )
                 )
-            )
-            `);
+                `);
 
-        data = result.data;
-        error = result.error;
+            data = result.data;
+            error = result.error;
+        } if(table === "summon_pool") {
+            const result = await supabase
+                .from("summon_pool_view")
+                .select("*");
+
+            data = result.data;
+            error = result.error;
 
         } else {
 
