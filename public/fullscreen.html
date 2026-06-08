@@ -166,6 +166,17 @@
             backdrop-filter: blur(4px);
         }
 
+        #storyVideo {
+            display: block;
+
+            width: 1200px;
+            height: 675px;
+
+            object-fit: cover;
+
+            background: black;
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .image-wrapper {
@@ -178,6 +189,10 @@
             .next-btn {
                 bottom:60px;
             }
+            #storyVideo {
+                width: 700px;
+                height: 394px;
+            }
         }
     </style>
 <body>
@@ -185,8 +200,14 @@
 
     <div id="imageModal" class="modal">
         <span class="close" onclick="closeImage()">✕</span>
+  
 
         <div class="image-wrapper">
+            <video
+                id="storyVideo"
+                autoplay>
+            </video>
+            
             <img
                 id="backgroundImage"
                 src="img/bg-bg.jpg"
@@ -224,41 +245,60 @@
 
             </div>
 
-            <button class="next-btn" onclick="nextStory()">
+            <button id="nextBtn" class="next-btn" onclick="nextStory()">
                 NEXT
             </button>
         </div>
     </div>
 <script>
     const storyData = [
+
+        {
+            type: "video",
+            video_url: "https://res.cloudinary.com/djeiswvsw/video/upload/YTDown_YouTube_Sword-Art-Online-Sachi-s-Death-HD_Media_p8_NMj7hvRI_001_720p_pqkbqy.mp4"
+        },
+
         {
             type: "narration",
-            background_url: "https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG",
+            background_url: "img/bg-bg.jpg",
             text: "Tahun 2022."
         },
+
         {
             type: "narration",
-            background_url: "https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG",
             text: "Sword Art Online akhirnya resmi dibuka."
         },
+
         {
             type: "dialog",
-            background_url: "https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG",
-            character_left_url: "https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA",
+            character_left_url: "img/character_kirito.png",
             speaker: "Kirito",
             text: "Selamat datang di Aincrad!"
         },
+
         {
             type: "dialog",
-            character_left_url: "https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA",
             speaker: "Kirito",
             text: "Ini adalah dunia baru."
         },
+
         {
             type: "dialog",
-            character_right_url: "https://lh3.googleusercontent.com/d/1oaGWmBXujU3mr4HAveUGE04SuPk9EOBB",
+            character_right_url: "img/character_kiel.png",
             speaker: "Kiel",
             text: "Aku siap bertarung."
+        },
+
+        {
+            type: "dialog",
+            hide_left: true,
+            speaker: "Kiel",
+            text: "Kirito sudah pergi."
+        },
+
+        {
+            type: "system",
+            text: "All players will be transported shortly."
         }
     ];
     let currentIndex = 0;
@@ -283,6 +323,17 @@
 
     const dialogText =
         document.getElementById("dialogText");
+    const nextBtn =
+    document.getElementById("nextBtn");
+
+    const storyVideo =
+        document.getElementById("storyVideo");
+
+    storyVideo.addEventListener("ended", () => {
+
+        nextBtn.style.display = "block";
+
+    });
 
     function renderEntry() {
 
@@ -293,55 +344,128 @@
             return;
         }
 
-        // reset karakter
-        characterImageLeft.style.display = "none";
-        characterImageRight.style.display = "none";
+        // reset hanya UI sementara
+        storyVideo.style.display = "none";
+        storyVideo.pause();
+        storyVideo.src = "";
 
-        // background
+        dialogBox.style.display = "none";
+        narrationBox.style.display = "none";
+        nextBtn.style.display = "block";
+
+        // =====================
+        // VIDEO
+        // =====================
+
+        if (entry.type === "video") {
+
+            backgroundImage.style.display = "none";
+            characterImageLeft.style.display = "none";
+            characterImageRight.style.display = "none";
+
+             // sembunyikan tombol
+            nextBtn.style.display = "none";
+
+            storyVideo.style.display = "block";
+
+            storyVideo.src = entry.video_url;
+
+            storyVideo.load();
+
+            storyVideo.play()
+                .catch(err => console.log(err));
+
+            return;
+        }
+
+        // jika bukan video tampilkan background lagi
+        backgroundImage.style.display = "block";
+
+        // =====================
+        // BACKGROUND
+        // =====================
+
         if (entry.background_url) {
             backgroundImage.src = entry.background_url;
         }
 
-        // karakter kiri
+        // =====================
+        // CHARACTER LEFT
+        // =====================
+
         if (entry.character_left_url) {
+
             characterImageLeft.style.display = "block";
-            characterImageLeft.src = entry.character_left_url;
+
+            characterImageLeft.src =
+                entry.character_left_url;
         }
 
-        // karakter kanan
+        if (entry.hide_left) {
+            characterImageLeft.style.display = "none";
+        }
+
+        // =====================
+        // CHARACTER RIGHT
+        // =====================
+
         if (entry.character_right_url) {
+
             characterImageRight.style.display = "block";
-            characterImageRight.src = entry.character_right_url;
+
+            characterImageRight.src =
+                entry.character_right_url;
         }
 
-        // narration
+        if (entry.hide_right) {
+            characterImageRight.style.display = "none";
+        }
+
+        // =====================
+        // NARRATION
+        // =====================
+
         if (entry.type === "narration") {
 
-            narrationBox.style.display =
-                "block";
-
-            dialogBox.style.display =
-                "none";
+            narrationBox.style.display = "block";
 
             narrationBox.textContent =
                 entry.text;
 
+            return;
         }
 
-        // dialog
-        else {
+        // =====================
+        // DIALOG
+        // =====================
 
-            narrationBox.style.display =
-                "none";
+        if (entry.type === "dialog") {
 
-            dialogBox.style.display =
-                "block";
+            dialogBox.style.display = "block";
 
             speakerName.textContent =
-                entry.speaker;
+                entry.speaker || "";
 
             dialogText.textContent =
-                entry.text;
+                entry.text || "";
+
+            return;
+        }
+
+        // =====================
+        // SYSTEM
+        // =====================
+
+        if (entry.type === "system") {
+
+            dialogBox.style.display = "block";
+
+            speakerName.textContent = "SYSTEM";
+
+            dialogText.textContent =
+                entry.text || "";
+
+            return;
         }
     }
 
@@ -364,6 +488,9 @@
     }
 
     function closeImage() {
+
+        storyVideo.pause();
+        storyVideo.src = "";
 
         document
             .getElementById("imageModal")
