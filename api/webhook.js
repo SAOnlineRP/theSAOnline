@@ -11,11 +11,11 @@ export default async function handler(req, res) {
 
   const { data: player } = await supabase
     .from('players')
-    .select('player_name')
+    .select('username')
     .eq('id', playerId)
     .single();
 
-  const playerName = player?.player_name ?? 'Unknown';
+  const playerName = player?.username ?? 'Unknown';
 
   await fetch(
     `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
