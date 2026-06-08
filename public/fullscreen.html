@@ -82,6 +82,7 @@
             background: #2196f3;
             color: white;
             font-weight: bold;
+            font-size: 18px;
             
         }
 
@@ -100,6 +101,11 @@
             .image-wrapper {
                 transform: rotate(90deg);
             }
+
+            .next-btn{
+                bottom: 40px;
+                right: 80px;
+            }
         }
     </style>
 <body>
@@ -110,13 +116,13 @@
 
         <div class="image-wrapper">
             <img
-                src="https://lh3.googleusercontent.com/d/1bgmcX_MuUsY45-SRajivOUl1HodX8jdG"
+                src="img/bg-bg.jpg"
                 alt="Background"
                 class="modal-image"
             >
 
             <img
-                src="https://lh3.googleusercontent.com/d/19jbF1pme1_6kKAbICFxJBetiFhJ3J4QA"
+                src="img/character_kirito.png"
                 alt="Character"
                 id="characterImage"
                 class="overlay-image"
@@ -142,7 +148,7 @@
 
     function nextCharacter() {
         document.getElementById("characterImage").src =
-            "https://lh3.googleusercontent.com/d/1RSZiiGzj98af673SSPihI596lsXGWbss";
+            "img/character_asuna.png";
     }
 </script>
 </body>
