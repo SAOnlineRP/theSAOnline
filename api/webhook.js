@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         chat_id: process.env.CHAT_ID,
-        text: `🟢 Player Login\nNama: ${playerName}`
+        text: `🟢 Player Login!! \nNama: ${playerName}`
       })
     }
   );
