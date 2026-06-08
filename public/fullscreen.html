@@ -336,13 +336,19 @@
     const bgmAudio = new Audio();
 
     bgmAudio.loop = true;
-    bgmAudio.volume = 0.3; // 30%
 
     storyVideo.addEventListener("ended", () => {
+        setBgmVolume(1);
 
         nextBtn.style.display = "block";
 
     });
+
+    function setBgmVolume(volume) {
+        bgmAudio.volume = volume;
+    }
+
+    setBgmVolume(1);
 
     function renderEntry() {
 
@@ -371,6 +377,8 @@
         // =====================
 
         if (entry.type === "video") {
+            
+            setBgmVolume(0.3);
 
             backgroundImage.style.display = "none";
             characterImageLeft.style.display = "none";
@@ -436,6 +444,7 @@
 
         if (entry.audio_url) {
             console.log("play:", entry.audio_url);
+            setBgmVolume(0.3);
             nextBtn.disabled = true;
 
             storyAudio.src = entry.audio_url;
@@ -445,6 +454,7 @@
                 .catch(err => console.error(err));
 
             storyAudio.onended = () => {
+                setBgmVolume(1);
                 nextBtn.disabled = false;
             };
         }
