@@ -12,8 +12,8 @@ function fillSummonPoolForm(summonPool) {
         summonPool.reward_name || "";
     document.getElementById("probability").value =
         summonPool.probability || 0;
-    summonPool.getElementById("quantity").value =
-        equipment.quantity || 0;
+    document.getElementById("quantity").value =
+        summonPool.quantity || 0;
 }
 
 function updateDeleteSummonPoolButton() {
@@ -190,7 +190,7 @@ async function initSummonPoolsPage() {
         }
 
         const confirmed = confirm(
-            `Delete ${selectedEqIds.size} pool(s)?`
+            `Delete ${selectedSummonPoolIds.size} pool(s)?`
         );
 
         if (!confirmed) {

@@ -72,6 +72,13 @@ export default async function handler(req, res) {
 
             data = result.data;
             error = result.error;
+        } if(table === "merchant_items") {
+            const result = await supabase
+                .from("merchant_items_view")
+                .select("*");
+
+            data = result.data;
+            error = result.error;
 
         } else {
 

@@ -1,3 +1,84 @@
-<section id="marketplace" class="content-section">
-    <h2>Merchant</h2>
+<section id="merchant" class="content-section">
+    <div class="panel-card">
+        <div class="panel-head">
+            <h3>Merchant Items</h3>
+            <div>
+                <button class="admin-btn danger-btn hidden" id="deleteSelectedMerchantBtn">
+                    Delete Selected
+                </button>
+                <button class="admin-btn primary-btn" id="openMerchantModal">+ Add Items</button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="merchantsTable" class="admin-table">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllItems"></th>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="merchantTableBody">
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
+<!-- modal -->
+<div class="modal" id="merchantModal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" id="closeMerchantModal">
+        &times;
+        </span>
+
+        <h2>Add New Item</h2>
+        <div class="modal-body">
+            <form id="merchantForm" style="overflow: visible;">
+                <div class="form-grid" style="max-height: 220px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label for="goodsType">Goods Type</label>
+                        <select id="goodsType" name="goodsType" required>
+                            <option value="equipment">Equipment</option>
+                            <option value="item">Special</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="goodsName">Goods Name:</label>
+                        <select id="goodsName" name="goodsName">
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" name="quantity">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" id="price" name="price">
+                    </div>
+                    
+                </div>
+                <button
+                    type="submit"
+                    class="admin-btn primary-btn"
+                    id="saveMerchantBtn"
+                >
+                    <span class="btn-text">Save</span>
+
+                    <span class="btn-loading hidden">
+                        <span class="spinner"></span>
+                        Saving...
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
