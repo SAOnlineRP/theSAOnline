@@ -45,15 +45,40 @@ export default async function handler(req, res) {
     // GET data player milik user login
     // =========================
     if (action === "getDataPlayer") {
-        const { data, error } = await supabase
-          .from(table)
-          .select("*")
-          .eq("player_id", user.id)
+        if(table === "player_partners"){
+            const { data, error } = await supabase
+                .from("player_partners")
+                .select(`
+                    *,
+                    partner:catalog_partners (
+                        name,
+                        link_ava,
+                        link_photo,
+                        skills:catalog_partner_skills (
+                            catalog_skills (
+                                id,
+                                name
+                            )
+                        )
+                    )
+                `)
+                .eq("player_id", user.id)
 
-        if (error) {
-          return res.status(500).json({ error: error.message });
+            if (error) {
+                return res.status(500).json({ error: error.message });
+            }
+            return res.status(200).json({ data });
+        } else {
+            const { data, error } = await supabase
+            .from(table)
+            .select("*")
+            .eq("player_id", user.id)
+
+            if (error) {
+            return res.status(500).json({ error: error.message });
+            }
+            return res.status(200).json({ data });
         }
-        return res.status(200).json({ data });
     }
 
     // =========================
@@ -332,6 +357,19 @@ export default async function handler(req, res) {
                 partners
             }
         });
+    }
+
+    if (action === "getColGems") {
+        const { data, error } = await supabase
+          .from("profile_players")
+          .select("col, arcana_gems")
+          .eq("player_id", user.id)
+          .single();
+
+        if (error) {
+          return res.status(500).json({ error: error.message });
+        }
+        return res.status(200).json({ data });
     }
   } catch (error) {
     console.error("Error in player_data API:", error);

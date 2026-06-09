@@ -37,6 +37,45 @@
             position: relative;
             overflow: hidden;
         }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-size: 20px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            }
+
+            .loading-overlay.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            }
+
+            .loading-bar-container {
+            width: 300px;
+            height: 30px;
+            background-color: #444;
+            border: 2px solid #d4af4d;
+            border-radius: 15px;
+            margin-top: 20px;
+            }
+
+            .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #061b33, #1f1b10);
+            box-shadow: 0 0 10px #000311;
+            border-radius: 13px;
+            width: 0%;
+            transition: width 0.2s ease;
+            }
 
         .bg-image {
         position: absolute;
@@ -343,6 +382,13 @@
 </head>
 <body>
     <div class="container">
+        <!-- LOADING OVERLAY -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div>Loading Assets...</div>
+            <div class="loading-bar-container">
+                <div id="loading-bar" class="loading-bar"></div>
+            </div>
+        </div>
         <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
         <div class="topbar">
         <div class="topbar-left">
@@ -357,105 +403,152 @@
         </div>
         <div class="content">
             <div class="list-partner">
-                <div class="partner-option">
-                    <img src="/img/partners/kirito.png">
-                </div>
-                <div class="partner-option">
-                    <img src="/img/partners/asuna.png">
-                </div>
-                <div class="partner-option">
-                    <img src="/img/partners/klein.png">
-                </div>
+                
             </div>
             <div class="info-partner">
-                <div class="detail-partner">
-                    <div>   
-                        <div class="name-section">
-                            <div>
-                                <h3 class="nama-partner">Kirito Kazugaya</h3>
-                            </div>
-                            <div class="levelup-partner">
-                                <h3 class="level-partner">Lv. 100</h3>
-                                <button><img src="/img/star-up.png" style="width: 25px; height: 25px;"></button>
-                            </div>
-                        </div>
-                        <div class="stars-partner" style="display: flex; justify-content: flex-start; gap:10px">
-                            <div class="stars" style="font-size: 20px;">★★★★★</div>
-                            <button><img src="/img/star-up.png" style="width: 25px; height: 25px;"></button>
-                        </div>
-                    </div>
-                    <div class="stat-partner">
-                        <div class="stat-item">
-                            <div class="stat-label">ATK</div>
-                            <div class="stat-bar">
-                                <div class="stat-fill" style="width: 80%"></div>
-                            </div>
-                        </div>
-
-                        <div class="stat-item">
-                            <div class="stat-label">DEF</div>
-                            <div class="stat-bar">
-                                <div class="stat-fill" style="width: 60%"></div>
-                            </div>
-                        </div>
-
-                        <div class="stat-item">
-                            <div class="stat-label">HP</div>
-                            <div class="stat-bar">
-                                <div class="stat-fill" style="width: 90%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="skills-partner">
-                        <div class="skill">⚔️ Skill A</div>
-                        <div class="skill">💥 Skill B</div>
-                        <div class="skill">✨ Skill C</div>
-                    </div>
-                </div>
-                <div class="foto-partner">
-                    <img src="/img/character_kirito.png">
-                </div>
+                
             </div>
         </div>
     </div>
-    <script>
-        function goBack() {
-        window.history.back();
-        }
+    <script type="module">
+    import { supabase } from "/js/supabaseClient.js";
+    import { requireLogin } from "/js/authGuard.js";
 
-        function goHome() {
+    const overlay = document.getElementById("loading-overlay");
+    const bar = document.getElementById("loading-bar");
+
+    let progress = 0;
+
+    function goBack() {
+        window.history.back();
+    }
+
+    function goHome() {
         window.location.href = "menu.html";
+    }
+    window.goBack = goBack;
+    window.goHome = goHome;
+    let partnersPlayer = [];
+
+    function renderPartners() {
+        const list = document.querySelector(".list-partner");
+
+        list.innerHTML = "";
+
+        partnersPlayer.forEach((partnerData, index) => {
+            const div = document.createElement("div");
+            div.className = "partner-option";
+
+            div.innerHTML = `
+                <img src="${partnerData.partner.link_ava}">
+            `;
+
+            div.addEventListener("click", () => {
+                updatePartner(partnerData, div);
+            });
+
+            list.appendChild(div);
+
+            if (index === 0) {
+                div.classList.add("active");
+
+                renderPartnerDetail(partnerData);
+            }
+        });
+    }
+
+    // ================== FUNCTION BARU ==================
+    async function loadPartner(session) {
+        try {
+            setProgress(10);
+
+            const response = await fetch(
+                `/api/player_data`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getDataPlayer",
+                        table: "player_partners"
+                    })
+                }
+            );
+            setProgress(20);
+
+            const partnersRes = await response.json();
+
+            if (!response.ok) throw new Error(profileResult.error);
+
+            partnersPlayer = partnersRes.data;
+            renderPartners();
+
+            setProgress(50); // API done (50%)
+
+            
+
+            // 🔥 tunggu gambar
+            await waitForImages();
+
+            // selesai semua
+            setProgress(100);
+
+            setTimeout(hideLoading, 300);
+
+        } catch (err) {
+            console.error("Load error:", err);
+            hideLoading();
         }
-        const partners = [
-        {
-            name: "Kirito Kazugaya",
-            level: 100,
-            atk: 80,
-            def: 60,
-            hp: 90,
-            skills: ["⚔️ Skill A", "💥 Skill B", "✨ Skill C"],
-            img: "/img/character_kirito.png"
-        },
-        {
-            name: "Asuna Yuuki",
-            level: 70,
-            atk: 75,
-            def: 65,
-            hp: 85,
-            skills: ["🌸 Flash", "⚡ Speed Strike", "✨ Heal"],
-            img: "/img/character_asuna.png"
-        },
-        {
-            name: "Kiel",
-            level: 50,
-            atk: 85,
-            def: 50,
-            hp: 70,
-            skills: ["🎯 Snipe", "💥 Bullet Rain", "👁️ Focus"],
-            img: "/img/character_kiel.png"
-        }
-    ];
+    }    
+
+    function setProgress(value) {
+        progress = value;
+        bar.style.width = progress + "%";
+    }
+
+    function hideLoading() {
+        overlay.classList.add("fade-out");
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, 500);
+    }
+
+    function waitForImages() {
+        const images = document.querySelectorAll("img");
+        let loaded = 0;
+        const total = images.length;
+
+        if (total === 0) return Promise.resolve();
+
+        return new Promise((resolve) => {
+            images.forEach((img) => {
+            if (img.complete) {
+                loaded++;
+                update();
+            } else {
+                img.onload = () => {
+                loaded++;
+                update();
+                };
+                img.onerror = () => {
+                loaded++;
+                update();
+                };
+            }
+            });
+
+            function update() {
+            const percent = (loaded / total) * 50; // max 50%
+            setProgress(50 + percent);
+
+            if (loaded === total) resolve();
+            }
+        });
+    }
+
+    
 
     const options = document.querySelectorAll(".partner-option");
 
@@ -465,49 +558,119 @@
         });
     });
 
-    function updatePartner(data, clickedEl) {
+    function renderPartnerDetail(data) {
         const container = document.querySelector(".info-partner");
 
-        // highlight yang dipilih
-        document.querySelectorAll(".partner-option").forEach(el => {
-            el.classList.remove("active");
-        });
+        const skillsHtml = data.partner.skills
+            .map(skill => `
+                <div class="skill">
+                    ${skill.catalog_skills.name}
+                </div>
+            `)
+            .join("");
+
+        const stars = "★".repeat(data.star);
+
+        container.innerHTML = `
+            <div class="detail-partner">
+                <div>
+                    <div class="name-section">
+                        <div>
+                            <h3>${data.partner.name}</h3>
+                        </div>
+
+                        <div class="levelup-partner">
+                            <h3>Lv. ${data.level}</h3>
+                            <button>
+                                <img
+                                    src="/img/star-up.png"
+                                    style="width:25px;height:25px"
+                                >
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="stars-partner"
+                        style="display:flex;gap:10px">
+                        <div class="stars">${stars}</div>
+                    </div>
+                </div>
+
+                <div class="stat-partner">
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            ATK (${data.cur_atk})
+                        </div>
+                        <div class="stat-bar">
+                            <div
+                                class="stat-fill"
+                                style="width:${Math.min(data.cur_atk * 2, 100)}%"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            DEF (${data.cur_def})
+                        </div>
+                        <div class="stat-bar">
+                            <div
+                                class="stat-fill"
+                                style="width:${Math.min(data.cur_def * 2, 100)}%"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            HP (${data.cur_max_hp})
+                        </div>
+                        <div class="stat-bar">
+                            <div
+                                class="stat-fill"
+                                style="width:${Math.min(data.cur_max_hp, 100)}%"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-partner">
+                    ${skillsHtml}
+                </div>
+            </div>
+
+            <div class="foto-partner">
+                <img src="${data.partner.link_photo}">
+            </div>
+        `;
+    }
+    
+    function updatePartner(data, clickedEl) {
+        document.querySelectorAll(".partner-option")
+            .forEach(el => el.classList.remove("active"));
+
         clickedEl.classList.add("active");
 
-        // animasi keluar
+        const container = document.querySelector(".info-partner");
+
         container.classList.add("info-exit");
 
         setTimeout(() => {
-            // update isi
-            document.querySelector(".nama-partner").innerText = data.name;
-            document.querySelector(".level-partner").innerText = "Lv." + data.level;
+            renderPartnerDetail(data);
 
-            const bars = document.querySelectorAll(".stat-fill");
-            bars[0].style.width = data.atk + "%";
-            bars[1].style.width = data.def + "%";
-            bars[2].style.width = data.hp + "%";
-
-            const skillContainer = document.querySelector(".skills-partner");
-            skillContainer.innerHTML = "";
-
-            data.skills.forEach(skill => {
-                const div = document.createElement("div");
-                div.className = "skill";
-                div.innerText = skill;
-                skillContainer.appendChild(div);
-            });
-
-            document.querySelector(".foto-partner img").src = data.img;
-
-            // reset & masuk animasi
             container.classList.remove("info-exit");
             container.classList.add("info-enter", "glow");
 
             setTimeout(() => {
                 container.classList.remove("info-enter");
             }, 500);
-
         }, 250);
+    }
+    const session = await requireLogin();
+
+    if (session) {
+        console.log("masuk session");
+        await loadPartner(session);
     }
     </script>
 </body>
