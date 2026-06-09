@@ -354,11 +354,20 @@
             });
         }
 
-        const session = await requireLogin();
+        async function init() {
+            try {
+                const session = await requireLogin();
+                if (!session) return; // ✅ sekarang valid
 
-        if (session) {
-            await loadProfile(session);
+                await loadProfile(session);
+                setTimeout(hideLoading, 500);
+
+            } catch (err) {
+                console.error("Loading error:", err);
+            }
         }
+
+        init();
     </script>
 </body>
 </html>

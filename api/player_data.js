@@ -68,6 +68,45 @@ export default async function handler(req, res) {
                 return res.status(500).json({ error: error.message });
             }
             return res.status(200).json({ data });
+
+        } if(table === "player_equipments"){
+            const { data, error } = await supabase
+                .from("player_equipments")
+                .select(`
+                    *,
+                    catalog:catalog_equipments (
+                        name,
+                        position,
+                        type,
+                        atk, 
+                        max_hp,
+                        def,
+                        link_photo
+                    )
+                `)
+                .eq("player_id", user.id)
+
+            if (error) {
+                return res.status(500).json({ error: error.message });
+            }
+            return res.status(200).json({ data });
+        } if(table === "player_items"){
+            const { data, error } = await supabase
+                .from("player_items")
+                .select(`
+                    *,
+                    catalog:catalog_items (
+                        name,
+                        desc,
+                        link_photo
+                    )
+                `)
+                .eq("player_id", user.id)
+
+            if (error) {
+                return res.status(500).json({ error: error.message });
+            }
+            return res.status(200).json({ data });
         } else {
             const { data, error } = await supabase
             .from(table)

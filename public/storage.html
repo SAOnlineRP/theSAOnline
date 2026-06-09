@@ -13,257 +13,264 @@
 </head>
 <body>
     <div class="container">
-    <div class="topbar">
-      <div class="topbar-left">
-        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px;" alt="Back"></button>
-        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px;" alt="Home"></button>
-      </div>
-
-      <div class="topbar-right">
-        <div class="currency-box" style="color: white;">🪙 10000</div>
-        <div class="currency-box" style="color: white;">💎 50</div>
-      </div>
-    </div>
-    <div class="storage-container">
-        <div class="nav-tab-wrapper d-flex justify-content-between align-items-center">
-            <ul class="nav nav-tabs" id="storageTabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link-storage" href="#" data-target="items-list" onclick="switchTab(event)">Items</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link-storage active" href="#" data-target="weapons" onclick="switchTab(event)">Weapons</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link-storage" href="#" data-target="equipments" onclick="switchTab(event)">Equipments</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link-storage" href="#" data-target="skillrecords" onclick="switchTab(event)">Partners</a>
-                </li>
-            </ul>
-             <div class="right-buttons d-flex gap-2">
-                <p class="capacity">300/500</p>
+        <!-- LOADING OVERLAY -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div>Loading Assets...</div>
+            <div class="loading-bar-container">
+                <div id="loading-bar" class="loading-bar"></div>
             </div>
         </div>
-        <div class="tab-content" id="storageTabsContent">
-            <div class="tab-pane active show" id="weapons">
-                <p class="tab-info">CAPACITY WEAPONS: 100/100 <span>(FULL)</span></p>
-                <div class="wequip-list">
-                    <div class="wequip-box" onclick="openModal(this)">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box" onclick="openModal(this)">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box" onclick="openModal(this)">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box" onclick="openModal(this)">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                 <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                 <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wequip-box">
-                        <div class="photo-info">
-                            <div class="item-photo">
-                                <!-- foto itemnya -->
-                                 <img src="/img/eq-1.png" class="photo-item">
-                                <div class="item-div">
-                                    <p class="item-number">10</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+        <div class="topbar">
+            <div class="topbar-left">
+                <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px;" alt="Back"></button>
+                <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px;" alt="Home"></button>
+            </div>
+
+            <div class="topbar-right">
+                <div class="currency-box" style="color: white;">🪙 10000</div>
+                <div class="currency-box" style="color: white;">💎 50</div>
+            </div>
+        </div>
+        <div class="storage-container">
+            <div class="nav-tab-wrapper d-flex justify-content-between align-items-center">
+                <ul class="nav nav-tabs" id="storageTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link-storage" href="#" data-target="items-list" onclick="switchTab(event)">Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-storage active" href="#" data-target="weapons" onclick="switchTab(event)">Weapons</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-storage" href="#" data-target="equipments" onclick="switchTab(event)">Equipments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-storage" href="#" data-target="skillrecords" onclick="switchTab(event)">Partners</a>
+                    </li>
+                </ul>
+                <div class="right-buttons d-flex gap-2">
+                    <p class="capacity">300/500</p>
                 </div>
             </div>
-            <div class="tab-pane" id="equipments">
-                <h4>EQUIPMENTS</h4>
-                <p>List of equipments available.</p>
-            </div>
-            <div class="tab-pane" id="items-list">
-                <h4>ITEMS</h4>
-                <p>List of items available.</p>
-            </div>
-            <div class="tab-pane" id="skillrecords">
-                <h4>PARTNERS</h4>
-                <p>List of Partners available.</p>
+            <div class="tab-content" id="storageTabsContent">
+                <div class="tab-pane active show" id="weapons">
+                    <p class="tab-info">CAPACITY WEAPONS: 100/100 <span>(FULL)</span></p>
+                    <div class="wequip-list">
+                        <div class="wequip-box" onclick="openModal(this)">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box" onclick="openModal(this)">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box" onclick="openModal(this)">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box" onclick="openModal(this)">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wequip-box">
+                            <div class="photo-info">
+                                <div class="item-photo">
+                                    <!-- foto itemnya -->
+                                    <img src="/img/eq-1.png" class="photo-item">
+                                    <div class="item-div">
+                                        <p class="item-number">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tab-pane" id="equipments">
+                    <h4>EQUIPMENTS</h4>
+                    <p>List of equipments available.</p>
+                </div>
+                <div class="tab-pane" id="items-list">
+                    <h4>ITEMS</h4>
+                    <p>List of items available.</p>
+                </div>
+                <div class="tab-pane" id="skillrecords">
+                    <h4>PARTNERS</h4>
+                    <p>List of Partners available.</p>
+                </div>
             </div>
         </div>
     </div>
-  </div>
   <!-- INFORMATION MODAL -->
     <div id="modal-overlay" class="modal-overlay hidden">
         <div class="modal-content">
@@ -276,14 +283,118 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-  <script type="text/javascript">
+  <script type="module">
+    import { supabase } from "/js/supabaseClient.js";
+    import { requireLogin } from "/js/authGuard.js";
+
+    const overlay = document.getElementById("loading-overlay");
+    const bar = document.getElementById("loading-bar");
+
+    let progress = 0;
+
     function goBack() {
-      window.history.back();
+        window.history.back();
     }
 
     function goHome() {
-      window.location.href = "menu.html";
+        window.location.href = "menu.html";
     }
+    window.goBack = goBack;
+    window.goHome = goHome;
+    window.switchTab = switchTab;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+
+    async function loadStorage(session) {
+        try {
+
+            const resEq = await fetch(
+                `/api/player_data`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getDataPlayer",
+                        table: "player_equipments"
+                    })
+                }
+            );
+
+            const equipmentResult = await resEq.json();
+
+            const resItem = await fetch(
+                `/api/player_data`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getDataPlayer",
+                        table: "player_items"
+                    })
+                }
+            );
+
+            const itemResult = await resItem.json();
+
+            if (!resEq.ok) throw new Error(equipmentResult.error);
+            if (!resItem.ok) throw new Error(itemResult.error);
+        } catch (err) {
+            console.error("Load error:", err);
+            hideLoading();
+        }
+    }
+
+    function setProgress(value) {
+        progress = value;
+        bar.style.width = progress + "%";
+    }
+
+    function hideLoading() {
+        overlay.classList.add("fade-out");
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, 500);
+    }
+
+    function waitForImages() {
+        const images = document.querySelectorAll("img");
+        let loaded = 0;
+        const total = images.length;
+
+        if (total === 0) return Promise.resolve();
+
+        return new Promise((resolve) => {
+            images.forEach((img) => {
+            if (img.complete) {
+                loaded++;
+                update();
+            } else {
+                img.onload = () => {
+                loaded++;
+                update();
+                };
+                img.onerror = () => {
+                loaded++;
+                update();
+                };
+            }
+            });
+
+            function update() {
+            const percent = (loaded / total) * 50; // max 50%
+            setProgress(50 + percent);
+
+            if (loaded === total) resolve();
+            }
+        });
+    }
+
     function switchTab(event) {
         event.preventDefault();
         // Remove active class from all nav links
@@ -309,16 +420,28 @@
     }
 
     function openModal(item) {
-    document
-        .getElementById("modal-overlay")
-        .classList.add("show");
+        console.log("item ", item);
+        document.getElementById("modal-overlay").classList.add("show");
     }
 
     function closeModal() {
-        document
-            .getElementById("modal-overlay")
-            .classList.remove("show");
+        document.getElementById("modal-overlay").classList.remove("show");
     }
+    
+    async function init() {
+      try {
+        const session = await requireLogin();
+        if (!session) return; // ✅ sekarang valid
+
+        await loadStorage(session);
+        setTimeout(hideLoading, 500);
+
+      } catch (err) {
+        console.error("Loading error:", err);
+      }
+    }
+
+    init();
   </script>
 </body>
 </html>
