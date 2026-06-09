@@ -400,7 +400,7 @@ export default async function handler(req, res) {
 
     if (action === "getColGems") {
         const { data, error } = await supabase
-          .from("profile_players")
+          .from("player_profiles")
           .select("col, arcana_gems")
           .eq("player_id", user.id)
           .single();

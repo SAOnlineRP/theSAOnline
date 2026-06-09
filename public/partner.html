@@ -8,377 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/bf6001b681.js" crossorigin="anonymous"></script>
-    <style>
-        :root {
-            --bg-top: #003973;
-            --bg-mid: #11375d;
-            --bg-bottom: #020813;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Orbitron', sans-serif !important;
-        }
-
-        body {
-            min-height: 100vh;
-            background-size: cover;
-            background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
-        }
-
-        .container {
-            height: 100vh;              /* patok ke tinggi layar */
-            width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
-            max-width: 100%;
-            margin: 0 auto;
-
-            position: relative;
-            overflow: hidden;
-        }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-            font-size: 20px;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .loading-overlay.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-bar-container {
-            width: 300px;
-            height: 30px;
-            background-color: #444;
-            border: 2px solid #d4af4d;
-            border-radius: 15px;
-            margin-top: 20px;
-        }
-
-        .loading-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #061b33, #1f1b10);
-            box-shadow: 0 0 10px #000311;
-            border-radius: 13px;
-            width: 0%;
-            transition: width 0.2s ease;
-        }
-
-        .bg-image {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: min(600px, 60vw);
-            opacity: 0.4;
-            pointer-events: none;
-            z-index: 0;
-            filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
-            z-index: -1;
-        }
-
-        /* top bar */
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            margin-top: 10px;
-            margin-bottom: 12px;
-            font-size: 40px;
-        }
-
-        .topbar-left {
-            display: flex;
-            gap: 18px;
-            color: #000;
-            align-items: center;
-        }
-
-        .topbar-left button {
-            border: none;
-            background: none;
-            font-size: 40px;
-            cursor: pointer;
-        }
-
-        .topbar-right {
-            display: flex;
-            gap: 14px;
-        }
-
-        .currency-box {
-            min-width: 100px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 40px;
-            color: white;
-            padding: 0 12px;
-        }
-
-        .content{
-            height: calc(100% - 100px);
-            display: flex;
-            flex-direction: row;
-            gap: 30px;
-            justify-content: space-around;
-        }
-
-        .info-partner{
-            width: 65%;
-            min-height: 80%;
-            background: #215b7a;
-            border-radius: 10px;
-            box-shadow:
-            inset 0 0 18px rgba(255,255,255,0.04),
-            0 10px 28px rgba(0,0,0,0.35);
-
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            justify-content: space-around;
-
-            transition: all 0.3s ease;
-        }
-
-        /* KELUAR */
-        .info-exit {
-            opacity: 0;
-            transform: translateX(40px) scale(0.95);
-            filter: blur(4px);
-        }
-
-        /* MASUK */
-        .info-enter {
-            animation: enterAnim 0.5s ease forwards;
-        }
-
-        @keyframes enterAnim {
-            0% {
-                opacity: 0;
-                transform: translateX(-40px) scale(0.95);
-                filter: blur(6px);
-            }
-            60% {
-                transform: translateX(10px) scale(1.02);
-                filter: blur(0);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
-        }
-
-        /* GLOW EFFECT */
-        .info-partner.glow {
-            box-shadow:
-                0 0 20px rgba(0,255,255,0.4),
-                0 0 40px rgba(0,255,255,0.2),
-                inset 0 0 10px rgba(255,255,255,0.05);
-        }
-
-        /* SELECTED ITEM */
-        .partner-option.active {
-            outline: 2px solid cyan;
-            transform: scale(1.05);
-            transition: 0.2s;
-        }
-
-        .list-partner{
-            width: 20%;
-            min-height: 80%;
-            background: #215b7a;
-            border-radius: 10px;
-            box-shadow:
-            inset 0 0 18px rgba(255,255,255,0.04),
-            0 10px 28px rgba(0,0,0,0.35);
-            overflow-y: auto;
-            overflow-x: hidden;
-            display:flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding:10px;
-        }
-
-        .partner-option{
-            width: 90%;
-            height: auto;
-        }
-
-        .partner-option img{
-            width: 100%;
-            background-size: cover;
-            border-radius: 20px;
-        }
-
-        .list-partner::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .list-partner::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-
-        .detail-partner {
-            padding: 10px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            color: white;
-            justify-content: center;
-        }
-
-        /* NAMA */
-        .detail-partner h3 {
-            font-size: 22px;
-            letter-spacing: 1px;
-            border-bottom: 2px solid rgba(0,255,255,0.3);
-            padding-bottom: 6px;
-        }
-
-        .stars-partner button {
-            border: none;
-            background: none;
-            cursor: pointer;
-        }
-
-        .levelup-partner button {
-            border: none;
-            background: none;
-            cursor: pointer;
-        }
-
-        /* STAT CONTAINER */
-        .stat-partner {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* STAT ITEM */
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        /* BAR */
-        .stat-bar {
-            height: 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .stat-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00e5ff, #00ffcc);
-            border-radius: 10px;
-        }
-
-        /* SKILL */
-        .skills-partner {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .skill {
-            padding: 10px;
-            border-radius: 8px;
-            background: rgba(0,0,0,0.35);
-            border: 1px solid rgba(0,255,255,0.2);
-            transition: 0.2s;
-        }
-
-        .skill:hover {
-            background: rgba(0,255,255,0.15);
-            transform: translateX(4px);
-        }
-
-        .foto-partner{
-            height: 100%
-        }
-
-        .foto-partner img{
-            height: 100%;
-            background-size: cover;
-        }
-
-        .name-section{
-            display: flex; 
-            justify-content: space-between;
-        }
-
-        .levelup-partner{
-            display: flex; 
-            justify-content: space-between;
-        }
-
-        @media (max-width: 768px) {
-            .content {
-                margin-top: 50px;
-                height: unset;
-                align-items: center;
-                flex-direction: column;
-            }
-
-            .list-partner{
-                min-width: 90%;
-                flex-direction: row;
-            }
-
-            .topbar-right{
-                align-items: center;
-            }
-
-            .currency-box{
-                height: 25px;
-                font-size: 25px;
-                padding: 0px 0px;
-            }
-
-            .foto-partner{
-                display: none;
-            }
-            
-            .info-partner{
-                flex-direction: column;
-            }
-
-            .name-section{
-                flex-direction: column;
-            }
-
-            .levelup-partner{
-                justify-content: unset;
-                gap: 10px;
-            }
-        } 
-    </style>
+    <link rel="stylesheet" href="/css/partner.css">
 </head>
 <body>
     <div class="container">
@@ -397,8 +27,8 @@
         </div>
 
         <div class="topbar-right">
-            <div class="currency-box">🪙 10000</div>
-            <div class="currency-box">💎 50</div>
+            <div class="currency-box">🪙 <span id="col-player">10000</span></div>
+            <div class="currency-box">💎 <span id="gems-player">50</span></div>
         </div>
         </div>
         <div class="content">
@@ -462,7 +92,7 @@
         try {
             setProgress(10);
 
-            const response = await fetch(
+            const resEq = await fetch(
                 `/api/player_data`,
                 {
                     method: "POST",
@@ -478,12 +108,52 @@
             );
             setProgress(20);
 
-            const partnersRes = await response.json();
+            const partnersRes = await resEq.json();
 
-            if (!response.ok) throw new Error(profileResult.error);
+            if (!resEq.ok) throw new Error(partnersRes.error);
 
             partnersPlayer = partnersRes.data;
             renderPartners();
+
+            const resItem = await fetch(
+                `/api/player_data`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getDataPlayer",
+                        table: "player_items"
+                    })
+                }
+            );
+
+            const itemRes = await resItem.json();
+
+            if (!resItem.ok) throw new Error(itemRes.error);
+
+            const response = await fetch(
+                `/api/player_data`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getColGems",
+                    })
+                }
+            );
+
+            const colGem = await response.json();
+
+            if (!response.ok) throw new Error(colGem.error);
+
+            document.getElementById("col-player").innerHTML = colGem.data.col;
+            document.getElementById("gems-player").innerHTML = colGem.data.arcana_gems;
 
             setProgress(50); // API done (50%)
             // 🔥 tunggu gambar
