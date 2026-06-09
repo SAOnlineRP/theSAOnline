@@ -64,7 +64,12 @@ export default async function handler(req, res) {
         const { data: profile, error: profileError } =
             await supabase
             .from("player_profiles")
-            .select("*")
+            .select(`
+                *,
+                soul_trait:catalog_soul_traits (
+                    name
+                )
+            `)
             .eq("player_id", user.id)
             .single();
 
@@ -95,7 +100,8 @@ export default async function handler(req, res) {
             .select(`*,
                 catalog:catalog_badges (
                 id,
-                name
+                name,
+                link_photo
                 )`)
             .eq("player_id", user.id);
 
@@ -104,6 +110,12 @@ export default async function handler(req, res) {
             error: badgesError.message
             });
         }
+
+        const equippedBadges = Object.fromEntries(
+            badges
+                .filter(badge => badge.status)
+                .map(badge => [badge.status, badge])
+        );
 
         // EQUIPPED
         const { data: equipped, error: equippedError } = await supabase
@@ -157,7 +169,8 @@ export default async function handler(req, res) {
                 catalog:catalog_partners (
                 id,
                 name,
-                link_photo
+                link_photo,
+                link_ava
                 )
             ),
             second_partner:player_partners!player_equipped_second_partner_fkey (
@@ -167,7 +180,8 @@ export default async function handler(req, res) {
                 catalog:catalog_partners (
                 id,
                 name,
-                link_photo
+                link_photo,
+                link_ava
                 )
             )
             `)
@@ -185,6 +199,7 @@ export default async function handler(req, res) {
                 profile,
                 stats,
                 badges,
+                equippedBadges,
                 equipped
             }
         });

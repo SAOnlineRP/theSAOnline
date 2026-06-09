@@ -228,54 +228,58 @@
             try {
                 setProgress(10);
 
-                const response = await fetch(
-                    `/api/player_data`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${session.access_token}`,
-                        },
-                        body: JSON.stringify({
-                            action: "getProfile",
-                        })
-                    }
-                );
+                const headers = {
+                    Authorization: `Bearer ${session.access_token}`,
+                };
+
                 setProgress(20);
 
-                const profileResult = await response.json();
+                const [profileRes, equippedRes, statRes, badgeRes] = await Promise.all([
+                    fetch("/api/profile", { headers }),
+                    fetch("/api/profile_equipped", { headers }),
+                    fetch("/api/profile_stat", { headers }),
+                    fetch("/api/profile_badges", { headers }),
+                ]);
 
-                if (!response.ok) throw new Error(profileResult.error);
+                setProgress(40);
 
-                const allData = profileResult.data;
-                const profile = allData.profile;
-                const equipped = allData.equipped;
-                const stats = allData.stats;
-                const badges = allData.stats;
+                const profileResult = await profileRes.json();
+                const equippedResult = await equippedRes.json();
+                const statResult = await statRes.json();
+                const badgeResult = await badgeRes.json();  
 
-                var equippedRightArm = equipped.right_arm.catalog.link_photo;
-                var equippedLeftArm = equipped.left_arm.catalog.link_photo;
+                if (!profileRes.ok) throw new Error(profileResult.error);
+                if (!equippedRes.ok) throw new Error(equippedResult.error);
+                if (!statRes.ok) throw new Error(statResult.error);
+                if (!badgeRes.ok) throw new Error(badgeResult.error);
+
+                const profile = profileResult.data;
+                const equipped = equippedResult.data;
+                const stats = statResult.data;
+                const badges = badgeResult.data;
+
+                var equippedRightArm = equipped.equipped.right_arm.catalog.link_photo;
+                var equippedLeftArm = equipped.equipped.left_arm.catalog.link_photo;
 
                 document.getElementById("player-name").innerHTML = `
                 <span>${profile.name}</span>
                 <span class="level">Lv. ${profile.level}</span>
                 `;
-                
-                setProgress(40);
+
                 document.getElementById("avatar").src = profile.avatar || "/img/avatar.png";
 
                 document.getElementById("col").textContent = profile.col;
                 document.getElementById("arcana-gem").textContent = profile.arcana_gems;
  
-                document.getElementById("equipped-right-arm").src = equipped.right_arm.catalog.link_photo || "/img/eq-1.png";
-                document.getElementById("equipped-left-arm").src = equipped.left_arm.catalog.link_photo || "/img/eq-2.png";
-                document.getElementById("armor-lower").src = equipped.lower.catalog.link_photo || "/img/eq-3.png";
-                document.getElementById("armor-upper").src = equipped.upper.catalog.link_photo || "/img/eq-4.png";
-                document.getElementById("skill-record-1").src = equipped.first_partner.catalog.link_ava || "/img/sr-1.png";
-                document.getElementById("skill-record-2").src = equipped.second_partner.catalog.link_ava || "/img/sr-2.png";
+                document.getElementById("equipped-right-arm").src = equipped.equipped.right_arm.catalog.link_photo || "/img/eq-1.png";
+                document.getElementById("equipped-left-arm").src = equipped.equipped.left_arm.catalog.link_photo || "/img/eq-2.png";
+                document.getElementById("armor-lower").src = equipped.equipped.lower.catalog.link_photo || "/img/eq-3.png";
+                document.getElementById("armor-upper").src = equipped.equipped.upper.catalog.link_photo || "/img/eq-4.png";
+                document.getElementById("skill-record-1").src = equipped.equipped.first_partner.catalog.link_ava || "/img/sr-1.png";
+                document.getElementById("skill-record-2").src = equipped.equipped.second_partner.catalog.link_ava || "/img/sr-2.png";
 
-                document.getElementById("badge-1").src = allData.equippedBadges?.slot1?.catalog?.link_photo || "/img/badge-1.png";
-                document.getElementById("badge-2").src = allData.equippedBadges?.slot2?.catalog?.link_photo || "/img/badge-2.png";
+                document.getElementById("badge-1").src = badges.badges[0]?.catalog.link_photo || "/img/badge-1.png";
+                document.getElementById("badge-2").src = badges.badges[1]?.catalog.link_photo || "/img/badge-2.png";
 
                 console.log("profile:", profile);
                 console.log("equipped:", equipped);
@@ -284,12 +288,12 @@
                 setProgress(50); // API done (50%)
 
                 const radarStats = {
-                    atk: stats.atk,
-                    def: stats.def,
-                    crit: stats.crit_pct,
-                    cdmg: stats.crit_dmg,
-                    mp: stats.max_mp,
-                    hp: stats.max_hp
+                    atk: stats.stats.atk,
+                    def: stats.stats.def,
+                    crit: stats.stats.crit_pct,
+                    cdmg: stats.stats.crit_dmg,
+                    mp: stats.stats.max_mp,
+                    hp: stats.stats.max_hp
                 };
 
                 // 🔥 tunggu gambar
