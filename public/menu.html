@@ -97,7 +97,7 @@
               <button onclick="closeModal()">✕</button>
           </div>
 
-          <div class="modal-body">
+          <div class="modal-body" id="daily-quest-list">
               <div class="quest-item">
                 <div class="task-title">
                     Login Today
@@ -146,7 +146,65 @@
               </button>
           </div>
       </div>
-  </div>
+    </div>
+    <!-- WEEKLY QUEST MODAL -->
+    <div id="modal-weekly" class="modal-overlay hidden">
+      <div class="sao-modal">
+          <div class="modal-header">
+              <span>WEEKLY QUEST</span>
+              <button onclick="closeModalWeekly()">✕</button>
+          </div>
+
+          <div class="modal-body" id="weekly-quest-list">
+              <div class="quest-item">
+                <div class="task-title">
+                    Login Today
+                </div>
+                <div class="quest-progress-text">
+                  1 / 1
+                </div>
+
+                <div class="quest-status clear">
+                    ✓
+                </div>
+              </div>
+
+              <div class="quest-item">
+                <div class="task-title">
+                    Clear 5 Dungeons
+                </div>
+
+                <div class="quest-progress-text">
+                  2 / 5
+                </div>
+
+                <div class="quest-status pending">
+                    ○
+                </div>
+              </div>
+
+              <div class="quest-item">
+                <div class="task-title">
+                    Defeat 10 Bosses
+                </div>
+
+                <div class="quest-progress-text">
+                  0 / 10
+                </div>
+
+                <div class="quest-status failed">
+                    ✗
+                </div> 
+              </div>
+          </div>
+
+          <div class="modal-footer">
+              <button class="sao-btn">
+                  CLAIM ALL
+              </button>
+          </div>
+      </div>
+    </div>
   </main>
 
   <script type="module">
@@ -249,23 +307,45 @@
       try {
         setProgress(10);
 
-        const headers = {
-            Authorization: `Bearer ${session.access_token}`,
-        };
+        const response = await fetch(
+            `/api/player_data`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: "getDataPlayer",
+                    table: "player_profiles"
+                })
+            }
+        );
+
+        const resTasks = await fetch(
+            `/api/admin`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: "getAll",
+                    table: "catalog_tasks"
+                })
+            }
+        );
 
         setProgress(20);
 
-        const [profileRes] = await Promise.all([
-            fetch("/api/profile", { headers }),
-        ]);
+        const profileResult = await response.json();
+        const taskRes = await resTasks.json();
 
-        setProgress(40);
+        if (!response.ok) throw new Error(profileResult.error);
 
-        const profileResult = await profileRes.json();
-
-        if (!profileRes.ok) throw new Error(profileResult.error);
-
-        const profile = profileResult.data;
+        const profile = profileResult.data[0];
+        const tasks = taskRes.data;
 
         console.log("profile:", profile);
 
@@ -274,9 +354,48 @@
         document.getElementById("player-level").textContent = `Lvl. ${profile.level}`;
         document.getElementById("col").textContent = profile.col;
         document.getElementById("arcana-gem").textContent = profile.arcana_gems;
+            
+        setProgress(40);
 
+        const dailyTasks = tasks.filter(task => task.type === "daily");
+        const weeklyTasks = tasks.filter(task => task.type === "weekly");
 
-        setProgress(50); // API done (50%)
+        const dailyQuestList = document.getElementById("daily-quest-list");
+        const weeklyQuestList = document.getElementById("weekly-quest-list");
+
+        dailyQuestList.innerHTML = dailyTasks.map(task => `
+            <div class="quest-item">
+                <div class="task-title">
+                    ${task.title}
+                </div>
+
+                <div class="quest-progress-text">
+                    0 / 1
+                </div>
+
+                <div class="quest-status pending">
+                    ○
+                </div>
+            </div>
+        `).join("");
+
+        weeklyQuestList.innerHTML = weeklyTasks.map(task => `
+            <div class="quest-item">
+                <div class="task-title">
+                    ${task.title}
+                </div>
+
+                <div class="quest-progress-text">
+                    0 / 1
+                </div>
+
+                <div class="quest-status pending">
+                    ○
+                </div>
+            </div>
+        `).join("");
+
+        setProgress(60); // API done (50%)
 
         // 🔥 tunggu gambar
         await waitForImages();
@@ -291,6 +410,7 @@
           hideLoading();
       }
     }
+
     async function handleLogout() {
       await logout();
     }
@@ -316,7 +436,7 @@
       if (type === "dailytask") {
           html = `
               <div class="popup-item" onclick="closePopup(); openModal()">Daily Quest</div>
-              <div class="popup-item">Weekly Quest</div>
+              <div class="popup-item" onclick="closePopup(); openModalWeekly()">Weekly Quest</div>
           `;
       }
 
@@ -357,6 +477,18 @@
             .classList.add("hidden");
     }
 
+    function openModalWeekly() {
+        document
+            .getElementById("modal-weekly")
+            .classList.remove("hidden");
+    }
+
+    function closeModalWeekly() {
+        document
+            .getElementById("modal-weekly")
+            .classList.add("hidden");
+    }
+
     window.goToQuest = goToQuest;
     window.goToParty = goToParty;
     window.goToSummon = goToSummon;
@@ -374,6 +506,8 @@
     };
     window.openModal = openModal;
     window.closeModal = closeModal;
+    window.openModalWeekly = openModalWeekly;
+    window.closeModalWeekly  = closeModalWeekly;
 
     async function init() {
       try {
