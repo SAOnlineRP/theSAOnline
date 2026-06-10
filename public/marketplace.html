@@ -39,10 +39,7 @@
                     <a class="nav-link-market" href="#" data-target="items-list" onclick="switchTab(event)">Items</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link-market active" href="#" data-target="weapons" onclick="switchTab(event)">Weapons</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link-market" href="#" data-target="equipments" onclick="switchTab(event)">Equipments</a>
+                    <a class="nav-link-market active" href="#" data-target="equipments" onclick="switchTab(event)">Equipments</a>
                 </li>
             </ul>
              <div class="right-buttons d-flex gap-2">
@@ -51,14 +48,10 @@
             </div>
         </div>
         <div class="tab-content" id="marketTabsContent">
-            <div class="tab-pane active show" id="weapons">
-                <div class="wequip-list">
-                    
+            <div class="tab-pane active show" id="equipments">
+                <div class="wequip-list" id="list-equipments">
+                    <p>List of equipments available.</p>
                 </div>
-            </div>
-            <div class="tab-pane" id="equipments">
-                <h4>EQUIPMENTS</h4>
-                <p>List of equipments available in the marketplace.</p>
             </div>
             <div class="tab-pane" id="items-list">
                 <h4>ITEMS</h4>
@@ -70,17 +63,20 @@
     <div class="popup" id="myPopup">
         <div class="popup-content">
             <div class="popup-title" style="padding-bottom: 10px; font-size: 20px;">YOUR CART</div>
-            <div class="cart-list">
-                
+            <div class="cart-list"></div>
+
+            <div class="cart-footer">
+                <div class="cart-total">
+                    Total = 0
+                </div>
+
+                <div class="cart-actions">
+                    <button class="buy-btn">Buy</button>
+                    <button class="close-btn" onclick="closePopup()">
+                        Close
+                    </button>
+                </div>
             </div>
-            <div class="cart-total">
-                Total = 0
-            </div>
-            <div>
-                <button>Buy</button>
-                <button>Cancel</button>
-            </div>
-            <button class="close-btn" onclick="closePopup()">Close</button>
         </div>
     </div>
   </div>
@@ -113,6 +109,41 @@
     window.switchTab = switchTab;
     window.openPopup = openPopup;
     window.closePopup = closePopup;
+
+    let merchantItems = [];
+
+    async function loadData(session){
+        try {
+            const resMerchant = await fetch(
+                `/api/admin`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getAll",
+                        table: "merchant_items"
+                    })
+                }
+            );
+
+            const merchantData = await resMerchant.json();
+            merchantItems = merchantData.data;
+
+            const items = merchantItems.filter(row => row.goods_type === "item");
+            const equipments = merchantItems.filter(row => row.goods_type === "equipment");
+            console.log("items merchant: ", items);
+            console.log("eq merchant: ", equipments);
+
+            renderEquipments(equipments);
+            if (!resMerchant.ok) throw new Error(merchantData.error);
+        } catch (err) {
+            console.error("Load error:", err);
+            hideLoading();
+        }
+    }
 
     function setProgress(value) {
         progress = value;
@@ -210,46 +241,29 @@
         document.getElementById('myPopup').style.display = 'none';
     }
 
-    const weapons = [
-        {
-            name: "Double-Edge Sword",
-            desc: "Pedang tajam dua sisi",
-            price: 20000,
-            img: "/img/eq-1.png",
-            max: 100
-        },
-        {
-            name: "Katana",
-            desc: "Pedang samurai",
-            price: 50000,
-            img: "/img/eq-1.png",
-            max: 50
-        }
-    ];
-
-    function renderWeapons(data) {
-        const container = document.querySelector('.wequip-list');
+    function renderEquipments(data) {
+        const container = document.getElementById("list-equipments");
         container.innerHTML = '';
 
         data.forEach(item => {
             container.innerHTML += `
-            <div class="wequip-box">
+            <div class="wequip-box" data-id="${item.id}">
                 <div class="photo-info">
                 <div class="item-photo">
-                    <img src="${item.img}" class="photo-item">
+                    <img src="${item.link_photo}" class="photo-item">
                 </div>
                 <div class="input-angka">
                     <div class="quantity-selector">
                     <button class="qty-btn minus">-</button>
-                    <input type="number" min="1" max="${item.max}" value="1" class="qty-input" />
+                    <input type="number" min="1" max="${item.quantity}" value="1" class="qty-input" />
                     <button class="qty-btn plus">+</button>
                     </div>
                 </div>
                 </div>
                 <div class="desc-item">
-                <div class="item-name">${item.name}</div>
-                <div class="item-desc">${item.desc}</div>
-                <div class="item-max">(Max.${item.max})</div>
+                <div class="item-name">${item.goods_name}</div>
+                <div class="item-desc">Deskripsi</div>
+                <div class="item-max">(Max.${item.quantity})</div>
                 <div class="cost-add">
                     <div class="cost-item">
                     <span>${item.price.toLocaleString()}</span>
@@ -269,59 +283,96 @@
     let cart = [];
 
     function renderCart() {
-        const cartList = document.querySelector('.cart-list');
-        cartList.innerHTML = '';
+        const cartList = document.querySelector(".cart-list");
+        cartList.innerHTML = "";
 
         let total = 0;
 
         cart.forEach(item => {
-            const subtotal = item.price * item.qty;
+            const subtotal = item.price * item.quantity;
             total += subtotal;
 
             cartList.innerHTML += `
-            <div class="wequip-box">
+            <div class="cart-item">
                 <div class="item-photo">
-                    <img src="${item.image}" class="photo-item">
+                    <img src="${item.link_photo}" class="photo-item">
                 </div>
                 <div class="desc-item">
-                    <div class="item-name">${item.name}</div>
-                    <div>Qty: ${item.qty}</div>
+                    <div class="item-name">${item.goods_name}</div>
+                    <div>Qty: ${item.quantity}</div>
                     <div>Price: ${item.price.toLocaleString()}</div>
                     <div>Total: ${subtotal.toLocaleString()}</div>
+                    <button
+                        class="remove-cart-btn"
+                        data-id="${item.id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </div>
             </div>
             `;
         });
 
-        document.querySelector('.cart-total').innerText =
-            "Total = " + total.toLocaleString();
+        document.querySelector(".cart-total").textContent =
+            `Total = ${total.toLocaleString()}`;
     }
 
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.add-to-cart');
+    document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".add-to-cart");
         if (!btn) return;
 
-        const card = btn.closest('.wequip-box');
+        const card = btn.closest(".wequip-box");
 
-        const name = card.querySelector('.item-name').innerText;
+        const id = card.dataset.id;
 
-        const image = card.querySelector('.photo-item').src;
+        const qty =
+            parseInt(card.querySelector(".qty-input").value) || 1;
 
-        const priceText = card.querySelector('.cost-item span').innerText;
-        const price = parseInt(priceText.replace(/,/g, ''));
+        const product =
+            merchantItems.find(item => item.id === id);
 
-        const qty = parseInt(card.querySelector('.qty-input').value) || 1;
+        if (!product) return;
 
-        const existing = cart.find(item => item.name === name);
+        addToCart(product, qty);
+    });
+
+    function addToCart(product, qty = 1) {
+        const existing = cart.find(item => item.id === product.id);
 
         if (existing) {
-            existing.qty += qty;
+            existing.quantity += qty;
+
+            // optional: jangan lebih dari stok merchant
+            if (existing.quantity > product.quantity) {
+                existing.quantity = product.quantity;
+            }
         } else {
-            cart.push({ name, price, qty, image });
+            cart.push({
+                id: product.id,
+                goods_id: product.goods_id,
+                goods_type: product.goods_type,
+                goods_name: product.goods_name,
+                price: product.price,
+                link_photo: product.link_photo,
+                quantity: qty
+            });
         }
 
         renderCart();
+    }
+
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        renderCart();
+    }
+
+    document.addEventListener("click", function(e) {
+        const btn = e.target.closest(".remove-cart-btn");
+
+        if (!btn) return;
+
+        removeFromCart(btn.dataset.id);
     });
+
 
     async function init() {
         try {
@@ -329,7 +380,8 @@
             if (!session) return; // ✅ sekarang valid
 
             //await loadStorage(session);
-            renderWeapons(weapons);
+            
+            await loadData(session);
             setTimeout(hideLoading, 500);
 
         } catch (err) {

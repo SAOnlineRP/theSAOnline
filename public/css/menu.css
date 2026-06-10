@@ -673,4 +673,11 @@ body {
     min-height: 72px;
     font-size: 12px;
     }
+
+    .logout-btn {
+        left: unset;
+        bottom: unset;
+        right: 24px;
+        top: 80px;
+    }
 }
