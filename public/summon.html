@@ -38,6 +38,46 @@
         overflow: hidden;
     }
 
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        color: white;
+        font-size: 20px;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .loading-overlay.fade-out {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .loading-bar-container {
+        width: 300px;
+        height: 30px;
+        background-color: #444;
+        border: 2px solid #d4af4d;
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+
+    .loading-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #061b33, #1f1b10);
+        box-shadow: 0 0 10px #000311;
+        border-radius: 13px;
+        width: 0%;
+        transition: width 0.2s ease;
+    }
+
     .bg-image {
       position: absolute;
       top: 50%;
@@ -52,50 +92,52 @@
     }
 
     .content {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        margin: 0 20px;
-      }
-
-    /* top icons */
-    .top-left {
-      position: absolute;
-      top: 12px;
-      left: 14px;
       display: flex;
-      gap: 14px;
-      font-size: 50px;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: 0 20px;
+    }
+    /* top bar */
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        font-size: 40px;
+    }
+
+    .top-left {
+        display: flex;
+        gap: 18px;
+        color: #000;
+        align-items: center;
     }
 
     .top-left button {
-      border: none;
-      background: none;
-      font-size: 40px;
-      cursor: pointer;
+        border: none;
+        background: none;
+        font-size: 40px;
+        cursor: pointer;
     }
 
-    /* top currency */
     .top-right {
-      position: absolute;
-      top: 10px;
-      right: 0;
-      display: flex;
-      gap: 12px;
-      padding-right: 0;
+        display: flex;
+        gap: 14px;
     }
 
     .currency-box {
       min-width: 100px;
-      height: 50px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       font-size: 40px;
       color: white;
-    }
+      padding: 0 12px;
+  }
 
     /* left menu */
     .left-panel {
@@ -320,6 +362,8 @@
         aspect-ratio: 9 / 16;
         min-height: 100vh;
         width: unset;
+        padding-right: 10px;
+        padding-left: 10px;
       }
 
       .content {
@@ -328,6 +372,13 @@
         justify-content: center;
         align-items: center;
         margin: 0 20px;
+      }
+
+      .top-right{
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 2px;
       }
 
       .left-panel {
@@ -372,15 +423,23 @@
 </head>
 <body>
   <div class="screen">
-    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
-    <div class="top-left">
-        <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
-        <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+    <div id="loading-overlay" class="loading-overlay">
+        <div>Loading Assets...</div>
+        <div class="loading-bar-container">
+            <div id="loading-bar" class="loading-bar"></div>
+        </div>
     </div>
+    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
+    <div class="topbar">
+      <div class="top-left">
+          <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Back"></button>
+          <button onclick="goHome()"><img src="/img/home2.png" style="width: 35px; height: 35px; margin-top:10px" alt="Home"></button>
+      </div>
 
-    <div class="top-right">
-       <div class="currency-box">🪙 <span id="col-player">10000</span></div>
-        <div class="currency-box">💎 <span id="gems-player">50</span></div>
+      <div class="top-right">
+        <div class="currency-box">🪙 <span id="col-player">10000</span></div>
+          <div class="currency-box">💎 <span id="gems-player">50</span></div>
+      </div>
     </div>
 
     <div class="content">
@@ -424,7 +483,116 @@
       </div>
     </div>
   </div>
-  <script>
+  <script type="module">
+    import { supabase } from "/js/supabaseClient.js";
+    import { requireLogin } from "/js/authGuard.js";
+
+    const overlay = document.getElementById("loading-overlay");
+    const bar = document.getElementById("loading-bar");
+
+    let progress = 0;
+
+    async function loadData(session){
+      try {
+          setProgress(10);
+          const response = await fetch(
+              `/api/player_data`,
+              {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${session.access_token}`,
+                  },
+                  body: JSON.stringify({
+                      action: "getColGems",
+                  })
+              }
+          );
+
+          const colGem = await response.json();
+
+          if (!response.ok) throw new Error(colGem.error);
+
+          document.getElementById("col-player").innerHTML = colGem.data.col;
+          document.getElementById("gems-player").innerHTML = colGem.data.arcana_gems;
+          setProgress(20);
+
+          const resSummon = await fetch(
+              `/api/admin`,
+              {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${session.access_token}`,
+                  },
+                  body: JSON.stringify({
+                      action: "getAll",
+                      table: "summon_pool"
+                  })
+              }
+          );
+
+          const summonRes = await resSummon.json();
+
+          if (!resSummon.ok) throw new Error(summonRes.error);
+          
+          setProgress(50);
+          await waitForImages();
+
+          // selesai semua
+          setProgress(100);
+
+          setTimeout(hideLoading, 300);
+      } catch (err) {
+          console.error("Load error:", err);
+          hideLoading();
+      }
+    }
+
+    function setProgress(value) {
+      progress = value;
+      bar.style.width = progress + "%";
+    }
+
+    function hideLoading() {
+      overlay.classList.add("fade-out");
+      setTimeout(() => {
+        overlay.style.display = "none";
+      }, 500);
+    }
+
+    function waitForImages() {
+      const images = document.querySelectorAll("img");
+      let loaded = 0;
+      const total = images.length;
+
+      if (total === 0) return Promise.resolve();
+
+      return new Promise((resolve) => {
+          images.forEach((img) => {
+          if (img.complete) {
+              loaded++;
+              update();
+          } else {
+              img.onload = () => {
+              loaded++;
+              update();
+              };
+              img.onerror = () => {
+              loaded++;
+              update();
+              };
+          }
+          });
+
+          function update() {
+          const percent = (loaded / total) * 50; // max 50%
+          setProgress(50 + percent);
+
+          if (loaded === total) resolve();
+          }
+      });
+    }
     // =========================
     // 🎯 DATA
     // =========================
@@ -706,6 +874,11 @@
       renderPopup(results);
     });
 
+    window.goBack = goBack;
+    window.goHome = goHome;
+    window.closePopup = closePopup;
+    window.summonAgain = summonAgain;
+    window.changeSummon = changeSummon;
 
     // =========================
     // NAVIGATION
@@ -729,6 +902,21 @@
         closePopup();
       }
     });
+
+    async function init() {
+      try {
+          const session = await requireLogin();
+          if (!session) return; // ✅ sekarang valid
+
+          await loadData(session);
+          setTimeout(hideLoading, 500);
+
+      } catch (err) {
+          console.error("Loading error:", err);
+      }
+    }
+
+    init();
   </script>
 </body>
 </html>

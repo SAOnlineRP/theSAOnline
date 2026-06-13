@@ -65,14 +65,15 @@ export default async function handler(req, res) {
 
             data = result.data;
             error = result.error;
-        } if(table === "summon_pool") {
+        } else if(table === "summon_pool") {
+            console.log("masuk summon pool");
             const result = await supabase
-                .from("summon_pool_view")
+                .from("summon_pools_view")
                 .select("*");
 
             data = result.data;
             error = result.error;
-        } if(table === "merchant_items") {
+        } else if(table === "merchant_items") {
             const result = await supabase
                 .from("merchant_items_view")
                 .select("*");
@@ -82,13 +83,13 @@ export default async function handler(req, res) {
 
         } else {
 
-        const result = await supabase
-            .from(table)
-            .select("*")
-            .order("created_at", { ascending: false });
+            const result = await supabase
+                .from(table)
+                .select("*")
+                .order("created_at", { ascending: false });
 
-        data = result.data;
-        error = result.error;
+            data = result.data;
+            error = result.error;
         }
 
         if (error) {
