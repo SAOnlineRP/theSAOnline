@@ -232,7 +232,146 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    gap: 20px;
 }
+
+.profile-edit {
+    padding: 6px 16px;
+    align-self: center;
+
+    background: linear-gradient(
+        180deg,
+        rgba(52, 178, 255, 0.95),
+        rgba(18, 102, 150, 0.95)
+    );
+
+    border: 1px solid rgba(120, 220, 255, 0.8);
+    border-radius: 20px;
+
+    color: black;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 12px rgba(78, 226, 255, 0.45),
+        inset 0 0 10px rgba(255,255,255,0.15);
+
+    transition: all 0.2s ease;
+}
+
+.profile-edit:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 18px rgba(0, 0, 0, 0.7),
+        inset 0 0 12px rgba(255,255,255,0.2);
+}
+
+.profile-edit:active {
+    transform: translateY(0);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.72);
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-box {
+    width: min(480px, calc(100% - 40px));
+    background: rgba(12, 18, 32, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+    padding: 24px;
+    color: #fff;
+}
+
+.modal-box h3 {
+    margin: 0 0 18px;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+.modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.modal-field label {
+    font-size: 14px;
+    color: #c7d4ec;
+    letter-spacing: 0.5px;
+}
+
+.modal-field input,
+.modal-field select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    outline: none;
+    font-size: 16px;
+}
+
+.modal-field input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.modal-actions button {
+    min-width: 110px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+}
+
+.modal-actions .modal-save {
+    background: linear-gradient(180deg, #43d1ff 0%, #1c7fa6 100%);
+    color: #000;
+}
+
+.modal-actions .modal-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modal-actions button:hover {
+    transform: translateY(-1px);
+}
+
+.modal-actions button:active {
+    transform: translateY(0);
+}
+
 
 /*.stat-section {
     background: #215b7a;

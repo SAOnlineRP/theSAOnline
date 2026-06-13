@@ -40,7 +40,11 @@
         </div>
         <div class="profile-card">
             <div class="info-section">
-                <div class="name" id="player-name"><span>ARJUNA</span><span class="level">Lv. 100</span></div>
+                <div style="display:flex; justify-content: center; gap:10px">
+                    <div class="name" id="player-name"><span>ARJUNA</span><span class="level">Lv. 100</span></div>
+                    <div class="profile-edit">Edit</div>
+                </div>
+                
                 <div class="avatar-section">
                     <img id="avatar" src="/img/default-nodata.png" alt="avatar" class="avatar-img">
                 </div>
@@ -97,7 +101,7 @@
             <div>
                 <div class="wequip-container">
                     <div class="wequip-box">Skill Records</div>
-                    <div class="wequip-box-edit">Edit</div>
+                    <div class="wequip-box-edit" id="partner-edit">Edit</div>
                 </div>
                 
                 <div class="grid-container">
@@ -106,13 +110,100 @@
                 </div>
                 <div class="wequip-container">
                     <div class="wequip-box">Equipment</div>
-                    <div class="wequip-box-edit">Edit</div>
+                    <div class="wequip-box-edit" id="equipment-edit">Edit</div>
                 </div>
                 <div class="equipment-container">
                     <div class="box-equip"><img id="equipped-right-arm" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
                     <div class="box-equip"><img id="equipped-left-arm" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
                     <div class="box-equip"><img id="armor-lower" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
                     <div class="box-equip"><img id="armor-upper" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
+                </div>
+            </div>
+        </div>
+        <div id="profileModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Edit Profile</h3>
+                <div class="modal-field">
+                    <label>Player's Name</label>
+                    <input type="text" id="profile-name-input" placeholder="Enter your name" />
+                </div>
+                <div class="modal-field">
+                    <label>Slot 1 Badge</label>
+                    <select id="badge-slot-1">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label>Slot 2 Badge</label>
+                    <select id="badge-slot-2">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-save">Save</button>
+                    <button type="button" class="modal-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div id="partnerModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Edit Partner</h3>
+                <div class="modal-field">
+                    <label>Partner Slot 1</label>
+                    <select id="partner-slot-1">
+                        <option value="partner-a">Partner A</option>
+                        <option value="partner-b">Partner B</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label>Partner Slot 2</label>
+                    <select id="partner-slot-2">
+                        <option value="partner-a">Partner A</option>
+                        <option value="partner-b">Partner B</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-save partner-save">Save</button>
+                    <button type="button" class="modal-cancel partner-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div id="equipmentModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Edit Equipment</h3>
+                <div class="modal-field">
+                    <label>Right Arm</label>
+                    <select id="equipment-slot-right-arm">
+                        <option value="eq-1">Equipment 1</option>
+                        <option value="eq-2">Equipment 2</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label>Left Arm</label>
+                    <select id="equipment-slot-left-arm">
+                        <option value="eq-1">Equipment 1</option>
+                        <option value="eq-2">Equipment 2</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label>Armor Lower</label>
+                    <select id="equipment-slot-lower">
+                        <option value="eq-1">Equipment 1</option>
+                        <option value="eq-2">Equipment 2</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label>Armor Upper</label>
+                    <select id="equipment-slot-upper">
+                        <option value="eq-1">Equipment 1</option>
+                        <option value="eq-2">Equipment 2</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-save equipment-save">Save</button>
+                    <button type="button" class="modal-cancel equipment-cancel">Cancel</button>
                 </div>
             </div>
         </div>
@@ -353,6 +444,59 @@
                 }
             });
         }
+
+        const profileEditButton = document.querySelector(".profile-edit");
+        const profileModal = document.getElementById("profileModal");
+        const profileModalCancel = profileModal?.querySelector(".modal-cancel");
+        const profileModalSave = profileModal?.querySelector(".modal-save");
+
+        const partnerEditButton = document.getElementById("partner-edit");
+        const partnerModal = document.getElementById("partnerModal");
+        const partnerModalCancel = partnerModal?.querySelector(".partner-cancel");
+        const partnerModalSave = partnerModal?.querySelector(".partner-save");
+
+        const equipmentEditButton = document.getElementById("equipment-edit");
+        const equipmentModal = document.getElementById("equipmentModal");
+        const equipmentModalCancel = equipmentModal?.querySelector(".equipment-cancel");
+        const equipmentModalSave = equipmentModal?.querySelector(".equipment-save");
+
+        function openModal(modal) {
+            modal?.classList.add("show");
+        }
+
+        function closeModal(modal) {
+            modal?.classList.remove("show");
+        }
+
+        profileEditButton?.addEventListener("click", () => openModal(profileModal));
+        profileModalCancel?.addEventListener("click", () => closeModal(profileModal));
+        profileModalSave?.addEventListener("click", () => {
+            // TODO: kirim data perubahan profil ke backend
+            closeModal(profileModal);
+        });
+        profileModal?.addEventListener("click", (event) => {
+            if (event.target === profileModal) closeModal(profileModal);
+        });
+
+        partnerEditButton?.addEventListener("click", () => openModal(partnerModal));
+        partnerModalCancel?.addEventListener("click", () => closeModal(partnerModal));
+        partnerModalSave?.addEventListener("click", () => {
+            // TODO: kirim data perubahan partner ke backend
+            closeModal(partnerModal);
+        });
+        partnerModal?.addEventListener("click", (event) => {
+            if (event.target === partnerModal) closeModal(partnerModal);
+        });
+
+        equipmentEditButton?.addEventListener("click", () => openModal(equipmentModal));
+        equipmentModalCancel?.addEventListener("click", () => closeModal(equipmentModal));
+        equipmentModalSave?.addEventListener("click", () => {
+            // TODO: kirim data perubahan equipment ke backend
+            closeModal(equipmentModal);
+        });
+        equipmentModal?.addEventListener("click", (event) => {
+            if (event.target === equipmentModal) closeModal(equipmentModal);
+        });
 
         async function init() {
             try {
