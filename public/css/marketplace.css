@@ -427,8 +427,8 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
 
 @media (max-width: 768px) {
     .container {
-        margin: 10px 10px;
-        padding: 10px;
+        padding-right: 10px;
+        padding-left: 10px;
     }
 
     .top-container {
@@ -441,6 +441,8 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
     .topbar-right{
         gap: 2px;
         align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
 
     .currency-box{

@@ -431,8 +431,16 @@ body {
         box-sizing: border-box;
     }
 
-    .top-left, .top-right {
-        gap: 8px;
+    .top-left {
+        gap: 18px;
+        
+    }
+
+    .top-right {
+        gap: 2px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
     }
     
     .icon-btn img {
