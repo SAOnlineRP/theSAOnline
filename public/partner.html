@@ -40,14 +40,58 @@
             </div>
         </div>
     </div>
+
+    <div id="levelupModal" class="modal-overlay">
+        <div class="modal-box">
+            <span class="modal-close" id="cancelLevelup">&times;</span>
+            <h3>Level Up Partner</h3>
+
+            <div class="levelup-card">
+                <div class="levelup-row">
+                    <div><strong id="levelup-partner-name">Partner Name</strong></div>
+                    <div>Lv. <span id="levelup-partner-level">0</span></div>
+                </div>
+
+                <div class="levelup-row">
+                    <label for="levelup-item-select">Item yang dipakai</label>
+                    <select id="levelup-item-select"></select>
+                </div>
+
+                <div class="levelup-row item-info">
+                    <div>Qty tersedia: <span id="levelup-item-qty">0</span></div>
+                </div>
+
+                <div class="levelup-row">
+                    <label for="levelup-level-input">Naikkan berapa level</label>
+                    <input id="levelup-level-input" type="number" min="1" value="1">
+                </div>
+
+                <div class="levelup-row">
+                    <div class="levelup-result">Level baru: <span id="levelup-result-level">0</span></div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="confirmLevelup" class="modal-save">Konfirmasi</button>
+                    <button type="button" id="cancelLevelupButton" class="modal-cancel">Batal</button>
+                </div>
+
+                <p class="levelup-message" id="levelup-message"></p>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
     import { supabase } from "/js/supabaseClient.js";
     import { requireLogin } from "/js/authGuard.js";
 
     const overlay = document.getElementById("loading-overlay");
     const bar = document.getElementById("loading-bar");
+    const levelupModal = document.getElementById("levelupModal");
 
     let progress = 0;
+    let partnersPlayer = [];
+    let playerItems = [];
+    let currentPartner = null;
 
     function goBack() {
         window.history.back();
@@ -58,8 +102,6 @@
     }
     window.goBack = goBack;
     window.goHome = goHome;
-    let partnersPlayer = [];
-
     function renderPartners() {
         const list = document.querySelector(".list-partner");
 
@@ -133,6 +175,8 @@
             const itemRes = await resItem.json();
 
             if (!resItem.ok) throw new Error(itemRes.error);
+
+            playerItems = itemRes.data;
 
             const response = await fetch(
                 `/api/player_data`,
@@ -217,14 +261,6 @@
 
     
 
-    const options = document.querySelectorAll(".partner-option");
-
-    options.forEach((el, index) => {
-        el.addEventListener("click", () => {
-            updatePartner(partners[index], el);
-        });
-    });
-
     function renderPartnerDetail(data) {
         const container = document.querySelector(".info-partner");
 
@@ -248,7 +284,7 @@
 
                         <div class="levelup-partner">
                             <h3>Lv. ${data.level}</h3>
-                            <button>
+                            <button id="openLevelupButton">
                                 <img
                                     src="/img/star-up.png"
                                     style="width:25px;height:25px"
@@ -310,6 +346,9 @@
                 <img src="${data.partner.link_photo}">
             </div>
         `;
+
+        const openLevelupButton = container.querySelector("#openLevelupButton");
+        openLevelupButton?.addEventListener("click", () => openLevelUpModal(data));
     }
     
     function updatePartner(data, clickedEl) {
@@ -333,10 +372,89 @@
             }, 500);
         }, 250);
     }
+    function updateLevelupSummary() {
+        const levelInput = document.getElementById("levelup-level-input");
+        const resultLevel = document.getElementById("levelup-result-level");
+        const qtyDisplay = document.getElementById("levelup-item-qty");
+        const select = document.getElementById("levelup-item-select");
+
+        const selectedItem = playerItems.find(item => String(item.id) === select.value);
+        const currentLevel = currentPartner?.level || 0;
+        const amount = Math.max(1, parseInt(levelInput.value, 10) || 1);
+
+        resultLevel.textContent = currentLevel + amount;
+        qtyDisplay.textContent = selectedItem?.quantity ?? 0;
+    }
+
+    function openLevelUpModal(data) {
+        currentPartner = data;
+
+        document.getElementById("levelup-partner-name").textContent = data.partner.name;
+        document.getElementById("levelup-partner-level").textContent = data.level;
+        document.getElementById("levelup-level-input").value = 1;
+        document.getElementById("levelup-message").textContent = "";
+
+        const select = document.getElementById("levelup-item-select");
+        select.innerHTML = playerItems.map(item => {
+            const quantity = item.quantity ?? 0;
+            const label = `${item.catalog.name} (${quantity})`;
+            return `<option value="${item.id}">${label}</option>`;
+        }).join("");
+
+        if (!playerItems.length) {
+            select.innerHTML = `<option value="">Tidak ada item</option>`;
+        }
+
+        updateLevelupSummary();
+        levelupModal.classList.add("show");
+    }
+
+    function closeLevelUpModal() {
+        levelupModal.classList.remove("show");
+    }
+
+    function confirmLevelUp() {
+        const select = document.getElementById("levelup-item-select");
+        const levelInput = document.getElementById("levelup-level-input");
+        const message = document.getElementById("levelup-message");
+
+        const selectedItem = playerItems.find(item => item.id === select.value);
+        const amount = Math.max(1, parseInt(levelInput.value) || 1);
+
+        if (!selectedItem) {
+            message.textContent = "Pilih item yang tersedia terlebih dahulu.";
+            return;
+        }
+
+        if (selectedItem.quantity < amount) {
+            message.textContent = "Jumlah item tidak cukup untuk meningkatkan level.";
+            return;
+        }
+
+        selectedItem.quantity -= amount;
+        currentPartner.level += amount;
+
+        renderPartnerDetail(currentPartner);
+        closeLevelUpModal();
+
+        const itemQtyDisplay = document.getElementById("levelup-item-qty");
+        if (itemQtyDisplay) itemQtyDisplay.textContent = selectedItem.quantity;
+    }
+
     async function init() {
       try {
         const session = await requireLogin();
         if (!session) return; // ✅ sekarang valid
+
+        levelupModal.addEventListener("click", (event) => {
+            if (event.target === levelupModal) closeLevelUpModal();
+        });
+
+        document.getElementById("cancelLevelupButton").addEventListener("click", closeLevelUpModal);
+        document.getElementById("cancelLevelup").addEventListener("click", closeLevelUpModal);
+        document.getElementById("confirmLevelup").addEventListener("click", confirmLevelUp);
+        document.getElementById("levelup-item-select").addEventListener("change", updateLevelupSummary);
+        document.getElementById("levelup-level-input").addEventListener("input", updateLevelupSummary);
 
         await loadPartner(session);
         setTimeout(hideLoading, 500);
