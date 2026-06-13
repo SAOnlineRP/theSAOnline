@@ -431,6 +431,10 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
         padding-left: 10px;
     }
 
+    .topbar{
+        margin-bottom : 20px;
+    }
+
     .top-container {
         flex-direction: column;
         gap: 5px;
@@ -494,6 +498,7 @@ background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, 
     .wequip-box {
         flex: 1 1 100%;
         align-items: center;
+        justify-content: center;
     }
 
     .photo-item {

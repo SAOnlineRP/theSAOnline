@@ -28,8 +28,8 @@
       </div>
 
       <div class="topbar-right">
-        <div class="currency-box" style="color: white;">🪙 10000</div>
-        <div class="currency-box" style="color: white;">💎 50</div>
+        <div class="currency-box" style="color: white">🪙 <span id="col-player">10000</span></div>
+        <div class="currency-box" style="color: white">💎 <span id="gems-player">50</span></div>
       </div>
     </div>
     <div class="market-container">
@@ -46,6 +46,14 @@
                 <button class="btn btn-sm btn-info text-btn button-market" style="color: black !important;" onclick="goToStorage()">My Storage</button>
                 <button class="btn btn-sm btn-cart" style="background-color: #362f2c;" onclick="openPopup()"><i class="bi bi-cart button-market"></i></button>
             </div>
+        </div>
+        <div class="filter-row mt-2 d-flex gap-2 align-items-center" id="marketFilters">
+            <select id="typeFilter" class="form-select form-select-sm" style="width:180px">
+                <option value="">All Types</option>
+            </select>
+            <select id="positionFilter" class="form-select form-select-sm" style="width:180px">
+                <option value="">All Positions</option>
+            </select>
         </div>
         <div class="tab-content" id="marketTabsContent">
             <div class="tab-pane active show" id="equipments">
@@ -114,6 +122,27 @@
 
     async function loadData(session){
         try {
+            const response = await fetch(
+                `/api/player_data`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getColGems",
+                    })
+                }
+            );
+
+            const colGem = await response.json();
+
+            if (!response.ok) throw new Error(colGem.error);
+
+            document.getElementById("col-player").innerHTML = colGem.data.col;
+            document.getElementById("gems-player").innerHTML = colGem.data.arcana_gems;
+            
             const resMerchant = await fetch(
                 `/api/admin`,
                 {
@@ -138,6 +167,8 @@
             console.log("eq merchant: ", equipments);
 
             renderEquipments(equipments);
+            // populate filter options for equipments
+            populateMarketplaceFilters(equipments);
             if (!resMerchant.ok) throw new Error(merchantData.error);
         } catch (err) {
             console.error("Load error:", err);
@@ -212,6 +243,19 @@
         if (targetPane) {
             targetPane.classList.add('active', 'show');
         }
+
+        // show filters only for equipments tab
+        const filtersRow = document.getElementById('marketFilters');
+        if (filtersRow) {
+            if (targetId === 'equipments') {
+                filtersRow.style.display = 'flex';
+                // re-render equipments with current filters
+                const equipments = merchantItems.filter(row => row.goods_type === 'equipment');
+                renderEquipments(equipments);
+            } else {
+                filtersRow.style.display = 'none';
+            }
+        }
     }
     document.addEventListener('click', function(e) {
         const minus = e.target.closest('.minus');
@@ -245,7 +289,24 @@
         const container = document.getElementById("list-equipments");
         container.innerHTML = '';
 
-        data.forEach(item => {
+        // apply filters if present
+        const typeSel = document.getElementById('typeFilter');
+        const positionSel = document.getElementById('positionFilter');
+
+        const selType = typeSel ? typeSel.value : '';
+        const selPosition = positionSel ? positionSel.value : '';
+
+        let list = Array.isArray(data) ? data.slice() : [];
+
+        if (selType) {
+            list = list.filter(it => (it.type) ? String(it.type) === selType : false);
+        }
+
+        if (selPosition) {
+            list = list.filter(it => (it.position) ? String(it.position) === selPosition : false);
+        }
+
+        list.forEach(item => {
             container.innerHTML += `
             <div class="wequip-box" data-id="${item.id}">
                 <div class="photo-info">
@@ -276,6 +337,54 @@
             </div>
             `;
         });
+    }
+
+    // debounce helper
+    function debounce(fn, wait) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    function populateMarketplaceFilters(equipments) {
+        const typeFilter = document.getElementById('typeFilter');
+        const positionFilter = document.getElementById('positionFilter');
+
+        if (!equipments || equipments.length === 0) return;
+
+        const types = Array.from(new Set(equipments.map(e => e.type).filter(Boolean))).sort();
+        const positions = Array.from(new Set(equipments.map(e => e.position).filter(Boolean))).sort();
+
+        if (typeFilter) {
+            // remove existing options except the first
+            while (typeFilter.options.length > 1) typeFilter.remove(1);
+            types.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                typeFilter.appendChild(opt);
+            });
+        }
+
+        if (positionFilter) {
+            while (positionFilter.options.length > 1) positionFilter.remove(1);
+            positions.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.textContent = p;
+                positionFilter.appendChild(opt);
+            });
+        }
+
+        const handleFilterChange = debounce(() => {
+            const equipmentsTab = merchantItems.filter(row => row.goods_type === "equipment");
+            renderEquipments(equipmentsTab);
+        }, 150);
+
+        if (typeFilter) typeFilter.addEventListener('change', handleFilterChange);
+        if (positionFilter) positionFilter.addEventListener('change', handleFilterChange);
     }
 
     

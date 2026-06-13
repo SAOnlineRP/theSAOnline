@@ -27,8 +27,8 @@
             </div>
 
             <div class="topbar-right">
-                <div class="currency-box" style="color: white;">🪙 10000</div>
-                <div class="currency-box" style="color: white;">💎 50</div>
+                <div class="currency-box" style="color: white">🪙 <span id="col-player">10000</span></div>
+                <div class="currency-box" style="color: white">💎 <span id="gems-player">50</span></div>
             </div>
         </div>
         <div class="storage-container">
@@ -45,6 +45,7 @@
                     </li>
                 </ul>
                 <div class="right-buttons d-flex gap-2">
+                    <input type="text" id="searchInput" placeholder="Search by name..." class="search-input">
                     <p class="capacity">300/500</p>
                 </div>
             </div>
@@ -107,9 +108,31 @@
         let items = [];
         let equipments = [];
         let partners = [];
+        let currentActiveTab = "equipments"; // Track active tab
 
         async function loadStorage(session) {
             try {
+                const response = await fetch(
+                    `/api/player_data`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${session.access_token}`,
+                        },
+                        body: JSON.stringify({
+                            action: "getColGems",
+                        })
+                    }
+                );
+
+                const colGem = await response.json();
+
+                if (!response.ok) throw new Error(colGem.error);
+
+                document.getElementById("col-player").innerHTML = colGem.data.col;
+                document.getElementById("gems-player").innerHTML = colGem.data.arcana_gems;
+                
                 setProgress(10);
                 const resEq = await fetch(
                     `/api/player_data`,
@@ -326,10 +349,14 @@
 
             // Show target tab
             const targetId = clicked.getAttribute('data-target');
+            currentActiveTab = targetId;
             const targetPane = document.getElementById(targetId);
             if (targetPane) {
                 targetPane.classList.add('active', 'show');
             }
+
+            // Clear search input when switching tabs
+            document.getElementById("searchInput").value = "";
         }
 
         function openModal(data, type) {
@@ -382,6 +409,101 @@
         function closeModal() {
             document.getElementById("modal-overlay").classList.remove("show");
         }
+
+        function getActiveTabData() {
+            if (currentActiveTab === "equipments") return equipments;
+            if (currentActiveTab === "items-list") return items;
+            if (currentActiveTab === "partners") return partners;
+            return [];
+        }
+
+        function getNameFromData(data, tabType) {
+            if (tabType === "equipments" || tabType === "items-list") {
+                return data.catalog.name.toLowerCase();
+            }
+            if (tabType === "partners") {
+                return data.partner.name.toLowerCase();
+            }
+            return "";
+        }
+
+        function performSearch(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            const activeData = getActiveTabData();
+
+            if (!term) {
+                // If search is empty, render all
+                if (currentActiveTab === "equipments") renderEquipments();
+                if (currentActiveTab === "items-list") renderItems();
+                if (currentActiveTab === "partners") renderPartners();
+                return;
+            }
+
+            // Filter data based on name
+            const filtered = activeData.filter(data => {
+                const name = getNameFromData(data, currentActiveTab);
+                return name.includes(term);
+            });
+
+            // Render filtered results
+            const listId = currentActiveTab === "items-list" ? "list-items" : 
+                          currentActiveTab === "equipments" ? "list-equipments" : 
+                          "list-partners";
+            const list = document.getElementById(listId);
+            list.innerHTML = "";
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #999;">No results found</p>`;
+                return;
+            }
+
+            filtered.forEach((data) => {
+                const div = document.createElement("div");
+                div.className = "wequip-box";
+                
+                if (currentActiveTab === "equipments") {
+                    div.innerHTML = `
+                        <div class="photo-info">
+                            <div class="item-photo">
+                                <img src="${data.catalog.link_photo}" class="photo-item">
+                                <div class="item-div">
+                                    <p class="item-number">${data.level}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    div.addEventListener("click", () => openModal(data, "equipment"));
+                }
+                if (currentActiveTab === "items-list") {
+                    div.innerHTML = `
+                        <div class="photo-info">
+                            <div class="item-photo">
+                                <img src="${data.catalog.link_photo}" class="photo-item">
+                                <div class="item-div">
+                                    <p class="item-number">${data.quantity}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    div.addEventListener("click", () => openModal(data, "item"));
+                }
+                if (currentActiveTab === "partners") {
+                    div.innerHTML = `
+                        <div class="photo-info">
+                            <div class="item-photo">
+                                <img src="${data.partner.link_ava}" class="photo-item">
+                                <div class="item-div">
+                                    <p class="item-number">${data.level}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    div.addEventListener("click", () => openModal(data, "partner"));
+                }
+
+                list.appendChild(div);
+            });
+        }
         
         async function init() {
             try {
@@ -390,6 +512,11 @@
 
                 await loadStorage(session);
                 setTimeout(hideLoading, 500);
+
+                // Add search input event listener
+                document.getElementById("searchInput").addEventListener("input", (e) => {
+                    performSearch(e.target.value);
+                });
 
             } catch (err) {
                 console.error("Loading error:", err);

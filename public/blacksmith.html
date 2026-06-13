@@ -26,8 +26,8 @@
       </div>
 
       <div class="topbar-right">
-        <div class="currency-box">🪙 10000</div>
-        <div class="currency-box">💎 50</div>
+        <div class="currency-box">🪙 <span id="col-player">10000</span></div>
+        <div class="currency-box">💎 <span id="gems-player">50</span></div>
       </div>
     </div>
 
@@ -40,6 +40,25 @@
         </div>
 
         <div class="inventory-panel">
+            <div class="search-row">
+              <input id="searchInput" type="search" placeholder="Search item by name..." />
+              <div class="filters-row">
+                <select id="typeFilter">
+                  <option value="">All Types</option>
+                </select>
+                <select id="positionFilter">
+                  <option value="">All Positions</option>
+                </select>
+                <select id="starFilter">
+                  <option value="">All Stars</option>
+                  <option value="1">1★</option>
+                  <option value="2">2★</option>
+                  <option value="3">3★</option>
+                  <option value="4">4★</option>
+                  <option value="5">5★</option>
+                </select>
+              </div>
+            </div>
             <div class="grid-box" id="gridBox"></div>
 
             <div class="bottom-buttons">
@@ -179,6 +198,28 @@
       try {
 
         setProgress(10);
+
+        const response = await fetch(
+            `/api/player_data`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: "getColGems",
+                })
+            }
+        );
+
+        const colGem = await response.json();
+
+        if (!response.ok) throw new Error(colGem.error);
+
+        document.getElementById("col-player").innerHTML = colGem.data.col;
+        document.getElementById("gems-player").innerHTML = colGem.data.arcana_gems;
+        
         const resEq = await fetch(
             `/api/player_data`,
             {
@@ -217,7 +258,7 @@
       }
     }
 
-    async function renderGrid(category = "all") {
+    async function renderGrid(category = "all", searchTerm = "") {
       const gridBox = document.getElementById("gridBox");
 
       gridBox.innerHTML = "";
@@ -243,6 +284,36 @@
 
           default:
             data = [];
+      }
+
+      // apply additional filters from selects
+      const typeSel = document.getElementById('typeFilter');
+      const positionSel = document.getElementById('positionFilter');
+      const starSel = document.getElementById('starFilter');
+
+      const selType = typeSel ? typeSel.value : '';
+      const selPosition = positionSel ? positionSel.value : '';
+      const selStar = starSel ? starSel.value : '';
+
+      if (selType) {
+        data = data.filter(it => (it.catalog && it.catalog.type) ? String(it.catalog.type) === selType : false);
+      }
+
+      if (selPosition) {
+        data = data.filter(it => (it.catalog && it.catalog.position) ? String(it.catalog.position) === selPosition : false);
+      }
+
+      if (selStar) {
+        data = data.filter(it => String(it.star) === selStar);
+      }
+
+      // apply search filter if provided
+      const term = (searchTerm || "").trim().toLowerCase();
+      if (term) {
+        data = data.filter(it => {
+          const name = (it.catalog && it.catalog.name) ? it.catalog.name : (it.name || "");
+          return name.toLowerCase().includes(term);
+        });
       }
 
       data.forEach(item => {
@@ -280,7 +351,46 @@
       });
 
       clicked.classList.add("active");
-      renderGrid(category);
+      const searchInput = document.getElementById("searchInput");
+      renderGrid(category, searchInput ? searchInput.value : "");
+    }
+
+    // debounce helper
+    function debounce(fn, wait) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    function populateFilterOptions() {
+      const typeFilter = document.getElementById('typeFilter');
+      const positionFilter = document.getElementById('positionFilter');
+
+      if (!equipments || equipments.length === 0) return;
+
+      const types = Array.from(new Set(equipments.map(e => e.catalog && e.catalog.type).filter(Boolean))).sort();
+      const positions = Array.from(new Set(equipments.map(e => e.catalog && e.catalog.position).filter(Boolean))).sort();
+
+      if (typeFilter) {
+        // keep the default option then append
+        types.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          opt.textContent = t;
+          typeFilter.appendChild(opt);
+        });
+      }
+
+      if (positionFilter) {
+        positions.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p;
+          opt.textContent = p;
+          positionFilter.appendChild(opt);
+        });
+      }
     }
 
     function levelUp() {
@@ -316,6 +426,35 @@
           await loadData(session);
           //renderGrid("all");
           setTimeout(hideLoading, 500);
+
+          // wire up search input after initial render
+          const searchInput = document.getElementById("searchInput");
+          if (searchInput) {
+            const handleSearch = debounce(() => {
+              // find active category
+              const activeBtn = document.querySelector('.category-tabs button.active');
+              const category = activeBtn ? activeBtn.getAttribute('data-category') : 'all';
+              renderGrid(category, searchInput.value);
+            }, 200);
+
+            searchInput.addEventListener('input', handleSearch);
+          }
+
+          // populate filter selects and wire changes
+          populateFilterOptions();
+          const typeFilter = document.getElementById('typeFilter');
+          const positionFilter = document.getElementById('positionFilter');
+          const starFilter = document.getElementById('starFilter');
+
+          const handleFilterChange = debounce(() => {
+            const activeBtn = document.querySelector('.category-tabs button.active');
+            const category = activeBtn ? activeBtn.getAttribute('data-category') : 'all';
+            renderGrid(category, searchInput ? searchInput.value : '');
+          }, 150);
+
+          if (typeFilter) typeFilter.addEventListener('change', handleFilterChange);
+          if (positionFilter) positionFilter.addEventListener('change', handleFilterChange);
+          if (starFilter) starFilter.addEventListener('change', handleFilterChange);
 
       } catch (err) {
           console.error("Loading error:", err);
