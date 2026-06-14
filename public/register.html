@@ -46,7 +46,22 @@
             <span></span>
           </div>
 
-          <img src="img/characters/cewek1.png">
+          <div class="character-selector">
+              <button type="button" class="char-nav" id="prevChar">
+                  ◀
+              </button>
+
+              <img
+                  id="characterImage"
+                  src="img/characters/cewek1.png"
+                  alt="Character"
+                  class="character-image"
+              >
+
+              <button type="button" class="char-nav" id="nextChar">
+                  ▶
+              </button>
+          </div>
         </div>
         <div class="register-panel">
           <div class="sao-overlay"></div>
@@ -63,8 +78,7 @@
             <input type="password" id="password" placeholder="PASSWORD" required />
 
             <div class="register-actions">
-              <button type="submit" class="register-btn">ENTER</button>
-              <button type="button" class="close-btn" id="closeModalBtn">CANCEL</button>
+              <button type="submit" class="register-btn">REGISTER</button>
             </div>
 
             <div class="register-status" id="registerStatus"></div>
@@ -75,7 +89,33 @@
   </main>
 
   <script type="module">
+    const characters = [
+        "img/characters/cewek1.png",
+        "img/characters/cewek2.png",
+        "img/characters/cowok1.png",
+        "img/characters/cowok2.png"
+    ];
 
+    let currentIndex = 0;
+
+    const image = document.getElementById("characterImage");
+    const prevBtn = document.getElementById("prevChar");
+    const nextBtn = document.getElementById("nextChar");
+
+    function updateCharacter() {
+        image.src = characters[currentIndex];
+    }
+
+    nextBtn.addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % characters.length;
+        updateCharacter();
+    });
+
+    prevBtn.addEventListener("click", () => {
+        currentIndex =
+            (currentIndex - 1 + characters.length) % characters.length;
+        updateCharacter();
+    });
   </script>
 </body>
 </html>
