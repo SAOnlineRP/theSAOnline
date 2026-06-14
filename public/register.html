@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>theSAOnline</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/register.css" />
+</head>
+<body>
+  <main class="screen">
+    <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
+    <div class="nebula"></div>
+    <div class="grid-plane"></div>
+
+    <div class="stars-container">
+      <div class="star-layer"></div>
+      <div class="star-layer"></div>
+      <div class="star-layer"></div>
+    </div>
+
+    <div class="button-container" id="startContainer">
+      <div class="button-hexagons">
+        <div class="hexagon"></div>
+        <div class="hexagon"></div>
+        <div class="hexagon"></div>
+        <div class="hexagon"></div>
+        <div class="hexagon"></div>
+        <div class="hexagon"></div>
+      </div>
+
+      
+    </div>
+  </main>
+
+  <div class="login-modal show" id="loginModal">
+    <div class="login-panel" id="loginPanel">
+      <div class="sao-overlay" id="saoOverlay"></div>
+
+      <div class="login-corners" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <h2 class="login-title">LOGIN</h2>
+      <div id="saoText" class="sao-text">SYSTEM READY</div>
+
+      <form class="login-form" id="loginForm">
+        <input type="text" id="username" placeholder="USERNAME" required />
+        <input type="password" id="password" placeholder="PASSWORD" required />
+
+        <div class="login-actions">
+          <button type="submit" class="login-btn">ENTER</button>
+          <button type="button" class="close-btn" id="closeModalBtn">CANCEL</button>
+        </div>
+
+        <div class="login-status" id="loginStatus"></div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+
+  </script>
+</body>
+</html>
