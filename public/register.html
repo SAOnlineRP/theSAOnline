@@ -30,39 +30,49 @@
         <div class="hexagon"></div>
         <div class="hexagon"></div>
         <div class="hexagon"></div>
-      </div>
-
+      </div>      
       
     </div>
-  </main>
+    <div>
+      <h2 class="register-title">REGISTER</h2>
+      <div class="register-modal">
+        <div class="register-panel">
+          <div class="sao-overlay"></div>
 
-  <div class="login-modal show" id="loginModal">
-    <div class="login-panel" id="loginPanel">
-      <div class="sao-overlay" id="saoOverlay"></div>
+          <div class="register-corners" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
 
-      <div class="login-corners" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-      <h2 class="login-title">LOGIN</h2>
-      <div id="saoText" class="sao-text">SYSTEM READY</div>
-
-      <form class="login-form" id="loginForm">
-        <input type="text" id="username" placeholder="USERNAME" required />
-        <input type="password" id="password" placeholder="PASSWORD" required />
-
-        <div class="login-actions">
-          <button type="submit" class="login-btn">ENTER</button>
-          <button type="button" class="close-btn" id="closeModalBtn">CANCEL</button>
+          <img src="img/characters/cewek1.png">
         </div>
+        <div class="register-panel">
+          <div class="sao-overlay"></div>
 
-        <div class="login-status" id="loginStatus"></div>
-      </form>
+          <div class="register-corners" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <form class="register-form" id="registerForm">
+            <input type="text" id="username" placeholder="USERNAME" required />
+            <input type="password" id="password" placeholder="PASSWORD" required />
+
+            <div class="register-actions">
+              <button type="submit" class="register-btn">ENTER</button>
+              <button type="button" class="close-btn" id="closeModalBtn">CANCEL</button>
+            </div>
+
+            <div class="register-status" id="registerStatus"></div>
+          </form>
+        </div>
+      </div>
     </div>
-  </div>
+  </main>
 
   <script type="module">
 
