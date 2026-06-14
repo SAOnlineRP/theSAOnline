@@ -551,6 +551,50 @@ body {
 .label-mp   { bottom: 38px; left: 10px; }
 .label-hp   { top: 52px; left: 10px; }
 
+/* partner list */
+.badge-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid cyan;
+    border-radius: 8px;
+    cursor: pointer;
+
+    /* tambahan overlay */
+    position: relative;
+    overflow: hidden;
+}
+
+.badge-name {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    font-size: 12px;
+    text-align: center;
+    padding: 2px;
+}
+
+.badge-item:hover {
+    background: rgba(126, 231, 255, 0.3);
+}
+
+.badge-item img {
+    width: 100%;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
 @keyframes pulseRadar {
     0%, 100% {
     opacity: 0.92;

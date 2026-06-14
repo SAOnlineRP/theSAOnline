@@ -122,24 +122,12 @@
         </div>
         <div id="profileModal" class="modal-overlay">
             <div class="modal-box">
-                <h3>Edit Profile</h3>
-                <div class="modal-field">
-                    <label>Player's Name</label>
-                    <input type="text" id="profile-name-input" placeholder="Enter your name" />
-                </div>
-                <div class="modal-field">
-                    <label>Slot 1 Badge</label>
-                    <select id="badge-slot-1">
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                    </select>
-                </div>
-                <div class="modal-field">
-                    <label>Slot 2 Badge</label>
-                    <select id="badge-slot-2">
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                    </select>
+                <h3>Edit Badges</h3>
+                <p>Pilih badge yang mau diganti:</p>
+
+                <div class="badge-options">
+                    <button class="badge-slot">Slot 1</button>
+                    <button class="badge-slot">Slot 2</button>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="modal-save">Save</button>
@@ -147,26 +135,37 @@
                 </div>
             </div>
         </div>
+        <div id="badgeListModal" class="modal-overlay">
+            <div class="modal-box">
+                <button class="modal-close" id="closeBadgeModal">×</button>
+                <h3>Pilih Badge</h3>
+
+                <div class="badge-list">
+                </div>
+            </div>
+        </div>
         <div id="partnerModal" class="modal-overlay">
             <div class="modal-box">
                 <h3>Edit Partner</h3>
-                <div class="modal-field">
-                    <label>Partner Slot 1</label>
-                    <select id="partner-slot-1">
-                        <option value="partner-a">Partner A</option>
-                        <option value="partner-b">Partner B</option>
-                    </select>
+                <p>Pilih partner yang mau diganti:</p>
+
+                <div class="badge-options">
+                    <button class="badge-slot">Slot 1</button>
+                    <button class="badge-slot">Slot 2</button>
                 </div>
-                <div class="modal-field">
-                    <label>Partner Slot 2</label>
-                    <select id="partner-slot-2">
-                        <option value="partner-a">Partner A</option>
-                        <option value="partner-b">Partner B</option>
-                    </select>
-                </div>
+                
                 <div class="modal-actions">
                     <button type="button" class="modal-save partner-save">Save</button>
                     <button type="button" class="modal-cancel partner-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div id="partnerListModal" class="modal-overlay">
+            <div class="modal-box">
+                <button class="modal-close" id="closePartnerModal">×</button>
+                <h3>Pilih Partner</h3>
+
+                <div class="partner-list">
                 </div>
             </div>
         </div>
@@ -447,6 +446,8 @@
 
         const profileEditButton = document.querySelector(".profile-edit");
         const profileModal = document.getElementById("profileModal");
+        const badgeListModal = document.getElementById("badgeListModal");
+        const badgeSlots = document.querySelectorAll(".badge-slot");
         const profileModalCancel = profileModal?.querySelector(".modal-cancel");
         const profileModalSave = profileModal?.querySelector(".modal-save");
 
@@ -468,7 +469,26 @@
             modal?.classList.remove("show");
         }
 
+        document.getElementById("closeBadgeModal").addEventListener("click", () => {
+            badgeListModal.classList.remove("show");
+            profileModal.classList.add("show");
+        });
+        
+        let selectedSlotIndex = null;
+        let selectedBadges = [null, null]; 
+
         profileEditButton?.addEventListener("click", () => openModal(profileModal));
+
+        /* klik slot */
+        badgeSlots.forEach((slot, index) => {
+            slot.onclick = () => {
+                selectedSlotIndex = index;
+                closeModal(profileModal);
+
+                renderBadgeList(); // render tiap buka
+                openModal(badgeListModal);
+            };
+        });
         profileModalCancel?.addEventListener("click", () => closeModal(profileModal));
         profileModalSave?.addEventListener("click", () => {
             // TODO: kirim data perubahan profil ke backend
@@ -497,6 +517,68 @@
         equipmentModal?.addEventListener("click", (event) => {
             if (event.target === equipmentModal) closeModal(equipmentModal);
         });
+
+        async function renderBadgeList() {
+            const session = await requireLogin();
+            const response = await fetch(
+                `/api/player_data`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                    body: JSON.stringify({
+                        action: "getDataPlayer",
+                        table: "player_badges"
+                    })
+                }
+            );
+            const badgesRes = await response.json();
+            const badges = badgesRes.data;
+
+            const badgeSection = document.querySelectorAll(".badge-section");
+            const badgeList = document.querySelector(".badge-list");
+            badgeList.innerHTML = badges.map((p, i) => `
+                <div class="badge-item" data-index="${p.id}">
+                <img src="${p.catalog.link_photo}">
+                <div class="badge-name">${p.catalog.name}</div>
+                </div>
+            `).join("");
+
+            /* pasang event setelah render */
+            const items = document.querySelectorAll(".badge-item");
+
+            items.forEach(item => {
+                item.onclick = () => {
+                    const badgeId = item.dataset.index;
+
+                    const data = badges.find(
+                        badge => badge.id === badgeId
+                    );
+                    console.log("data badges ", data);
+
+                    // ❌ CEK DUPLIKAT
+                    if (selectedBadges.includes(badgeId)) {
+                        alert("Badge ini sudah dipakai di slot lain!");
+                        return;
+                    }
+
+                    if (selectedSlotIndex !== null) {
+                        // simpan pilihan
+                        selectedBadges[selectedSlotIndex] = badgeId;
+
+                        // update UI
+                        const section = badgeSection[selectedSlotIndex];
+                        const img = section.querySelector("img");
+                        img.src = data.catalog.link_photo;
+                    }
+
+                    closeModal(badgeListModal);
+
+                };
+            });
+        }
 
         async function init() {
             try {

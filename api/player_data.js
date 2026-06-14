@@ -69,7 +69,7 @@ export default async function handler(req, res) {
             }
             return res.status(200).json({ data });
 
-        } if(table === "player_equipments"){
+        } else if(table === "player_equipments"){
             const { data, error } = await supabase
                 .from("player_equipments")
                 .select(`
@@ -90,12 +90,29 @@ export default async function handler(req, res) {
                 return res.status(500).json({ error: error.message });
             }
             return res.status(200).json({ data });
-        } if(table === "player_items"){
+        } else if(table === "player_items"){
             const { data, error } = await supabase
                 .from("player_items")
                 .select(`
                     *,
                     catalog:catalog_items (
+                        name,
+                        desc,
+                        link_photo
+                    )
+                `)
+                .eq("player_id", user.id)
+
+            if (error) {
+                return res.status(500).json({ error: error.message });
+            }
+            return res.status(200).json({ data });
+        } else if(table === "player_badges"){
+            const { data, error } = await supabase
+                .from("player_badges")
+                .select(`
+                    *,
+                    catalog:catalog_badges (
                         name,
                         desc,
                         link_photo
