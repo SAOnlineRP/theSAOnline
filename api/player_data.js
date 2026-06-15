@@ -464,6 +464,30 @@ export default async function handler(req, res) {
             data
         });
     }
+
+    else if (action === "editEquipped") {
+        const { id, type } = body;
+
+        const { data, error } = await supabase
+            .from("player_equipped")
+            .update({
+                [type]: id
+            })
+            .eq("player_id", user.id)
+            .select()
+            .maybeSingle();
+
+        if (error) {
+            return res.status(500).json({
+                error: error.message
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data
+        });
+    }
   } catch (error) {
     console.error("Error in player_data API:", error);
     return res.status(500).json({ error: "Internal Server Error" });

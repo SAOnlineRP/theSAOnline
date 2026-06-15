@@ -659,9 +659,9 @@
                         let status = selectedSlotIndex === 0
                         ? "slot1"
                         : "slot2";
-                        
+
                         try {
-                            console.log("masuk sini?");
+                            console.log("masuk badge?");
                             const response = await fetch(
                                 `/api/player_data`,
                                 {
@@ -697,9 +697,10 @@
 
          async function renderPartnerList() {
             let partners;
+            const session = await requireLogin();
             try {
                 setPartnersLoading(true);
-                const session = await requireLogin();
+                
                 const response = await fetch(
                     `/api/player_data`,
                     {
@@ -738,7 +739,7 @@
             const items = document.querySelectorAll(".partner-item");
 
             items.forEach(item => {
-                item.onclick = () => {
+                item.onclick = async () => {
                     const partnerId = item.dataset.index;
 
                     const data = partners.find(
@@ -748,8 +749,6 @@
 
                     // ❌ CEK DUPLIKAT
                     if (selectedPartners.includes(partnerId)) {
-                        console.log(selectedPartners);
-                        console.log(partnerId);
                         alert("Partner ini sudah dipakai di slot lain!");
                         return;
                     }
@@ -757,7 +756,32 @@
                     if (selectedSlotPartner !== null) {
                         // simpan pilihan
                         selectedPartners[selectedSlotPartner] = partnerId;
+                        let type = selectedSlotPartner === 0
+                        ? "first_partner"
+                        : "second_partner";
 
+                        try {
+                            console.log("masuk partner?");
+                            const response = await fetch(
+                                `/api/player_data`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${session.access_token}`,
+                                    },
+                                    body: JSON.stringify({
+                                        action: "editEquipped",
+                                        id: partnerId,
+                                        type: type
+                                    })
+                                }
+                            );
+                        } catch (err){
+
+                        } finally {
+
+                        }
                         // update UI
                         const section = partnerSection[selectedSlotPartner];
                         const img = section.querySelector("img");
@@ -772,6 +796,7 @@
 
         async function renderEquipmentList(position) {
             let equipments;
+            let filteredEquipments;
             const session = await requireLogin();
             try {
                 setEquipmentsLoading(true);
@@ -793,7 +818,7 @@
                 const equipmentRes = await response.json();
                 equipments = equipmentRes.data;
                 // filter sesuai slot
-                const filteredEquipments = equipments.filter(
+                filteredEquipments = equipments.filter(
                     eq => eq.catalog.position === position
                 );
 
@@ -818,7 +843,7 @@
             const items = document.querySelectorAll(".equipment-item");
 
             items.forEach(item => {
-                item.onclick = () => {
+                item.onclick = async () => {
                     const equipmentId = item.dataset.index;
 
                     const data = filteredEquipments.find(
@@ -835,6 +860,39 @@
                     if (selectedSlotEquipment !== null) {
                         // simpan pilihan
                         selectedEquipments[selectedSlotEquipment] = equipmentId;
+
+                        const typeRes = equipmentPositionMap[selectedSlotEquipment];
+                        let type;
+                        if(typeRes == "right-weapon"){
+                            type = "right_arm";
+                        } else if(typeRes == "left-weapon"){
+                            type = "left_arm";
+                        } else {
+                            type = typeRes;
+                        }
+                        try {
+                            const response = await fetch(
+                                `/api/player_data`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${session.access_token}`,
+                                    },
+                                    body: JSON.stringify({
+                                        action: "editEquipped",
+                                        id: equipmentId,
+                                        type: type
+                                    })
+                                }
+                            );
+
+                            const result = await response.json();
+                            console.log(result);
+
+                        } catch (err) {
+                            console.error(err);
+                        }
 
                         // update UI
                         const section = equipmentSection[selectedSlotEquipment];
