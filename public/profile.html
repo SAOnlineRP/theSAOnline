@@ -100,23 +100,23 @@
             </div>
             <div>
                 <div class="wequip-container">
-                    <div class="wequip-box">Skill Records</div>
+                    <div class="wequip-box">Partners</div>
                     <div class="wequip-box-edit" id="partner-edit">Edit</div>
                 </div>
                 
                 <div class="grid-container">
-                    <div class="skill-records"><img id="skill-record-1" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
-                    <div class="skill-records"><img id="skill-record-2" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
+                    <div class="skill-records partner-section"><img id="skill-record-1" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
+                    <div class="skill-records partner-section"><img id="skill-record-2" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
                 </div>
                 <div class="wequip-container">
                     <div class="wequip-box">Equipment</div>
                     <div class="wequip-box-edit" id="equipment-edit">Edit</div>
                 </div>
                 <div class="equipment-container">
-                    <div class="box-equip"><img id="equipped-right-arm" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
-                    <div class="box-equip"><img id="equipped-left-arm" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
-                    <div class="box-equip"><img id="armor-lower" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
-                    <div class="box-equip"><img id="armor-upper" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip equipment-section"><img id="equipped-right-arm" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip equipment-section"><img id="equipped-left-arm" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip equipment-section"><img id="armor-lower" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
+                    <div class="box-equip equipment-section"><img id="armor-upper" src="/img/default-nodata.png" alt="sr" class="avatar-img"></div>
                 </div>
             </div>
         </div>
@@ -125,13 +125,9 @@
                 <h3>Edit Badges</h3>
                 <p>Pilih badge yang mau diganti:</p>
 
-                <div class="badge-options">
+                <div class="profile-options">
                     <button class="badge-slot">Slot 1</button>
                     <button class="badge-slot">Slot 2</button>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="modal-save">Save</button>
-                    <button type="button" class="modal-cancel">Cancel</button>
                 </div>
             </div>
         </div>
@@ -139,8 +135,12 @@
             <div class="modal-box">
                 <button class="modal-close" id="closeBadgeModal">×</button>
                 <h3>Pilih Badge</h3>
+                <div class="badge-list-wrapper">
+                    <div id="listBadgesOverlayLoading" class="list-overlay hidden">
+                        <div class="spinner"></div>
+                    </div>
 
-                <div class="badge-list">
+                    <div class="badge-list"></div>
                 </div>
             </div>
         </div>
@@ -149,14 +149,9 @@
                 <h3>Edit Partner</h3>
                 <p>Pilih partner yang mau diganti:</p>
 
-                <div class="badge-options">
-                    <button class="badge-slot">Slot 1</button>
-                    <button class="badge-slot">Slot 2</button>
-                </div>
-                
-                <div class="modal-actions">
-                    <button type="button" class="modal-save partner-save">Save</button>
-                    <button type="button" class="modal-cancel partner-cancel">Cancel</button>
+                <div class="profile-options">
+                    <button class="partner-slot">Slot 1</button>
+                    <button class="partner-slot">Slot 2</button>
                 </div>
             </div>
         </div>
@@ -164,45 +159,39 @@
             <div class="modal-box">
                 <button class="modal-close" id="closePartnerModal">×</button>
                 <h3>Pilih Partner</h3>
+                <div class="partner-list-wrapper">
+                    <div id="listPartnersOverlayLoading" class="list-overlay hidden">
+                        <div class="spinner"></div>
+                    </div>
 
-                <div class="partner-list">
+                    <div class="partner-list"></div>
                 </div>
             </div>
         </div>
         <div id="equipmentModal" class="modal-overlay">
             <div class="modal-box">
                 <h3>Edit Equipment</h3>
-                <div class="modal-field">
-                    <label>Right Arm</label>
-                    <select id="equipment-slot-right-arm">
-                        <option value="eq-1">Equipment 1</option>
-                        <option value="eq-2">Equipment 2</option>
-                    </select>
+                <p>Pilih equipment yang mau diganti:</p>
+
+                <div class="profile-options">
+                    <button class="equipment-slot">Slot Right Arm</button>
+                    <button class="equipment-slot">Slot Left Arm</button>
+                    <button class="equipment-slot">Slot Upper</button>
+                    <button class="equipment-slot">Slot Lower</button>
                 </div>
-                <div class="modal-field">
-                    <label>Left Arm</label>
-                    <select id="equipment-slot-left-arm">
-                        <option value="eq-1">Equipment 1</option>
-                        <option value="eq-2">Equipment 2</option>
-                    </select>
-                </div>
-                <div class="modal-field">
-                    <label>Armor Lower</label>
-                    <select id="equipment-slot-lower">
-                        <option value="eq-1">Equipment 1</option>
-                        <option value="eq-2">Equipment 2</option>
-                    </select>
-                </div>
-                <div class="modal-field">
-                    <label>Armor Upper</label>
-                    <select id="equipment-slot-upper">
-                        <option value="eq-1">Equipment 1</option>
-                        <option value="eq-2">Equipment 2</option>
-                    </select>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="modal-save equipment-save">Save</button>
-                    <button type="button" class="modal-cancel equipment-cancel">Cancel</button>
+            </div>
+        </div>
+
+        <div id="equipmentListModal" class="modal-overlay">
+            <div class="modal-box">
+                <button class="modal-close" id="closeEquipmentModal">×</button>
+                <h3>Pilih Equipment</h3>
+                <div class="equipment-list-wrapper">
+                    <div id="listEquipmentsOverlayLoading" class="list-overlay hidden">
+                        <div class="spinner"></div>
+                    </div>
+
+                    <div class="equipment-list"></div>
                 </div>
             </div>
         </div>
@@ -444,6 +433,36 @@
             });
         }
 
+        const badgesLoading = document.getElementById("listBadgesOverlayLoading");
+
+        function setBadgesLoading(isLoading) {
+            badgesLoading.classList.toggle("hidden", !isLoading);
+
+            document
+                .querySelector(".badge-list")
+                .classList.toggle("loading", isLoading);
+        }
+
+        const partnersLoading = document.getElementById("listPartnersOverlayLoading");
+
+        function setPartnersLoading(isLoading) {
+            partnersLoading.classList.toggle("hidden", !isLoading);
+
+            document
+                .querySelector(".partner-list")
+                .classList.toggle("loading", isLoading);
+        }
+
+        const equipmentsLoading = document.getElementById("listEquipmentsOverlayLoading");
+
+        function setEquipmentsLoading(isLoading) {
+            equipmentsLoading.classList.toggle("hidden", !isLoading);
+
+            document
+                .querySelector(".equipment-list")
+                .classList.toggle("loading", isLoading);
+        }
+
         const profileEditButton = document.querySelector(".profile-edit");
         const profileModal = document.getElementById("profileModal");
         const badgeListModal = document.getElementById("badgeListModal");
@@ -453,11 +472,15 @@
 
         const partnerEditButton = document.getElementById("partner-edit");
         const partnerModal = document.getElementById("partnerModal");
+        const partnerListModal = document.getElementById("partnerListModal");
+        const partnerSlots = document.querySelectorAll(".partner-slot");
         const partnerModalCancel = partnerModal?.querySelector(".partner-cancel");
         const partnerModalSave = partnerModal?.querySelector(".partner-save");
 
         const equipmentEditButton = document.getElementById("equipment-edit");
         const equipmentModal = document.getElementById("equipmentModal");
+        const equipmentListModal = document.getElementById("equipmentListModal");
+        const equipmentSlots = document.querySelectorAll(".equipment-slot");
         const equipmentModalCancel = equipmentModal?.querySelector(".equipment-cancel");
         const equipmentModalSave = equipmentModal?.querySelector(".equipment-save");
 
@@ -474,8 +497,32 @@
             profileModal.classList.add("show");
         });
         
+        document.getElementById("closePartnerModal").addEventListener("click", () => {
+            partnerListModal.classList.remove("show");
+            partnerModal.classList.add("show");
+        });
+
+        document.getElementById("closeEquipmentModal").addEventListener("click", () => {
+            equipmentListModal.classList.remove("show");
+            equipmentModal.classList.add("show");
+        });
+
         let selectedSlotIndex = null;
         let selectedBadges = [null, null]; 
+
+        let selectedSlotPartner = null;
+        let selectedPartners = [null, null];
+
+        let selectedSlotEquipment = null;
+        let selectedEquipments = [null, null, null, null];
+
+
+        const equipmentPositionMap = {
+            0: "right-weapon", // Right Arm
+            1: "left-weapon",  // Left Arm
+            2: "upper",        // Upper
+            3: "lower"         // Lower
+        };
 
         profileEditButton?.addEventListener("click", () => openModal(profileModal));
 
@@ -499,6 +546,17 @@
         });
 
         partnerEditButton?.addEventListener("click", () => openModal(partnerModal));
+
+        /* klik slot */
+        partnerSlots.forEach((slot, index) => {
+            slot.onclick = () => {
+                selectedSlotPartner = index;
+                closeModal(partnerModal);
+
+                renderPartnerList(); // render tiap buka
+                openModal(partnerListModal);
+            };
+        });
         partnerModalCancel?.addEventListener("click", () => closeModal(partnerModal));
         partnerModalSave?.addEventListener("click", () => {
             // TODO: kirim data perubahan partner ke backend
@@ -509,6 +567,21 @@
         });
 
         equipmentEditButton?.addEventListener("click", () => openModal(equipmentModal));
+        
+        /* klik slot */
+        equipmentSlots.forEach((slot, index) => {
+            slot.onclick = () => {
+                selectedSlotEquipment = index;
+
+                closeModal(equipmentModal);
+
+                renderEquipmentList(
+                    equipmentPositionMap[index]
+                );
+
+                openModal(equipmentListModal);
+            };
+        });
         equipmentModalCancel?.addEventListener("click", () => closeModal(equipmentModal));
         equipmentModalSave?.addEventListener("click", () => {
             // TODO: kirim data perubahan equipment ke backend
@@ -519,38 +592,50 @@
         });
 
         async function renderBadgeList() {
+            let badges;
             const session = await requireLogin();
-            const response = await fetch(
-                `/api/player_data`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${session.access_token}`,
-                    },
-                    body: JSON.stringify({
-                        action: "getDataPlayer",
-                        table: "player_badges"
-                    })
-                }
-            );
-            const badgesRes = await response.json();
-            const badges = badgesRes.data;
+            try {
+                setBadgesLoading(true);
+                
+                const response = await fetch(
+                    `/api/player_data`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${session.access_token}`,
+                        },
+                        body: JSON.stringify({
+                            action: "getDataPlayer",
+                            table: "player_badges"
+                        })
+                    }
+                );
+                const badgesRes = await response.json();
+                badges = badgesRes.data;
+
+                const badgeList = document.querySelector(".badge-list");
+                badgeList.innerHTML = badges.map((p, i) => `
+                    <div class="badge-item" data-index="${p.id}">
+                    <img src="${p.catalog.link_photo}">
+                    <div class="badge-name">${p.catalog.name}</div>
+                    </div>
+                `).join("");
+            } catch (err) {
+                console.error(
+                    "Render Badge Error:",
+                    err
+                    );
+            } finally {
+                setBadgesLoading(false);
+            }
 
             const badgeSection = document.querySelectorAll(".badge-section");
-            const badgeList = document.querySelector(".badge-list");
-            badgeList.innerHTML = badges.map((p, i) => `
-                <div class="badge-item" data-index="${p.id}">
-                <img src="${p.catalog.link_photo}">
-                <div class="badge-name">${p.catalog.name}</div>
-                </div>
-            `).join("");
-
             /* pasang event setelah render */
             const items = document.querySelectorAll(".badge-item");
 
             items.forEach(item => {
-                item.onclick = () => {
+                item.onclick = async () => {
                     const badgeId = item.dataset.index;
 
                     const data = badges.find(
@@ -567,6 +652,36 @@
                     if (selectedSlotIndex !== null) {
                         // simpan pilihan
                         selectedBadges[selectedSlotIndex] = badgeId;
+                        console.log(selectedSlotEquipment);
+                        console.log(selectedBadges);
+                        console.log(badgeId);
+
+                        let status = selectedSlotIndex === 0
+                        ? "slot1"
+                        : "slot2";
+                        
+                        try {
+                            console.log("masuk sini?");
+                            const response = await fetch(
+                                `/api/player_data`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${session.access_token}`,
+                                    },
+                                    body: JSON.stringify({
+                                        action: "editBadges",
+                                        id: badgeId,
+                                        status: status
+                                    })
+                                }
+                            );
+                        } catch (err){
+
+                        } finally {
+
+                        }
 
                         // update UI
                         const section = badgeSection[selectedSlotIndex];
@@ -575,6 +690,159 @@
                     }
 
                     closeModal(badgeListModal);
+
+                };
+            });
+        }
+
+         async function renderPartnerList() {
+            let partners;
+            try {
+                setPartnersLoading(true);
+                const session = await requireLogin();
+                const response = await fetch(
+                    `/api/player_data`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${session.access_token}`,
+                        },
+                        body: JSON.stringify({
+                            action: "getDataPlayer",
+                            table: "player_partners"
+                        })
+                    }
+                );
+                const partnerRes = await response.json();
+                partners = partnerRes.data;
+
+                const partnerList = document.querySelector(".partner-list");
+                partnerList.innerHTML = partners.map((p, i) => `
+                    <div class="partner-item" data-index="${p.id}">
+                    <img src="${p.partner.link_ava}">
+                    <div class="partner-name">${p.partner.name}</div>
+                    </div>
+                `).join("");
+            } catch (err) {
+                console.error(
+                    "Render Partner Error:",
+                    err
+                    );
+            } finally {
+                setPartnersLoading(false);
+            }
+
+            const partnerSection = document.querySelectorAll(".partner-section");
+            /* pasang event setelah render */
+            const items = document.querySelectorAll(".partner-item");
+
+            items.forEach(item => {
+                item.onclick = () => {
+                    const partnerId = item.dataset.index;
+
+                    const data = partners.find(
+                        partner => partner.id === partnerId
+                    );
+                    console.log("data partner ", data);
+
+                    // ❌ CEK DUPLIKAT
+                    if (selectedPartners.includes(partnerId)) {
+                        console.log(selectedPartners);
+                        console.log(partnerId);
+                        alert("Partner ini sudah dipakai di slot lain!");
+                        return;
+                    }
+
+                    if (selectedSlotPartner !== null) {
+                        // simpan pilihan
+                        selectedPartners[selectedSlotPartner] = partnerId;
+
+                        // update UI
+                        const section = partnerSection[selectedSlotPartner];
+                        const img = section.querySelector("img");
+                        img.src = data.partner.link_ava;
+                    }
+
+                    closeModal(partnerListModal);
+
+                };
+            });
+        }
+
+        async function renderEquipmentList(position) {
+            let equipments;
+            const session = await requireLogin();
+            try {
+                setEquipmentsLoading(true);
+                
+                const response = await fetch(
+                    `/api/player_data`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${session.access_token}`,
+                        },
+                        body: JSON.stringify({
+                            action: "getDataPlayer",
+                            table: "player_equipments"
+                        })
+                    }
+                );
+                const equipmentRes = await response.json();
+                equipments = equipmentRes.data;
+                // filter sesuai slot
+                const filteredEquipments = equipments.filter(
+                    eq => eq.catalog.position === position
+                );
+
+                const equipmentList = document.querySelector(".equipment-list");
+                equipmentList.innerHTML = filteredEquipments.map(p => `
+                    <div class="equipment-item" data-index="${p.id}">
+                        <img src="${p.catalog.link_photo}">
+                        <div class="equipment-name">${p.catalog.name}</div>
+                    </div>
+                `).join("");
+            } catch (err) {
+                console.error(
+                    "Render Equipment Error:",
+                    err
+                    );
+            } finally {
+                setEquipmentsLoading(false);
+            }
+            
+            const equipmentSection = document.querySelectorAll(".equipment-section");
+            /* pasang event setelah render */
+            const items = document.querySelectorAll(".equipment-item");
+
+            items.forEach(item => {
+                item.onclick = () => {
+                    const equipmentId = item.dataset.index;
+
+                    const data = filteredEquipments.find(
+                        equipment => equipment.id === equipmentId
+                    );
+                    console.log("data equipment ", data);
+
+                    // ❌ CEK DUPLIKAT
+                    if (selectedEquipments.includes(equipmentId)) {
+                        alert("Equipment ini sudah dipakai di slot lain!");
+                        return;
+                    }
+
+                    if (selectedSlotEquipment !== null) {
+                        // simpan pilihan
+                        selectedEquipments[selectedSlotEquipment] = equipmentId;
+
+                        // update UI
+                        const section = equipmentSection[selectedSlotEquipment];
+                        const img = section.querySelector("img");
+                        img.src = data.catalog.link_photo;
+                    }
+
+                    closeModal(equipmentListModal);
 
                 };
             });

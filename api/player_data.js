@@ -140,7 +140,7 @@ export default async function handler(req, res) {
     // =========================
     // GET profile milik user login
     // =========================
-    if (action === "getProfile") {
+    else if (action === "getProfile") {
         // PROFILE
         const { data: profile, error: profileError } =
             await supabase
@@ -289,7 +289,7 @@ export default async function handler(req, res) {
     // =========================
     // GET equipped items for the logged-in user
     // =========================
-    if (action === "getEquipped") {
+    else if (action === "getEquipped") {
         // EQUIPPED
         const { data: equipped, error: equippedError } = await supabase
             .from("player_equipped")
@@ -415,7 +415,7 @@ export default async function handler(req, res) {
         });
     }
 
-    if (action === "getColGems") {
+    else if (action === "getColGems") {
         const { data, error } = await supabase
           .from("player_profiles")
           .select("col, arcana_gems")
@@ -426,6 +426,43 @@ export default async function handler(req, res) {
           return res.status(500).json({ error: error.message });
         }
         return res.status(200).json({ data });
+    }
+
+    else if (action === "editBadges") {
+        const { id, status } = body;
+
+        // kosongkan badge lain yang sedang memakai slot ini
+        const { error: clearError } = await supabase
+            .from("player_badges")
+            .update({ status: null })
+            .eq("player_id", user.id)
+            .eq("status", status);
+
+        if (clearError) {
+            return res.status(500).json({
+                error: clearError.message
+            });
+        }
+
+        // pasang badge baru ke slot
+        const { data, error } = await supabase
+            .from("player_badges")
+            .update({ status })
+            .eq("id", id)
+            .eq("player_id", user.id)
+            .select()
+            .maybeSingle();
+
+        if (error) {
+            return res.status(500).json({
+                error: error.message
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data
+        });
     }
   } catch (error) {
     console.error("Error in player_data API:", error);
