@@ -250,6 +250,7 @@ body {
 }
 
 .levelup-partner button {
+    padding-left: 10px;
     border: none;
     background: none;
     cursor: pointer;
