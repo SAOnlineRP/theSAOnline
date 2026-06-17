@@ -613,25 +613,25 @@ input {
 
 @media (max-width: 600px) {
     .holo-button {
-    min-width: auto;
-    width: 84vw;
-    font-size: 20px;
+        min-width: auto;
+        width: 84vw;
+        font-size: 20px;
     }
 
     .button-container {
-    transform: scale(0.95);
+        transform: scale(0.95);
     }
 
     .register-title {
-    font-size: 26px;
+        font-size: 26px;
     }
 
     .register-actions {
-    flex-direction: column;
+        flex-direction: column;
     }
 
     .button-hexagons {
-    display: none;
+        display: none;
     }
 
     .bg-image{
