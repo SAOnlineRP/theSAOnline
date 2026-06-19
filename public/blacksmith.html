@@ -63,7 +63,7 @@
 
             <div class="bottom-buttons">
               <button class="action-btn" onclick="levelUp()">Level Up</button>
-              <button class="action-btn">Limit Break</button>
+              <button class="action-btn" onclick="openLimitBreak()">Limit Break</button>
             </div>
         </div>
         </div>
@@ -71,13 +71,68 @@
   </div>
   <div id="popup" class="popup hidden">
     <div class="popup-content">
-        <img id="popupImage" width="120">
         <h2 id="popupName"></h2>
+        <br>
+        <div style="display:flex; gap: 20px; justify-content: space-evenly;">
+          <div style="display: flex;
+              flex-direction: column;
+              gap: 10px;">
+            <img id="popupImage" width="120">
+            <p>Level: <span id="popupLevel"></span></p>
+            <p>Position: <span id="popupPosition"></span></p>
+          </div>
+          <div style="display: flex;
+              flex-direction: column;
+              gap: 10px;">
+            <label for="levelupItemSelect">Item yang dipakai</label>
+            <select id="levelupItemSelect"></select>
 
-        <p>Level: <span id="popupLevel"></span></p>
-        <p>Position: <span id="popupPosition"></span></p>
+            <p>Qty tersedia: <span id="levelupItemQty">0</span></p>
+            <p>Dibutuhkan: <span id="levelupItemNeeded">0</span></p>
 
-        <button onclick="closePopup()">Close</button>
+            <label for="levelupAmount">Naikkan berapa level</label>
+            <input id="levelupAmount" type="number" min="1" value="1">
+
+            <p>Level baru: <span id="levelupResult">0</span></p>
+          </div>
+        </div>
+        <br>
+        <div class="popup-actions">
+            <button class="popup-save" id="confirmLevelupBtn">Konfirmasi</button>
+            <button class="popup-cancel"onclick="closePopup()">Batal</button>
+        </div>
+
+        <p id="levelupMessage"></p>
+    </div>
+  </div>
+
+  <div id="limitBreakPopup" class="popup hidden">
+    <div class="popup-content">
+        <h2 id="limitBreakName"></h2>
+        <br>
+        <div style="display:flex; gap: 20px; justify-content: space-evenly;">
+          <div style="display: flex;
+              flex-direction: column;
+              gap: 10px;">
+            <img id="limitBreakImage" width="120">
+            <p>Star sekarang: <span id="limitBreakCurrentStar">0</span></p>
+            <p>Level sekarang: <span id="limitBreakCurrentLevel">0</span></p>
+          </div>
+          <div style="display: flex;
+              flex-direction: column;
+              gap: 10px;">
+              <p id="limitBreakRequirement">-</p>
+              <p>Qty tersedia:</p>
+              <p>Refining Hammer / Hammer+: <span id="limitBreakHammerQty">0</span></p>
+              <p>Jewel / Jewel+: <span id="limitBreakJewelQty">0</span></p>
+              <p id="limitBreakMessage"></p>
+          </div>
+        </div>
+        <br>
+        <div class="popup-actions">
+            <button class="popup-save" id="confirmLimitBreakBtn">Konfirmasi</button>
+            <button class="popup-cancel" onclick="closeLimitBreak()">Batal</button>
+        </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
@@ -101,8 +156,10 @@
     window.goBack = goBack;
     window.goHome = goHome;
     window.levelUp = levelUp;
+    window.openLimitBreak = openLimitBreak;
     window.switchTab = switchTab;
     window.closePopup = closePopup;
+    window.closeLimitBreak = closeLimitBreak;
 
     function setProgress(value) {
       progress = value;
@@ -193,6 +250,8 @@
     let selectedItem = null;
     let items = [];
     let equipments = [];
+    let playerItems = [];
+    let limitBreakItem = null;
 
     async function loadData(session){
       try {
@@ -238,6 +297,36 @@
         const equipmentResult = await resEq.json();
         equipments = equipmentResult.data;
         if (!resEq.ok) throw new Error(equipmentResult.error);
+
+        const resItems = await fetch(
+            `/api/player_data`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: "getDataPlayer",
+                    table: "player_items"
+                })
+            }
+        );
+
+        const itemResult = await resItems.json();
+        if (!resItems.ok) throw new Error(itemResult.error);
+
+        playerItems = itemResult.data.filter(row => {
+            const name = row.catalog?.name || "";
+            return [
+                "Glare Rigid Stone",
+                "Glare Dragon Stone",
+                "Refining Hammer",
+                "Refining Hammer+",
+                "Jewel",
+                "Jewel+"
+            ].includes(name);
+        });
 
         setProgress(20);
 
@@ -393,6 +482,94 @@
       }
     }
 
+    const EQUIPMENT_MAX_LEVEL_BY_STAR = {
+      1: 30,
+      2: 60,
+      3: 100,
+    };
+
+    const LIMIT_BREAK_REQUIREMENTS = {
+      1: {
+        toStar: 2,
+        requiredLevel: 30,
+        hammer: "Refining Hammer",
+        hammerQty: 40,
+        jewel: "Jewel",
+        jewelQty: 10,
+      },
+      2: {
+        toStar: 3,
+        requiredLevel: 60,
+        hammer: "Refining Hammer+",
+        hammerQty: 80,
+        jewel: "Jewel+",
+        jewelQty: 50,
+      },
+    };
+
+    function getMaxEquipmentLevel(item) {
+      const star = Number(item?.star || 1);
+      return EQUIPMENT_MAX_LEVEL_BY_STAR[star] || EQUIPMENT_MAX_LEVEL_BY_STAR[1];
+    }
+
+    const LEVEL_UP_COST = {
+      "Glare Rigid Stone": 10,
+      "Glare Dragon Stone": 5,
+    };
+
+    function getLevelUpCost(itemName) {
+      return LEVEL_UP_COST[itemName] || 0;
+    }
+
+    function getItemQty(itemName) {
+      return playerItems.find(item => item.catalog?.name === itemName)?.quantity || 0;
+    }
+
+    function updateLevelUpSummary() {
+      const select = document.getElementById("levelupItemSelect");
+      const qtyDisplay = document.getElementById("levelupItemQty");
+      const neededDisplay = document.getElementById("levelupItemNeeded");
+      const amountInput = document.getElementById("levelupAmount");
+      const resultDisplay = document.getElementById("levelupResult");
+      const message = document.getElementById("levelupMessage");
+      const confirmButton = document.getElementById("confirmLevelupBtn");
+
+      if (!selectedItem) {
+        return;
+      }
+
+      const selectedConsumable = playerItems.find(item => String(item.id) === select.value);
+      const amount = Math.max(1, parseInt(amountInput.value, 10) || 1);
+      const maxLevel = getMaxEquipmentLevel(selectedItem);
+      const maxCanLevelUp = Math.max(0, maxLevel - (selectedItem.level || 0));
+      const safeAmount = Math.min(amount, maxCanLevelUp || 1);
+      const cost = selectedConsumable ? getLevelUpCost(selectedConsumable.catalog?.name) : 0;
+      const requiredQty = cost * safeAmount;
+
+      amountInput.value = safeAmount;
+      qtyDisplay.textContent = selectedConsumable?.quantity ?? 0;
+      neededDisplay.textContent = requiredQty;
+      resultDisplay.textContent = (selectedItem.level || 0) + safeAmount;
+      message.textContent = "";
+
+      if (!selectedConsumable) {
+        confirmButton.disabled = true;
+        message.textContent = "Tidak ada item level up yang tersedia.";
+        return;
+      }
+
+      if (maxCanLevelUp <= 0) {
+        confirmButton.disabled = true;
+        message.textContent = `Item sudah mencapai batas level untuk bintang ${selectedItem.star || 1}.`;
+        return;
+      }
+
+      confirmButton.disabled = (selectedConsumable.quantity || 0) < requiredQty;
+      if ((selectedConsumable.quantity || 0) < requiredQty) {
+        message.textContent = `Item tidak cukup. Butuh ${requiredQty} ${selectedConsumable.catalog?.name} untuk naik ${safeAmount} level.`;
+      }
+    }
+
     function levelUp() {
       if (!selectedItem) {
           alert("Pilih item dulu!");
@@ -411,11 +588,185 @@
       document.getElementById("popupPosition").textContent =
           selectedItem.catalog.position;
 
+      const select = document.getElementById("levelupItemSelect");
+      const amountInput = document.getElementById("levelupAmount");
+      const message = document.getElementById("levelupMessage");
+      const confirmButton = document.getElementById("confirmLevelupBtn");
+
+      select.innerHTML = playerItems.map(item => {
+        const quantity = item.quantity ?? 0;
+        return `<option value="${item.id}">${item.catalog.name} (${quantity})</option>`;
+      }).join("");
+
+      if (!playerItems.length) {
+        select.innerHTML = `<option value="">Tidak ada item</option>`;
+      }
+
+      amountInput.value = 1;
+      message.textContent = "";
+      document.getElementById("levelupResult").textContent = selectedItem.level || 0;
+      updateLevelUpSummary();
       document.getElementById("popup").classList.remove("hidden");
+
+      if (getMaxEquipmentLevel(selectedItem) <= (selectedItem.level || 0)) {
+        confirmButton.disabled = true;
+        message.textContent = `Item sudah mencapai batas level untuk bintang ${selectedItem.star || 1}.`;
+      } else {
+        confirmButton.disabled = false;
+      }
     }
 
     function closePopup() {
       document.getElementById("popup").classList.add("hidden");
+    }
+
+    function openLimitBreak() {
+      if (!selectedItem) {
+        alert("Pilih item dulu!");
+        return;
+      }
+
+      limitBreakItem = selectedItem;
+      const currentStar = Number(selectedItem.star || 1);
+      const req = LIMIT_BREAK_REQUIREMENTS[currentStar];
+      const message = document.getElementById("limitBreakMessage");
+      const confirmButton = document.getElementById("confirmLimitBreakBtn");
+
+      document.getElementById("limitBreakImage").src = selectedItem.catalog.link_photo;
+      document.getElementById("limitBreakName").textContent = selectedItem.catalog.name;
+      document.getElementById("limitBreakCurrentStar").textContent = currentStar;
+      document.getElementById("limitBreakCurrentLevel").textContent = selectedItem.level || 0;
+
+      if (!req) {
+        document.getElementById("limitBreakRequirement").textContent = "Tidak ada limit break yang tersedia untuk star ini.";
+        message.textContent = "";
+        confirmButton.disabled = true;
+      } else {
+        document.getElementById("limitBreakRequirement").textContent =
+          `Naik ke bintang ${req.toStar} butuh level ${req.requiredLevel} dan ${req.hammerQty} ${req.hammer} + ${req.jewelQty} ${req.jewel}`;
+        document.getElementById("limitBreakHammerQty").textContent = getItemQty(req.hammer);
+        document.getElementById("limitBreakJewelQty").textContent = getItemQty(req.jewel);
+        message.textContent = "";
+        confirmButton.disabled = false;
+      }
+
+      updateLimitBreakState();
+      document.getElementById("limitBreakPopup").classList.remove("hidden");
+    }
+
+    function updateLimitBreakState() {
+      const currentStar = Number(limitBreakItem?.star || 1);
+      const currentLevel = Number(limitBreakItem?.level || 0);
+      const req = LIMIT_BREAK_REQUIREMENTS[currentStar];
+      const message = document.getElementById("limitBreakMessage");
+      const confirmButton = document.getElementById("confirmLimitBreakBtn");
+
+      if (!req) {
+        confirmButton.disabled = true;
+        return;
+      }
+
+      const hasLevel = currentLevel >= req.requiredLevel;
+      const hasHammer = getItemQty(req.hammer) >= req.hammerQty;
+      const hasJewel = getItemQty(req.jewel) >= req.jewelQty;
+
+      if (!hasLevel) {
+        message.textContent = `Butuh level ${req.requiredLevel} untuk limit break ke bintang ${req.toStar}.`;
+      } else if (!hasHammer || !hasJewel) {
+        message.textContent = `Item tidak cukup untuk limit break ke bintang ${req.toStar}.`;
+      } else {
+        message.textContent = "";
+      }
+
+      confirmButton.disabled = !(hasLevel && hasHammer && hasJewel);
+    }
+
+    function closeLimitBreak() {
+      document.getElementById("limitBreakPopup").classList.add("hidden");
+      limitBreakItem = null;
+    }
+
+    function confirmLimitBreak() {
+      if (!limitBreakItem) {
+        return;
+      }
+
+      const currentStar = Number(limitBreakItem.star || 1);
+      const req = LIMIT_BREAK_REQUIREMENTS[currentStar];
+      const message = document.getElementById("limitBreakMessage");
+
+      if (!req) {
+        message.textContent = "Tidak ada limit break yang tersedia untuk star ini.";
+        return;
+      }
+
+      if ((limitBreakItem.level || 0) < req.requiredLevel) {
+        message.textContent = `Butuh level ${req.requiredLevel} untuk limit break ke bintang ${req.toStar}.`;
+        return;
+      }
+
+      const hammerQty = getItemQty(req.hammer);
+      const jewelQty = getItemQty(req.jewel);
+
+      if (hammerQty < req.hammerQty || jewelQty < req.jewelQty) {
+        message.textContent = `Item tidak cukup untuk limit break ke bintang ${req.toStar}.`;
+        return;
+      }
+
+      const hammerItem = playerItems.find(item => item.catalog?.name === req.hammer);
+      const jewelItem = playerItems.find(item => item.catalog?.name === req.jewel);
+
+      if (hammerItem) hammerItem.quantity -= req.hammerQty;
+      if (jewelItem) jewelItem.quantity -= req.jewelQty;
+
+      limitBreakItem.star = req.toStar;
+      limitBreakItem.level = req.requiredLevel;
+
+      document.getElementById("limitBreakPopup").classList.add("hidden");
+      limitBreakItem = null;
+      renderGrid();
+    }
+
+    function confirmLevelUp() {
+      const select = document.getElementById("levelupItemSelect");
+      const amountInput = document.getElementById("levelupAmount");
+      const message = document.getElementById("levelupMessage");
+
+      if (!selectedItem) {
+        message.textContent = "Pilih item dulu.";
+        return;
+      }
+
+      const selectedConsumable = playerItems.find(item => String(item.id) === select.value);
+      const amount = Math.max(1, parseInt(amountInput.value, 10) || 1);
+      const maxLevel = getMaxEquipmentLevel(selectedItem);
+      const maxCanLevelUp = Math.max(0, maxLevel - (selectedItem.level || 0));
+      const safeAmount = Math.min(amount, maxCanLevelUp || 1);
+      const cost = selectedConsumable ? getLevelUpCost(selectedConsumable.catalog?.name) : 0;
+      const requiredQty = cost * safeAmount;
+
+      if (!selectedConsumable) {
+        message.textContent = "Pilih item yang tersedia terlebih dahulu.";
+        return;
+      }
+
+      if (maxCanLevelUp <= 0) {
+        message.textContent = `Item sudah mencapai batas level untuk bintang ${selectedItem.star || 1}.`;
+        return;
+      }
+
+      if ((selectedConsumable.quantity || 0) < requiredQty) {
+        message.textContent = `Item tidak cukup. Butuh ${requiredQty} ${selectedConsumable.catalog?.name} untuk naik ${safeAmount} level.`;
+        return;
+      }
+
+      selectedConsumable.quantity -= requiredQty;
+      selectedItem.level += safeAmount;
+      document.getElementById("popupLevel").textContent = selectedItem.level;
+      document.getElementById("levelupResult").textContent = selectedItem.level;
+      renderGrid();
+      updateLevelUpSummary();
+      message.textContent = "Level berhasil ditingkatkan.";
     }
 
     async function init() {
@@ -439,6 +790,10 @@
 
             searchInput.addEventListener('input', handleSearch);
           }
+
+          document.getElementById('levelupItemSelect')?.addEventListener('change', updateLevelUpSummary);
+          document.getElementById('levelupAmount')?.addEventListener('input', updateLevelUpSummary);
+          document.getElementById('confirmLevelupBtn')?.addEventListener('click', confirmLevelUp);
 
           // populate filter selects and wire changes
           populateFilterOptions();
