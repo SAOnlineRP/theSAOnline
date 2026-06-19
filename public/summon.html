@@ -490,8 +490,60 @@
     const overlay = document.getElementById("loading-overlay");
     const bar = document.getElementById("loading-bar");
 
+    // =========================
+    // 🎯 DATA
+    // =========================
+
+    
+    const inventory = {
+      partners: new Set(), // punya siapa aja
+      shards: {} // { partnerId: totalShard }
+    };
+
+    let pityCounter = 0;
+    const MAX_PITY = 10;
+
+    function getPartnerRate() {
+      return Math.min(0.01 + pityCounter * 0.005, 0.2);
+    }
+
     let progress = 0;
-    let partnersGacha;
+    let partnerSummons;
+    let itemSummons;
+
+    // 20 partner (equal chance)
+    const partners = [
+      { id: 1, name: "Kirito", image: "img/partners/kirito.png" },
+      { id: 2, name: "Asuna", image: "img/partners/asuna.png" },
+      { id: 3, name: "Agil", image: "img/partners/agil.png" },
+      { id: 4, name: "Klein", image: "img/partners/klein.png" },
+      { id: 5, name: "Leafa", image: "img/partners/leafa.png" },
+      { id: 6, name: "Lisbeth", image: "img/partners/lisbeth.png" },
+      { id: 7, name: "Sachi", image: "img/partners/sachi.png" },
+      { id: 8, name: "Silica", image: "img/partners/silica.png" },
+      { id: 9, name: "Sinon", image: "img/partners/sinon.png" },
+      { id: 10, name: "Yui", image: "img/partners/yui.png" },
+      { id: 11, name: "Yuuki", image: "img/partners/yuuki.png" },
+      { id: 12, name: "Alice", image: "img/partners/alice.png" },
+      { id: 13, name: "Argo", image: "img/partners/argo.png" },
+      { id: 14, name: "Diavel", image: "img/partners/diavel.png" },
+      { id: 15, name: "Eugeo", image: "img/partners/eugeo.png" },
+      { id: 16, name: "Eydis", image: "img/partners/eydis.png" },
+      { id: 17, name: "Heathcliff", image: "img/partners/heathcliff.png" },
+      { id: 18, name: "Mito", image: "img/partners/mito.png" },
+      { id: 19, name: "Philia", image: "img/partners/philia.png" },
+      { id: 20, name: "Strea", image: "img/partners/strea.png" }
+    ];
+
+    // 10 items (equal chance)
+    const items = [
+      { id:1, name: "Item A", image: "img/items/item-a.png" },
+      { id:2, name: "Item B", image: "img/items/item-b.png"  },
+      { id:3, name: "Item C", image: "img/items/item-c.png"  },
+      { id:4, name: "Item D", image: "img/items/item-d.png"  },
+      { id:5, name: "Item E", image: "img/items/item-e.png"  },
+      { id:6, name: "Item F", image: "img/items/item-f.png"  }
+    ]
 
     async function loadData(session){
       try {
@@ -534,6 +586,14 @@
           );
 
           const summonRes = await resSummon.json();
+          console.log("Summon ", summonRes.data);
+          const dataSummon = summonRes.data;
+          partnerSummons = dataSummon.filter(
+            pool => pool.reward_type === "partner"
+          );
+          itemSummons = dataSummon.filter(
+            pool => pool.reward_type === "item"
+          );
 
           if (!resSummon.ok) throw new Error(summonRes.error);
           
@@ -594,51 +654,6 @@
           }
       });
     }
-    // =========================
-    // 🎯 DATA
-    // =========================
-
-    // 20 partner (equal chance)
-    const partners = [
-      { id: 1, name: "Kirito", image: "/img/partners/kirito.png" },
-      { id: 2, name: "Asuna", image: "/img/partners/asuna.png" },
-      { id: 3, name: "Agil", image: "/img/partners/agil.png" },
-      { id: 4, name: "Klein", image: "/img/partners/klein.png" },
-      { id: 5, name: "Leafa", image: "/img/partners/leafa.png" },
-      { id: 6, name: "Lisbeth", image: "/img/partners/lisbeth.png" },
-      { id: 7, name: "Sachi", image: "/img/partners/sachi.png" },
-      { id: 8, name: "Silica", image: "/img/partners/silica.png" },
-      { id: 9, name: "Sinon", image: "/img/partners/sinon.png" },
-      { id: 10, name: "Yui", image: "/img/partners/yui.png" },
-      { id: 11, name: "Yuuki", image: "/img/partners/yuuki.png" },
-      { id: 12, name: "Alice", image: "/img/partners/alice.png" },
-      { id: 13, name: "Argo", image: "/img/partners/argo.png" },
-      { id: 14, name: "Diavel", image: "/img/partners/diavel.png" },
-      { id: 15, name: "Eugeo", image: "/img/partners/eugeo.png" },
-      { id: 16, name: "Eydis", image: "/img/partners/eydis.png" },
-      { id: 17, name: "Heathcliff", image: "/img/partners/heathcliff.png" },
-      { id: 18, name: "Mito", image: "/img/partners/mito.png" },
-      { id: 19, name: "Philia", image: "/img/partners/philia.png" },
-      { id: 20, name: "Strea", image: "/img/partners/strea.png" }
-    ];
-
-    // 10 items (equal chance)
-    const items = Array.from({ length: 10 }, (_, i) => ({
-      id: i + 1,
-      name: `Item ${i + 1}`
-    }));
-
-    const inventory = {
-      partners: new Set(), // punya siapa aja
-      shards: {} // { partnerId: totalShard }
-    };
-
-    let pityCounter = 0;
-    const MAX_PITY = 10;
-
-    function getPartnerRate() {
-      return Math.min(0.01 + pityCounter * 0.005, 0.2);
-    }
 
     // =========================
     // 🎲 HELPER
@@ -660,7 +675,7 @@
     function rollPartner() {
       return {
         type: "partner",
-        data: randomFromArray(partners)
+        data: randomFromArray(partnerSummons)
       };
     }
 
@@ -670,14 +685,14 @@
       if (rand < 0.5) {
         return {
           type: "item",
-          data: randomFromArray(items)
+          data: randomFromArray(itemSummons)
         };
       }
 
       return {
         type: "shard",
         data: {
-          partner: randomFromArray(partners),
+          partner: randomFromArray(partnerSummons),
           amount: randomInt(5, 10)
         }
       };
@@ -763,13 +778,14 @@
         const img = document.createElement("img");
 
         if (r.type === "partner") {
-          img.src = r.data.image;
+          img.src = r.data.link_photo;
           back.appendChild(img);
         } else if (r.type === "shard") {
           const tag = r.data.fromDuplicate ? " (dup)" : "";
-          back.innerText = `🧩 ${r.data.partner.name} x${r.data.amount}${tag}`;
+          back.innerText = `🧩 ${r.data.partner.reward_name} x${r.data.amount}${tag}`;
         } else {
-          back.innerText = `🎉 ${r.data.name}`;
+          back.innerText = `🎉 ${r.data.reward_name}`;
+          img.src = r.data.link_photo;
         }
 
         back.appendChild(img);
