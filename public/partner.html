@@ -51,31 +51,83 @@
                     <div><strong id="levelup-partner-name">Partner Name</strong></div>
                     <div>Lv. <span id="levelup-partner-level">0</span></div>
                 </div>
+                <div style="display:flex; gap: 20px;">
+                    <div style="display: flex;
+                            flex-direction: column;
+                            gap: 10px;">
+                        <div class="levelup-row">
+                            <label for="levelup-item-select">Item yang dipakai</label>
+                            <select id="levelup-item-select"></select>
+                        </div>
 
-                <div class="levelup-row">
-                    <label for="levelup-item-select">Item yang dipakai</label>
-                    <select id="levelup-item-select"></select>
+                        <div class="levelup-row item-info">
+                            <div>Qty tersedia: <span id="levelup-item-qty">0</span></div>
+                            <div>Dibutuhkan: <span id="levelup-item-needed">0</span></div>
+                        </div>
+                    </div>
+                    <div style="display: flex;
+                        flex-direction: column;
+                        gap: 10px;">
+                        <div class="levelup-row">
+                            <label for="levelup-level-input">Naikkan berapa level</label>
+                            <input id="levelup-level-input" type="number" min="1" value="1">
+                        </div>
+
+                        <div class="levelup-row">
+                            <div class="levelup-result">Level baru: <span id="levelup-result-level">0</span></div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="levelup-row item-info">
-                    <div>Qty tersedia: <span id="levelup-item-qty">0</span></div>
-                </div>
-
-                <div class="levelup-row">
-                    <label for="levelup-level-input">Naikkan berapa level</label>
-                    <input id="levelup-level-input" type="number" min="1" value="1">
-                </div>
-
-                <div class="levelup-row">
-                    <div class="levelup-result">Level baru: <span id="levelup-result-level">0</span></div>
-                </div>
-
                 <div class="modal-actions">
                     <button type="button" id="confirmLevelup" class="modal-save">Konfirmasi</button>
                     <button type="button" id="cancelLevelupButton" class="modal-cancel">Batal</button>
                 </div>
 
                 <p class="levelup-message" id="levelup-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="starupModal" class="modal-overlay">
+        <div class="modal-box">
+            <span class="modal-close" id="cancelStarup">&times;</span>
+            <h3>Star Up Partner</h3>
+
+            <div class="levelup-card">
+                <div class="levelup-row">
+                    <div><strong id="starup-partner-name">Partner Name</strong></div>
+                    <div>Star <span id="starup-partner-star">0</span></div>
+                </div>
+
+                <div style="display:flex; gap: 20px;">
+                    <div style="display: flex;
+                            flex-direction: column;
+                            gap: 10px;">
+                        <div class="levelup-row item-info">
+                            <div>Record Kit: <span id="starup-recordkit-qty">0</span></div>
+                            <div>Jewel: <span id="starup-jewel-qty">0</span></div>
+                        </div>
+
+                        <div class="levelup-row item-info">
+                            <div>Kebutuhan: <span id="starup-requirement-text">-</span></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex;
+                        flex-direction: column;
+                        gap: 10px;">
+                        <div class="levelup-row">
+                            <div class="levelup-result">Star baru: <span id="starup-result-star">0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="confirmStarup" class="modal-save">Konfirmasi</button>
+                    <button type="button" id="cancelStarupButton" class="modal-cancel">Batal</button>
+                </div>
+
+                <p class="levelup-message" id="starup-message"></p>
             </div>
         </div>
     </div>
@@ -87,6 +139,7 @@
     const overlay = document.getElementById("loading-overlay");
     const bar = document.getElementById("loading-bar");
     const levelupModal = document.getElementById("levelupModal");
+    const starupModal = document.getElementById("starupModal");
 
     let progress = 0;
     let partnersPlayer = [];
@@ -175,8 +228,20 @@
             const itemRes = await resItem.json();
 
             if (!resItem.ok) throw new Error(itemRes.error);
-
-            playerItems = itemRes.data;
+            
+            let dataItems = itemRes.data;
+            playerItems = dataItems.filter(row => {
+                const name = row.catalog?.name || "";
+                return [
+                    "Record Frame S",
+                    "Record Frame M",
+                    "Record Frame L",
+                    "Record Kit",
+                    "Record Kit+",
+                    "Jewel",
+                    "Jewel+"
+                ].includes(name);
+            });
 
             const response = await fetch(
                 `/api/player_data`,
@@ -295,7 +360,13 @@
 
                     <div class="stars-partner"
                         style="display:flex;gap:10px">
-                        <div class="stars">${stars}</div>
+                        <div class="stars" style="font-size: 25px;">${stars}</div>
+                        <button id="openStarUpButton" style="margin-top: 5px;">
+                            <img
+                                src="/img/black-plus.png"
+                                style="width:25px;height:25px"
+                            >
+                        </button>
                     </div>
                 </div>
 
@@ -349,7 +420,21 @@
 
         const openLevelupButton = container.querySelector("#openLevelupButton");
         openLevelupButton?.addEventListener("click", () => openLevelUpModal(data));
+
+        const openStarUpButton = container.querySelector("#openStarUpButton");
+        openStarUpButton?.addEventListener("click", () => openStarUpModal(data));
     }
+    
+    const levelupItemSelect = document.getElementById("levelup-item-select");
+
+    levelupItemSelect.addEventListener("change", function () {
+        updateLevelupSummary();
+    });
+
+    const inputLevelUp = document.getElementById("levelup-level-input");
+    inputLevelUp.addEventListener("input", function () {
+        updateLevelupSummary();
+    });
     
     function updatePartner(data, clickedEl) {
         document.querySelectorAll(".partner-option")
@@ -372,18 +457,80 @@
             }, 500);
         }, 250);
     }
+    const MAX_LEVEL_PER_STAR = {
+        1: 30,
+        2: 60,
+        3: 90,
+        4: 120,
+        5: 150,
+    };
+
+    function getMaxPartnerLevel(partner) {
+        const star = Number(partner?.star || partner?.partner?.star || 1);
+        return MAX_LEVEL_PER_STAR[star] || MAX_LEVEL_PER_STAR[1];
+    }
+
+    const STAR_UP_REQUIREMENTS = {
+        1: { to: 2, minLevel: 30, recordKit: 10, jewel: 5, recordKitName: "Record Kit", jewelName: "Jewel" },
+        2: { to: 3, minLevel: 60, recordKit: 30, jewel: 15, recordKitName: "Record Kit", jewelName: "Jewel" },
+        3: { to: 4, minLevel: 90, recordKit: 15, jewel: 10, recordKitName: "Record Kit+", jewelName: "Jewel+" },
+        4: { to: 5, minLevel: 120, recordKit: 60, jewel: 40, recordKitName: "Record Kit+", jewelName: "Jewel+" },
+    };
+
+    function getInventoryQty(itemName) {
+        const item = playerItems.find(row => row.catalog?.name === itemName);
+        return item?.quantity || 0;
+    }
+
+    function getLevelUpItemCost(itemName) {
+        const costMap = {
+            "Record Frame S": 5,
+            "Record Frame M": 2,
+            "Record Frame L": 1,
+        };
+
+        return costMap[itemName] || 0;
+    }
+
     function updateLevelupSummary() {
         const levelInput = document.getElementById("levelup-level-input");
         const resultLevel = document.getElementById("levelup-result-level");
         const qtyDisplay = document.getElementById("levelup-item-qty");
+        const neededDisplay = document.getElementById("levelup-item-needed");
         const select = document.getElementById("levelup-item-select");
+        const confirmButton = document.getElementById("confirmLevelup");
+        const message = document.getElementById("levelup-message");
 
         const selectedItem = playerItems.find(item => String(item.id) === select.value);
         const currentLevel = currentPartner?.level || 0;
-        const amount = Math.max(1, parseInt(levelInput.value, 10) || 1);
+        const maxLevel = getMaxPartnerLevel(currentPartner);
+        const maxCanLevelUp = Math.max(0, maxLevel - currentLevel);
+
+        if (maxCanLevelUp <= 0) {
+            levelInput.value = 0;
+            levelInput.disabled = true;
+            confirmButton.disabled = true;
+            resultLevel.textContent = currentLevel;
+            qtyDisplay.textContent = selectedItem?.quantity ?? 0;
+            neededDisplay.textContent = 0;
+            message.textContent = `Level sudah maksimal (${maxLevel}). Gunakan item bintang untuk menaikkan bintang partner.`;
+            return;
+        }
+
+        levelInput.disabled = false;
+        confirmButton.disabled = false;
+        message.textContent = "";
+
+        const amount = Math.max(1, Math.min(parseInt(levelInput.value, 10) || 1, maxCanLevelUp));
+        levelInput.value = amount;
+        levelInput.max = maxCanLevelUp;
+
+        const itemCost = selectedItem ? getLevelUpItemCost(selectedItem.catalog?.name) : 0;
+        const requiredQty = itemCost * amount;
 
         resultLevel.textContent = currentLevel + amount;
         qtyDisplay.textContent = selectedItem?.quantity ?? 0;
+        neededDisplay.textContent = requiredQty;
     }
 
     function openLevelUpModal(data) {
@@ -395,6 +542,9 @@
         document.getElementById("levelup-message").textContent = "";
 
         const select = document.getElementById("levelup-item-select");
+        const confirmButton = document.getElementById("confirmLevelup");
+        const maxLevel = getMaxPartnerLevel(data);
+
         select.innerHTML = playerItems.map(item => {
             const quantity = item.quantity ?? 0;
             const label = `${item.catalog.name} (${quantity})`;
@@ -405,6 +555,15 @@
             select.innerHTML = `<option value="">Tidak ada item</option>`;
         }
 
+        if ((data.level || 0) >= maxLevel) {
+            confirmButton.disabled = true;
+            document.getElementById("levelup-level-input").disabled = true;
+            document.getElementById("levelup-message").textContent = `Level sudah maksimal (${maxLevel}). Gunakan item bintang untuk menaikkan bintang partner.`;
+        } else {
+            confirmButton.disabled = false;
+            document.getElementById("levelup-level-input").disabled = false;
+        }
+
         updateLevelupSummary();
         levelupModal.classList.add("show");
     }
@@ -413,25 +572,155 @@
         levelupModal.classList.remove("show");
     }
 
+    function updateStarupSummary() {
+        const resultStar = document.getElementById("starup-result-star");
+        const message = document.getElementById("starup-message");
+        const confirmButton = document.getElementById("confirmStarup");
+        const requirementText = document.getElementById("starup-requirement-text");
+        const recordKitQty = document.getElementById("starup-recordkit-qty");
+        const jewelQty = document.getElementById("starup-jewel-qty");
+
+        const currentStar = Number(currentPartner?.star || 0);
+        const currentLevel = Number(currentPartner?.level || 0);
+        const nextStar = currentStar + 1;
+        const req = STAR_UP_REQUIREMENTS[currentStar];
+
+        resultStar.textContent = nextStar;
+        message.textContent = "";
+
+        if (!req) {
+            confirmButton.disabled = true;
+            requirementText.textContent = "-";
+            return;
+        }
+
+        const recordKitName = req.recordKitName;
+        const jewelName = req.jewelName;
+        const recordKitNeed = req.recordKit;
+        const jewelNeed = req.jewel;
+
+        requirementText.textContent = `${recordKitNeed} ${recordKitName} + ${jewelNeed} ${jewelName}`;
+        recordKitQty.textContent = getInventoryQty(recordKitName);
+        jewelQty.textContent = getInventoryQty(jewelName);
+
+        if (currentStar >= 5) {
+            confirmButton.disabled = true;
+            message.textContent = "Partner sudah mencapai bintang maksimal.";
+            return;
+        }
+
+        if (currentLevel < req.minLevel) {
+            confirmButton.disabled = true;
+            message.textContent = `Butuh level ${req.minLevel} untuk naik ke bintang ${req.to}.`;
+            return;
+        }
+
+        const hasRecordKit = getInventoryQty(recordKitName) >= recordKitNeed;
+        const hasJewel = getInventoryQty(jewelName) >= jewelNeed;
+
+        confirmButton.disabled = !(hasRecordKit && hasJewel);
+
+        if (!hasRecordKit || !hasJewel) {
+            message.textContent = `Belum cukup item untuk naik ke bintang ${req.to}.`;
+        }
+    }
+
+    function openStarUpModal(data) {
+        currentPartner = data;
+
+        const confirmButton = document.getElementById("confirmStarup");
+        const message = document.getElementById("starup-message");
+
+        document.getElementById("starup-partner-name").textContent = data.partner.name;
+        document.getElementById("starup-partner-star").textContent = data.star || 0;
+        message.textContent = "";
+        confirmButton.disabled = false;
+
+        updateStarupSummary();
+        starupModal.classList.add("show");
+    }
+
+    function closeStarUpModal() {
+        starupModal.classList.remove("show");
+    }
+
+    function confirmStarUp() {
+        const message = document.getElementById("starup-message");
+
+        const currentStar = Number(currentPartner?.star || 0);
+        const currentLevel = Number(currentPartner?.level || 0);
+        const req = STAR_UP_REQUIREMENTS[currentStar];
+
+        if (!req) {
+            message.textContent = "Tidak ada syarat upgrade untuk bintang ini.";
+            return;
+        }
+
+        if (currentStar >= 5) {
+            message.textContent = "Partner sudah mencapai bintang maksimal.";
+            return;
+        }
+
+        if (currentLevel < req.minLevel) {
+            message.textContent = `Butuh level ${req.minLevel} untuk naik ke bintang ${req.to}.`;
+            return;
+        }
+
+        const recordKitName = req.recordKitName;
+        const jewelName = req.jewelName;
+        const recordKitNeed = req.recordKit;
+        const jewelNeed = req.jewel;
+
+        const hasRecordKit = getInventoryQty(recordKitName) >= recordKitNeed;
+        const hasJewel = getInventoryQty(jewelName) >= jewelNeed;
+
+        if (!hasRecordKit || !hasJewel) {
+            message.textContent = `Belum cukup item untuk naik ke bintang ${req.to}.`;
+            return;
+        }
+
+        const recordKitItem = playerItems.find(row => row.catalog?.name === recordKitName);
+        const jewelItem = playerItems.find(row => row.catalog?.name === jewelName);
+
+        if (recordKitItem) recordKitItem.quantity -= recordKitNeed;
+        if (jewelItem) jewelItem.quantity -= jewelNeed;
+
+        currentPartner.star = req.to;
+        currentPartner.level = Math.min(currentPartner.level, req.minLevel);
+
+        renderPartnerDetail(currentPartner);
+        closeStarUpModal();
+    }
+
     function confirmLevelUp() {
         const select = document.getElementById("levelup-item-select");
         const levelInput = document.getElementById("levelup-level-input");
         const message = document.getElementById("levelup-message");
 
-        const selectedItem = playerItems.find(item => item.id === select.value);
-        const amount = Math.max(1, parseInt(levelInput.value) || 1);
+        const selectedItem = playerItems.find(item => String(item.id) === select.value);
+        const currentLevel = currentPartner?.level || 0;
+        const maxLevel = getMaxPartnerLevel(currentPartner);
+        const maxCanLevelUp = Math.max(0, maxLevel - currentLevel);
+        const amount = Math.max(1, Math.min(parseInt(levelInput.value, 10) || 1, maxCanLevelUp));
+        const itemCost = selectedItem ? getLevelUpItemCost(selectedItem.catalog?.name) : 0;
+        const requiredQty = itemCost * amount;
 
         if (!selectedItem) {
             message.textContent = "Pilih item yang tersedia terlebih dahulu.";
             return;
         }
 
-        if (selectedItem.quantity < amount) {
-            message.textContent = "Jumlah item tidak cukup untuk meningkatkan level.";
+        if (maxCanLevelUp <= 0) {
+            message.textContent = `Level sudah maksimal (${maxLevel}). Gunakan item bintang untuk menaikkan bintang partner.`;
             return;
         }
 
-        selectedItem.quantity -= amount;
+        if (selectedItem.quantity < requiredQty) {
+            message.textContent = `Jumlah item tidak cukup. Butuh ${requiredQty} ${selectedItem.catalog?.name} untuk naik ${amount} level.`;
+            return;
+        }
+
+        selectedItem.quantity -= requiredQty;
         currentPartner.level += amount;
 
         renderPartnerDetail(currentPartner);
@@ -450,11 +739,20 @@
             if (event.target === levelupModal) closeLevelUpModal();
         });
 
+        starupModal.addEventListener("click", (event) => {
+            if (event.target === starupModal) closeStarUpModal();
+        });
+
         document.getElementById("cancelLevelupButton").addEventListener("click", closeLevelUpModal);
         document.getElementById("cancelLevelup").addEventListener("click", closeLevelUpModal);
         document.getElementById("confirmLevelup").addEventListener("click", confirmLevelUp);
         document.getElementById("levelup-item-select").addEventListener("change", updateLevelupSummary);
         document.getElementById("levelup-level-input").addEventListener("input", updateLevelupSummary);
+
+        document.getElementById("cancelStarupButton").addEventListener("click", closeStarUpModal);
+        document.getElementById("cancelStarup").addEventListener("click", closeStarUpModal);
+        document.getElementById("confirmStarup").addEventListener("click", confirmStarUp);
+        //document.getElementById("starup-item-select").addEventListener("change", updateStarupSummary);
 
         await loadPartner(session);
         setTimeout(hideLoading, 500);

@@ -256,6 +256,11 @@ body {
     cursor: pointer;
 }
 
+#levelup-item-select option{
+    background: #02183f;
+    color: white;
+}
+
 /* STAT CONTAINER */
 .stat-partner {
     display: flex;
@@ -344,7 +349,7 @@ body {
 }
 
 .modal-box {
-    width: min(520px, 100%);
+    width: min(580px, 100%);
     background: rgba(10, 28, 51, 0.98);
     border: 2px solid rgba(0, 255, 255, 0.18);
     border-radius: 18px;
