@@ -488,6 +488,86 @@ export default async function handler(req, res) {
             data
         });
     }
+
+    else if (action === "buyMerchant"){
+        const { data, total_price } = body;
+
+        const merchantLogs = data.map(item => ({
+            ...item,
+            player_id: user.id
+        }));
+
+        // log transaksi merchant
+        const { error: logError } = await supabase
+            .from("log_merchants")
+            .insert(merchantLogs);
+
+        if (logError) {
+            return res.status(500).json({
+                error: logError.message
+            });
+        }
+
+        // equipment yang dibeli
+        const equipments = data
+            .filter(item => item.goods_type === "equipment")
+            .map(item => ({
+                player_id: user.id,
+                equipment_id: item.goods_id,
+                level: 1,
+                star: 1
+            }));
+
+        if (equipments.length > 0) {
+            const { error } = await supabase
+                .from("player_equipments")
+                .insert(equipments);
+
+            if (error) {
+                return res.status(500).json({
+                    error: error.message
+                });
+            }
+        }
+
+        // item yang dibeli
+        const items = data.filter(item => item.goods_type === "item");
+
+        for (const item of items) {
+            const { error } = await supabase.rpc(
+                "add_player_item",
+                {
+                    p_player_id: user.id,
+                    p_item_id: item.goods_id,
+                    p_quantity: item.quantity
+                }
+            );
+
+            if (error) {
+                return res.status(500).json({
+                    error: error.message
+                });
+            }
+        }
+        // ubah col nya 
+        // ambil col sekarang
+        const { data: profile, error: profileError } = await supabase
+            .from("player_profiles")
+            .select("col")
+            .eq("player_id", user.id)
+            .single();
+
+        if (profileError) throw profileError;
+
+        const newCol = profile.col - total_price;
+
+        const { error } = await supabase
+            .from("player_profiles")
+            .update({ col: newCol })
+            .eq("player_id", user.id);
+
+        return res.status(200).json({ success: true, message: "Data inserted successfully" });
+    }
   } catch (error) {
     console.error("Error in player_data API:", error);
     return res.status(500).json({ error: "Internal Server Error" });

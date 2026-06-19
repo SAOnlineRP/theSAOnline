@@ -596,6 +596,24 @@
           );
 
           if (!resSummon.ok) throw new Error(summonRes.error);
+
+          const resPartners = await fetch(
+              `/api/player_data`,
+              {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${session.access_token}`,
+                  },
+                  body: JSON.stringify({
+                      action: "getDataPlayer",
+                      table: "player_partners"
+                  })
+              }
+          );
+
+          const partnerRes = await resPartners.json();
+          if (!resPartners.ok) throw new Error(partnerRes.error);
           
           setProgress(50);
           await waitForImages();
@@ -778,6 +796,7 @@
         const img = document.createElement("img");
 
         if (r.type === "partner") {
+          img.style.padding = "5px";
           img.src = r.data.link_photo;
           back.appendChild(img);
         } else if (r.type === "shard") {
@@ -785,6 +804,8 @@
           back.innerText = `🧩 ${r.data.partner.reward_name} x${r.data.amount}${tag}`;
         } else {
           back.innerText = `🎉 ${r.data.reward_name}`;
+          img.style.width = "90px";
+          img.style.height = "90px";
           img.src = r.data.link_photo;
         }
 

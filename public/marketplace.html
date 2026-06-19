@@ -21,6 +21,10 @@
             <div id="loading-bar" class="loading-bar"></div>
         </div>
     </div>
+    <div id="merchant-overlay" class="loading-overlay hidden">
+        <div>Purchasing Goods...</div>
+        <div class="spinner"></div>
+    </div>
     <div class="topbar">
       <div class="topbar-left">
         <button onclick="goBack()"><img src="/img/back2.png" style="width: 35px; height: 35px;" alt="Back"></button>
@@ -62,8 +66,9 @@
                 </div>
             </div>
             <div class="tab-pane" id="items-list">
-                <h4>ITEMS</h4>
-                <p>List of items available in the marketplace.</p>
+                <div class="wequip-list" id="list-items">
+                    <p>List of items available.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -79,7 +84,7 @@
                 </div>
 
                 <div class="cart-actions">
-                    <button class="buy-btn">Buy</button>
+                    <button class="buy-btn" onclick="buyMerchant()">Buy</button>
                     <button class="close-btn" onclick="closePopup()">
                         Close
                     </button>
@@ -117,6 +122,7 @@
     window.switchTab = switchTab;
     window.openPopup = openPopup;
     window.closePopup = closePopup;
+    window.buyMerchant = buyMerchant;
 
     let merchantItems = [];
 
@@ -169,6 +175,8 @@
             renderEquipments(equipments);
             // populate filter options for equipments
             populateMarketplaceFilters(equipments);
+
+            renderItems(items);
             if (!resMerchant.ok) throw new Error(merchantData.error);
         } catch (err) {
             console.error("Load error:", err);
@@ -254,6 +262,8 @@
                 renderEquipments(equipments);
             } else {
                 filtersRow.style.display = 'none';
+                const items = merchantItems.filter(row => row.goods_type === 'item');
+                renderItems(items);
             }
         }
     }
@@ -285,8 +295,138 @@
         document.getElementById('myPopup').style.display = 'none';
     }
 
+     const merchantLoading = document.getElementById("merchant-overlay");
+
+    const setMerchantLoading = isLoading => (
+        merchantLoading.classList.toggle("hidden", !isLoading)
+    );
+
+    async function buyMerchant(){
+        const totalMerchant = parseInt(
+            document.getElementById("total-merchant").innerText.replace(/,/g, ""),
+            10
+        );
+
+        const colPlayer = parseInt(
+            document.getElementById("col-player").innerText.replace(/,/g, ""),
+            10
+        );
+
+        console.log(totalMerchant); // 10000
+        console.log(colPlayer);     // 190299
+
+        if(totalMerchant < colPlayer){
+            const isConfirmed = confirm(
+                `Buy ${cart.length} item(s) for ${totalMerchant.toLocaleString()} Col?`
+            );
+
+            if (!isConfirmed) {
+                return;
+            }
+            //alert("bisa beli itemnya");
+            const sisaCol = colPlayer - totalMerchant;
+            document.getElementById("col-player").innerHTML = sisaCol;
+
+            const goods = cart.map(item => ({
+                goods_type: item.goods_type,
+                goods_id: item.goods_id,
+                quantity: item.quantity,
+                price: item.price,
+                total_price: item.price * item.quantity
+            }));
+
+            console.log(goods);
+            // panggil API
+            try{
+                setMerchantLoading(true);
+                const session = await requireLogin();
+                const response = await fetch(
+                    `/api/player_data`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${session.access_token}`,
+                        },
+                        body: JSON.stringify({
+                            action: "buyMerchant",
+                            data: goods,
+                            total_price: totalMerchant
+                        })
+                    }
+                );
+                cart = [];
+                renderCart();
+                closePopup();
+
+                console.log("Purchase success!");
+            } catch {
+
+            } finally {
+                setMerchantLoading(false);
+            }
+
+        } else {
+            alert("col lebih sedikit dari cart");
+        }
+    }
+
     function renderEquipments(data) {
         const container = document.getElementById("list-equipments");
+        container.innerHTML = '';
+
+        // apply filters if present
+        const typeSel = document.getElementById('typeFilter');
+        const positionSel = document.getElementById('positionFilter');
+
+        const selType = typeSel ? typeSel.value : '';
+        const selPosition = positionSel ? positionSel.value : '';
+
+        let list = Array.isArray(data) ? data.slice() : [];
+
+        if (selType) {
+            list = list.filter(it => (it.type) ? String(it.type) === selType : false);
+        }
+
+        if (selPosition) {
+            list = list.filter(it => (it.position) ? String(it.position) === selPosition : false);
+        }
+
+        list.forEach(item => {
+            container.innerHTML += `
+            <div class="wequip-box" data-id="${item.id}">
+                <div class="photo-info">
+                <div class="item-photo">
+                    <img src="${item.link_photo}" class="photo-item">
+                </div>
+                <div class="input-angka">
+                    <div class="quantity-selector">
+                    <button class="qty-btn minus">-</button>
+                    <input type="number" min="1" max="${item.quantity}" value="1" class="qty-input" />
+                    <button class="qty-btn plus">+</button>
+                    </div>
+                </div>
+                </div>
+                <div class="desc-item">
+                <div class="item-name">${item.goods_name}</div>
+                <div class="item-desc">Deskripsi</div>
+                <div class="item-max">(Max.${item.quantity})</div>
+                <div class="cost-add">
+                    <div class="cost-item">
+                    <span>${item.price.toLocaleString()}</span>
+                    </div>
+                    <div class="add-btn"> 
+                    <a class="add-to-cart">Add to <i class="bi bi-cart" style="color:white"></i></a>
+                    </div>
+                </div>
+                </div>
+            </div>
+            `;
+        });
+    }
+
+    function renderItems(data) {
+        const container = document.getElementById("list-items");
         container.innerHTML = '';
 
         // apply filters if present
@@ -407,23 +547,89 @@
                     <img src="${item.link_photo}" class="photo-item">
                 </div>
                 <div class="desc-item">
-                    <div class="item-name">${item.goods_name}</div>
-                    <div>Qty: ${item.quantity}</div>
-                    <div>Price: ${item.price.toLocaleString()}</div>
-                    <div>Total: ${subtotal.toLocaleString()}</div>
-                    <button
-                        class="remove-cart-btn"
-                        data-id="${item.id}">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div class="item-name">${item.goods_name}</div>
+                        <button
+                            class="remove-cart-btn"
+                            data-id="${item.id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div class="quantity-selector cart-qty">
+                            <button class="qty-btn cart-minus" data-id="${item.id}">-</button>
+
+                            <input
+                                type="number"
+                                class="cart-qty-input"
+                                data-id="${item.id}"
+                                min="1"
+                                max="${merchantItems.find(x => x.id === item.id)?.quantity || 999}"
+                                value="${item.quantity}"
+                            >
+
+                            <button class="qty-btn cart-plus" data-id="${item.id}">+</button>
+                        </div>
+                        <div>
+                            <div>Price: ${item.price.toLocaleString()}</div>
+                            <div>Total: ${subtotal.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
             `;
         });
 
-        document.querySelector(".cart-total").textContent =
-            `Total = ${total.toLocaleString()}`;
+        document.querySelector(".cart-total").innerHTML =
+        `Total = <span id="total-merchant">${total.toLocaleString()}</span>`;
     }
+
+    document.addEventListener("click", function(e) {
+        const minus = e.target.closest(".cart-minus");
+        const plus = e.target.closest(".cart-plus");
+
+        if (!minus && !plus) return;
+
+        const id = (minus || plus).dataset.id;
+
+        const item = cart.find(x => x.id === id);
+
+        if (!item) return;
+
+        const product = merchantItems.find(x => x.id === id);
+
+        if (minus && item.quantity > 1) {
+            item.quantity--;
+        }
+
+        if (plus && item.quantity < product.quantity) {
+            item.quantity++;
+        }
+
+        renderCart();
+    });
+
+    document.addEventListener("input", function(e) {
+        if (!e.target.classList.contains("cart-qty-input")) return;
+
+        const id = e.target.dataset.id;
+
+        const item = cart.find(x => x.id === id);
+
+        if (!item) return;
+
+        const product = merchantItems.find(x => x.id === id);
+
+        let qty = parseInt(e.target.value) || 1;
+
+        qty = Math.max(1, qty);
+        qty = Math.min(product.quantity, qty);
+
+        item.quantity = qty;
+
+        renderCart();
+    });
 
     document.addEventListener("click", function (e) {
         const btn = e.target.closest(".add-to-cart");
