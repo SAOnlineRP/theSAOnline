@@ -364,42 +364,59 @@
 
             if (type === "item") {
                 modalContent.innerHTML = `
-                    <span class="close-button" onclick="closeModal()">&times;</span>
-
-                    <h2>${data.catalog.name}</h2>
-
-                    <img src="${data.catalog.link_photo}" class="modal-image">
-
-                    <p><b>Quantity:</b> ${data.quantity}</p>
-                    <p>${data.catalog.description}</p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <h2>${data.catalog.name}</h2>
+                        <span class="close-button" onclick="closeModal()">&times;</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; gap:20px;">
+                        <img style="width: 100px; height: 100px;" src="${data.catalog.link_photo}" class="modal-image">
+                        <div>
+                            <p><b>Quantity:</b> ${data.quantity}</p>
+                            <p>${data.catalog.desc}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p><strong>Source:</strong> merchant</p>
+                    </div>
                 `;
             }
 
             if (type === "equipment") {
                 modalContent.innerHTML = `
-                    <span class="close-button" onclick="closeModal()">&times;</span>
-
-                    <h2>${data.catalog.name}</h2>
-
-                    <img src="${data.catalog.link_photo}" class="modal-image">
-
-                    <p><b>Level:</b> ${data.level}</p>
-                    <p><b>Rarity:</b> ${data.catalog.rarity}</p>
-                    <p>${data.catalog.description}</p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <h2>${data.catalog.name}</h2>
+                        <span class="close-button" onclick="closeModal()">&times;</span>
+                    </div>
+                    <div style="display: flex; justify-content: center; gap:20px;">
+                        <img style="width: 100px; height: 100px;" src="${data.catalog.link_photo}" class="modal-image">
+                        <div>
+                            <p><b>Level:</b> ${data.level}</p>
+                            <p>${data.catalog.desc}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p><strong>Source:</strong> merchant</p>
+                    </div>
                 `;
             }
 
             if (type === "partner") {
                 modalContent.innerHTML = `
-                    <span class="close-button" onclick="closeModal()">&times;</span>
-
-                    <h2>${data.partner.name}</h2>
-
-                    <img src="${data.partner.link_ava}" class="modal-image">
-
-                    <p><b>Level:</b> ${data.level}</p>
-                    <p><b>Role:</b> ${data.partner.role}</p>
-                    <p>${data.partner.description}</p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <h2>${data.partner.name}</h2>
+                        <span class="close-button" onclick="closeModal()">&times;</span>
+                    </div>
+                    <div style="display: flex; justify-content: center; gap:20px;">
+                        <img style="width: 100px; height: 100px;" src="${data.partner.link_ava}" class="modal-image">
+                        <div>
+                            <p><b>Level:</b> ${data.level}</p>
+                            <p>${data.partner.desc}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p><strong>Source:</strong> merchant</p>
+                    </div>
                 `;
             }
 
