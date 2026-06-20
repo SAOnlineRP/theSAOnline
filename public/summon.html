@@ -288,7 +288,7 @@
 
     .popup-card {
       width: 100px;
-      height: 140px;
+      height: 160px;
       perspective: 1000px;
     }
 
@@ -511,39 +511,8 @@
     let partnerSummons;
     let itemSummons;
 
-    // 20 partner (equal chance)
-    const partners = [
-      { id: 1, name: "Kirito", image: "img/partners/kirito.png" },
-      { id: 2, name: "Asuna", image: "img/partners/asuna.png" },
-      { id: 3, name: "Agil", image: "img/partners/agil.png" },
-      { id: 4, name: "Klein", image: "img/partners/klein.png" },
-      { id: 5, name: "Leafa", image: "img/partners/leafa.png" },
-      { id: 6, name: "Lisbeth", image: "img/partners/lisbeth.png" },
-      { id: 7, name: "Sachi", image: "img/partners/sachi.png" },
-      { id: 8, name: "Silica", image: "img/partners/silica.png" },
-      { id: 9, name: "Sinon", image: "img/partners/sinon.png" },
-      { id: 10, name: "Yui", image: "img/partners/yui.png" },
-      { id: 11, name: "Yuuki", image: "img/partners/yuuki.png" },
-      { id: 12, name: "Alice", image: "img/partners/alice.png" },
-      { id: 13, name: "Argo", image: "img/partners/argo.png" },
-      { id: 14, name: "Diavel", image: "img/partners/diavel.png" },
-      { id: 15, name: "Eugeo", image: "img/partners/eugeo.png" },
-      { id: 16, name: "Eydis", image: "img/partners/eydis.png" },
-      { id: 17, name: "Heathcliff", image: "img/partners/heathcliff.png" },
-      { id: 18, name: "Mito", image: "img/partners/mito.png" },
-      { id: 19, name: "Philia", image: "img/partners/philia.png" },
-      { id: 20, name: "Strea", image: "img/partners/strea.png" }
-    ];
-
-    // 10 items (equal chance)
-    const items = [
-      { id:1, name: "Item A", image: "img/items/item-a.png" },
-      { id:2, name: "Item B", image: "img/items/item-b.png"  },
-      { id:3, name: "Item C", image: "img/items/item-c.png"  },
-      { id:4, name: "Item D", image: "img/items/item-d.png"  },
-      { id:5, name: "Item E", image: "img/items/item-e.png"  },
-      { id:6, name: "Item F", image: "img/items/item-f.png"  }
-    ]
+    let lastSummonCount = 1;
+    let lastSummonCost = 0;
 
     async function loadData(session){
       try {
@@ -773,11 +742,48 @@
       return result;
     }
 
-    function renderPopup(results) {
+    async function renderPopup(results) {
       const container = document.getElementById("popup-cards");
       container.innerHTML = "";
 
       document.getElementById("result-popup").classList.remove("hidden");
+      console.log("results ", results);
+      const dataRes = results.map(item => ({
+        summon_type: item.type,
+        summon_id:
+          item.type === "shard"
+            ? item.data.partner.reward_id
+            : item.data.reward_id,
+        quantity:
+          item.type === "shard"
+            ? item.data.amount
+            : item.data.quantity
+      }));
+
+      console.log(dataRes);
+      const total_price = lastSummonCost;
+      try{
+        const session = await requireLogin();
+        const response = await fetch(
+            `/api/player_data`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: "doSummon",
+                    data: dataRes,
+                    total_price: total_price
+                })
+            }
+        ); 
+      } catch (err) {
+
+      } finally {
+        
+      }
 
       results.forEach((r, index) => {
         const card = document.createElement("div");
@@ -803,7 +809,7 @@
           const tag = r.data.fromDuplicate ? " (dup)" : "";
           back.innerText = `🧩 ${r.data.partner.reward_name} x${r.data.amount}${tag}`;
         } else {
-          back.innerText = `🎉 ${r.data.reward_name}`;
+          back.innerText = `${r.data.reward_name} x${r.data.quantity}`;
           img.style.width = "90px";
           img.style.height = "90px";
           img.src = r.data.link_photo;
@@ -882,9 +888,22 @@
     }
 
     function summonAgain() {
+      const gemsElement = document.getElementById("gems-player");
+      let gems = parseInt(gemsElement.innerText, 10);
+
+      if (gems < lastSummonCost) {
+        alert("Arcana Gems tidak cukup!");
+        return;
+      }
+
+      gems -= lastSummonCost;
+      gemsElement.innerText = gems;
+
       closePopup();
-      let results = multiRoll(4);
+
+      let results = multiRoll(lastSummonCount);
       results = results.map(r => processResult(r));
+
       renderPopup(results);
     }
 
@@ -898,16 +917,32 @@
       const text = e.target.innerText;
 
       let count = 1;
-      if (text.includes("4x")) count = 4;
-      if (text.includes("10x")) count = 10;
+      let cost = 200;
+
+      if (text.includes("4x")) {
+        count = 4;
+        cost = 1000;
+      }
+
+      const gemsElement = document.getElementById("gems-player");
+      let gems = parseInt(gemsElement.innerText, 10);
+
+      if (gems < cost) {
+        alert("Arcana Gems tidak cukup!");
+        return;
+      }
+
+      // simpan summon terakhir
+      lastSummonCount = count;
+      lastSummonCost = cost;
+
+      // kurangi gems
+      gems -= cost;
+      gemsElement.innerText = gems;
 
       let results = multiRoll(count);
 
-      // proses duplicate
       results = results.map(r => processResult(r));
-
-      console.log("FINAL RESULT:", results);
-      console.log("INVENTORY:", inventory);
 
       renderPopup(results);
     });

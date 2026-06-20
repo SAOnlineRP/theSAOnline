@@ -54,6 +54,8 @@ export default async function handler(req, res) {
                         name,
                         link_ava,
                         link_photo,
+                        desc,
+                        source,
                         skills:catalog_partner_skills (
                             catalog_skills (
                                 id,
@@ -81,7 +83,9 @@ export default async function handler(req, res) {
                         atk, 
                         max_hp,
                         def,
-                        link_photo
+                        link_photo,
+                        desc,
+                        source
                     )
                 `)
                 .eq("player_id", user.id)
@@ -98,6 +102,7 @@ export default async function handler(req, res) {
                     catalog:catalog_items (
                         name,
                         desc,
+                        source,
                         link_photo
                     )
                 `)
@@ -586,6 +591,104 @@ export default async function handler(req, res) {
         const { error } = await supabase
             .from("player_profiles")
             .update({ col: newCol })
+            .eq("player_id", user.id);
+
+        return res.status(200).json({ success: true, message: "Data inserted successfully" });
+    } 
+    else if (action == "doSummon"){
+        const { data, total_price } = body;
+
+        const summonLogs = data.map(item => ({
+            ...item,
+            player_id: user.id
+        }));
+
+        // log transaksi merchant
+        const { error: logError } = await supabase
+            .from("log_summons")
+            .insert(summonLogs);
+
+        if (logError) {
+            return res.status(500).json({
+                error: logError.message
+            });
+        }
+
+        // masukin item
+        const items = data.filter(item => item.summon_type === "item");
+
+        for (const item of items) {
+            const { error } = await supabase.rpc(
+                "add_player_item",
+                {
+                    p_player_id: user.id,
+                    p_item_id: item.summon_id,
+                    p_quantity: item.quantity
+                }
+            );
+
+            if (error) {
+                return res.status(500).json({
+                    error: error.message
+                });
+            }
+        }
+
+        // masukin partner
+        const partners = data
+            .filter(item => item.summon_type === "partner")
+            .map(item => ({
+                player_id: user.id,
+                partner_id: item.summon_id,
+                level: 1,
+                star: 1
+            }));
+
+        if (partners.length > 0) {
+            const { error } = await supabase
+                .from("player_partners")
+                .insert(partners);
+
+            if (error) {
+                return res.status(500).json({
+                    error: error.message
+                });
+            }
+        }
+
+        // masukkin shard
+        const shards = data.filter(item => item.summon_type === "shard");
+
+        for (const shard of shards) {
+            const { error } = await supabase.rpc(
+                "add_player_shard",
+                {
+                    p_player_id: user.id,
+                    p_partner_id: shard.summon_id,
+                    p_quantity: shard.quantity
+                }
+            );
+
+            if (error) {
+                return res.status(500).json({
+                    error: error.message
+                });
+            }
+        }
+
+        const { data: profile, error: profileError } = await supabase
+            .from("player_profiles")
+            .select("arcana_gems")
+            .eq("player_id", user.id)
+            .single();
+
+        if (profileError) throw profileError;
+
+        const newGems = profile.arcana_gems - total_price;
+
+        const { error } = await supabase
+            .from("player_profiles")
+            .update({ arcana_gems: newGems })
             .eq("player_id", user.id);
 
         return res.status(200).json({ success: true, message: "Data inserted successfully" });
