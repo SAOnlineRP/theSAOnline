@@ -1,0 +1,599 @@
+:root {
+    --bg-top: #003973;
+    --bg-mid: #11375d;
+    --bg-bottom: #020813;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+body {
+    min-height: 100vh;
+    background-size: cover;
+    background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
+}
+
+.game-ui {
+    height: 100vh;              /* patok ke tinggi layar */
+    width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
+    max-width: 100%;
+    margin: 0 auto;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+  font-size: 20px;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loading-bar-container {
+  width: 300px;
+  height: 30px;
+  background-color: #444;
+  border: 2px solid #d4af4d;
+  border-radius: 15px;
+  margin-top: 20px;
+}
+
+.loading-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #061b33, #1f1b10);
+  box-shadow: 0 0 10px #000311;
+  border-radius: 13px;
+  width: 0%;
+  transition: width 0.2s ease;
+}
+
+.bg-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(600px, 60vw);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+    filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
+    z-index: -1;
+}
+
+/* top icons */
+.top-bar {
+    display: flex !important;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    font-size: 40px;
+}
+
+.top-left {
+    display: flex;
+    gap: 18px;
+    color: #000;
+    align-items: center;
+}
+
+.top-left button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 40px;
+    line-height: 1;
+}
+
+.save-btn {
+    padding: 12px 24px;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background: #215b7a;
+    border-radius: 30px;
+    box-shadow:
+    inset 0 0 18px rgba(255,255,255,0.04),
+    0 10px 28px rgba(0,0,0,0.35);
+    color: white;
+}
+
+/* section titles */
+.content-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    height: 80%;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title {
+    font-size: 28px;
+    color: white;
+    margin-left: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* main panels */
+.panel {
+    background: #215b7a;
+    padding: 10px;
+    position: relative;
+    border-radius: 10px;
+    box-shadow:
+    inset 0 0 18px rgba(255,255,255,0.04),
+    0 10px 28px rgba(0,0,0,0.35);
+}
+
+.edit-icon {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 14px;
+    color: #000;
+    cursor: pointer;
+}
+
+/* party members */
+.members-panel {
+    width: 430px;
+    display: flex;
+    gap: 10px;
+}
+
+.member-card {
+    width: 200px;
+    height: 340px;
+    background: #d9d9d9;
+    border: 1px solid #999;
+    overflow: hidden;
+}
+
+.member-name {
+    background: #cfcfcf;
+    text-align: center;
+    font-size: 20px;
+    padding: 2px 4px;
+    border-bottom: 1px solid #999;
+}
+
+.member-image {
+    height: 180px;
+    background: #efefef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-bottom {
+    background: #f4f4f4;
+    padding: 4px;
+    border-top: 1px solid #999;
+    font-size: 15px;
+}
+
+.member-role {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    color: #444;
+}
+
+.member-weapon {
+    background: #fff;
+    border: 1px solid #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.member-weapon img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* partners */
+.partners-panel {
+    width: 170px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.partner-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.partner-image {
+    width: 100%;
+    height: 132px;
+    background: #f2f2f2;
+    overflow: hidden;
+}
+
+.partner-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.partner-info {
+    margin-top: -25px;
+    z-index: 2;
+
+    width: 90%;
+    padding: 6px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background: rgba(0,0,0,.75);
+    color: white;
+    border-radius: 8px;
+}
+
+.stars {
+    color: gold;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+/* equipments */
+.equipments-panel {
+    width: 350px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom */
+    gap: 10px;
+}
+
+.equip-card {
+    background: #bfe9f2;
+    border: 2px solid #e9f9ff;
+    width: 100%;   /* penting biar ikut grid */
+    aspect-ratio: 1 / 1; /* biar kotak */
+    height: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.equip-card img {
+    width: 75%;
+    height: 75%;
+    object-fit: contain;
+}
+
+.equip-type {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #aaa;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* bottom row */
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.weapon-section {
+    width: 180px;
+}
+
+.weapon-panel {
+    width: 280px;
+    background: #8f8f8f;
+    padding: 8px;
+    position: relative;
+}
+
+.weapon-box {
+    height: 80px;
+    width: 240px;
+    background: #efefef;
+    border: 1px solid #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.weapon-box img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.save-btn:hover {
+    background: #bfbfbf;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-box {
+    width: min(420px, 90%);
+    background: #123b5a;
+    border: 2px solid #7ee7ff;
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
+    box-shadow: 0 0 30px rgba(126, 231, 255, 0.35);
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.party-options {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.party-options button {
+    padding: 12px;
+    border: 1px solid #7ee7ff;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.party-options button:hover {
+    background: rgba(126, 231, 255, 0.2);
+}
+
+.edit-btn {
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    color: black;
+}
+
+/* partner list */
+.partner-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.partner-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid cyan;
+    border-radius: 8px;
+    cursor: pointer;
+
+    /* tambahan overlay */
+    position: relative;
+    overflow: hidden;
+}
+
+.partner-name {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    font-size: 12px;
+    text-align: center;
+    padding: 2px;
+}
+
+.partner-item:hover {
+    background: rgba(126, 231, 255, 0.3);
+}
+
+.partner-item img {
+    width: 100%;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
+/* equipment list */
+.equipment-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.equipment-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid cyan;
+    border-radius: 8px;
+    cursor: pointer;
+
+    /* tambahan overlay */
+    position: relative;
+    overflow: hidden;
+}
+
+.equipment-name {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    font-size: 12px;
+    text-align: center;
+    padding: 2px;
+}
+
+.equipment-item:hover {
+    background: rgba(126, 231, 255, 0.3);
+}
+
+.equipment-item img {
+    width: 100%;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
+/* mobile */
+@media (max-width: 768px) {
+    .game-ui {
+    aspect-ratio: 9 / 16;
+    min-height: 100vh;
+    width: unset;
+    }
+
+    .content-row {
+    margin: 0px 5px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    }
+
+    /* Party Members tetap lebar besar */
+    .content-row > .column:nth-child(1) {
+    width: calc(100% - 140px);
+    }
+
+    .column{
+    align-items: center;
+    }
+
+    .members-panel {
+    width: 100%;
+    gap: 8px;
+    }
+
+    .member-card {
+    width: calc(50% - 4px);
+    height: auto;
+    }
+
+    /* Partners di samping party */
+    .content-row > .column:nth-child(2) {
+    width: 128px;
+    }
+
+    .partners-panel {
+    width: 100%;
+    }
+
+    .partner-image {
+    height: 100px;
+    }
+
+    /* Equipments turun ke bawah full row */
+    .content-row > .column:nth-child(3) {
+    width: 100%;
+    }
+
+    .equipments-panel {
+    width: 70%;
+    gap: 10px;
+    }
+
+
+    /* Weapon ada di bawah equipments */
+    .bottom-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 12px;
+    }
+
+    .weapon-section {
+    width: 100%;
+    }
+
+    .weapon-panel {
+    width: 100%;
+    }
+
+    .weapon-box {
+    width: 100%;
+    }
+
+    .save-btn {
+    width: 100%;
+    height: 56px;
+    }
+
+    .title {
+    font-size: 20px;
+    gap: 8px;
+    }
+}

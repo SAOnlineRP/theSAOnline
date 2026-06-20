@@ -340,9 +340,16 @@ export default async function handler(req, res) {
                 level,
                 star,
                 catalog:catalog_partners (
-                id,
-                name,
-                link_photo
+                    id,
+                    name,
+                    link_photo,
+                    link_ava,
+                    catalog_partner_skills (
+                        catalog_skills (
+                            id,
+                            name
+                        )
+                    )
                 )
             ),
             second_partner:player_partners!player_equipped_second_partner_fkey (
@@ -350,9 +357,16 @@ export default async function handler(req, res) {
                 level,
                 star,
                 catalog:catalog_partners (
-                id,
-                name,
-                link_photo
+                    id,
+                    name,
+                    link_photo,
+                    link_ava,
+                    catalog_partner_skills (
+                        catalog_skills (
+                            id,
+                            name
+                        )
+                    )
                 )
             )
             `)
@@ -372,10 +386,15 @@ export default async function handler(req, res) {
                 catalog:catalog_equipments (
                 id,
                 name,
-                link_photo
+                atk,
+                max_hp, 
+                def,
+                link_photo,
+                position,
+                type
                 )
             `)
-            .eq("player_id", player_id);
+            .eq("player_id", user.id);
 
         if (equipmentsError) {
             return res.status(500).json({
@@ -393,10 +412,13 @@ export default async function handler(req, res) {
                 id,
                 name,
                 link_photo,
-                stats
+                atk,
+                def,
+                max_hp,
+                max_mp
                 )
             `)
-            .eq("player_id", player_id);
+            .eq("player_id", user.id);
 
         if (partnersError) {
             return res.status(500).json({

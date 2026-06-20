@@ -7,572 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg-top: #003973;
-      --bg-mid: #11375d;
-      --bg-bottom: #020813;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Orbitron', sans-serif !important;
-    }
-
-    body {
-      min-height: 100vh;
-      background-size: cover;
-      background: radial-gradient(circle at top, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
-    }
-
-    .game-ui {
-      height: 100vh;              /* patok ke tinggi layar */
-        width: calc(100vh * 16 / 9); /* biar tetap 16:9 */
-        max-width: 100%;
-        margin: 0 auto;
-
-        position: relative;
-        overflow: hidden;
-    }
-
-    .bg-image {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: min(600px, 60vw);
-      opacity: 0.4;
-      pointer-events: none;
-      z-index: 0;
-      filter: drop-shadow(0 0 20px rgba(0, 221, 255, 0.5)) blur(0.5px);
-      z-index: -1;
-    }
-
-    /* top icons */
-    .top-bar {
-      display: flex !important;
-      justify-content: space-between;
-      gap: 14px;
-      margin-top: 10px;
-      margin-bottom: 6px;
-      font-size: 40px;
-    }
-
-    .top-left {
-      display: flex;
-      gap: 18px;
-      color: #000;
-      align-items: center;
-    }
-
-    .top-left button {
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 40px;
-      line-height: 1;
-    }
-
-    .save-btn {
-      padding: 12px 24px;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      background: #215b7a;
-      border-radius: 30px;
-      box-shadow:
-      inset 0 0 18px rgba(255,255,255,0.04),
-      0 10px 28px rgba(0,0,0,0.35);
-      color: white;
-    }
-
-    /* section titles */
-    .content-row {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      justify-content: center;
-      height: 80%;
-    }
-
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .title {
-      font-size: 28px;
-      color: white;
-      margin-left: 6px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    /* main panels */
-    .panel {
-      background: #215b7a;
-      padding: 10px;
-      position: relative;
-      border-radius: 10px;
-      box-shadow:
-      inset 0 0 18px rgba(255,255,255,0.04),
-      0 10px 28px rgba(0,0,0,0.35);
-    }
-
-    .edit-icon {
-      position: absolute;
-      top: 4px;
-      right: 6px;
-      font-size: 14px;
-      color: #000;
-      cursor: pointer;
-    }
-
-    /* party members */
-    .members-panel {
-      width: 430px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .member-card {
-      width: 200px;
-      height: 340px;
-      background: #d9d9d9;
-      border: 1px solid #999;
-      overflow: hidden;
-    }
-
-    .member-name {
-      background: #cfcfcf;
-      text-align: center;
-      font-size: 20px;
-      padding: 2px 4px;
-      border-bottom: 1px solid #999;
-    }
-
-    .member-image {
-      height: 180px;
-      background: #efefef;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .member-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .member-bottom {
-      background: #f4f4f4;
-      padding: 4px;
-      border-top: 1px solid #999;
-      font-size: 15px;
-    }
-
-    .member-role {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-      color: #444;
-    }
-
-    .member-weapon {
-      height: 18px;
-      background: #fff;
-      border: 1px solid #bbb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .member-weapon img {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: contain;
-    }
-
-    /* partners */
-    .partners-panel {
-      width: 170px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .partner-card {
-      background: #cfcfcf;
-      border: 1px solid #9a9a9a;
-      padding: 6px;
-      position: relative;
-    }
-
-    .partner-image {
-      width: 100%;
-      height: 132px;
-      background: #f2f2f2;
-      overflow: hidden;
-    }
-
-    .partner-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .partner-info {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 4px;
-      font-size: 12px;
-    }
-
-    .partner-badge {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: red;
-    }
-
-    .stars {
-      color: gold;
-      font-size: 11px;
-      letter-spacing: 1px;
-    }
-
-    /* equipments */
-    .equipments-panel {
-      width: 350px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr); /* 2 kolom */
-      gap: 10px;
-    }
-
-    .equip-card {
-      background: #bfe9f2;
-      border: 2px solid #e9f9ff;
-      width: 100%;   /* penting biar ikut grid */
-      aspect-ratio: 1 / 1; /* biar kotak */
-      height: auto;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .equip-card img {
-      width: 75%;
-      height: 75%;
-      object-fit: contain;
-    }
-
-    .equip-type {
-      position: absolute;
-      bottom: 4px;
-      left: 4px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid #aaa;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* bottom row */
-    .bottom-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-
-    .weapon-section {
-      width: 180px;
-    }
-
-    .weapon-panel {
-      width: 280px;
-      background: #8f8f8f;
-      padding: 8px;
-      position: relative;
-    }
-
-    .weapon-box {
-      height: 80px;
-      width: 240px;
-      background: #efefef;
-      border: 1px solid #bbb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .weapon-box img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-    }
-
-    .save-btn:hover {
-      background: #bfbfbf;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.65);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    .modal-overlay.show {
-      display: flex;
-    }
-
-    .modal-box {
-      width: min(420px, 90%);
-      background: #123b5a;
-      border: 2px solid #7ee7ff;
-      border-radius: 16px;
-      padding: 24px;
-      color: white;
-      box-shadow: 0 0 30px rgba(126, 231, 255, 0.35);
-      position: relative;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      border: none;
-      background: transparent;
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-    }
-
-    .party-options {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .party-options button {
-      padding: 12px;
-      border: 1px solid #7ee7ff;
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .party-options button:hover {
-      background: rgba(126, 231, 255, 0.2);
-    }
-
-    .edit-btn {
-      cursor: pointer;
-    }
-
-    .edit-btn:hover {
-      color: black;
-    }
-
-    /* partner list */
-    .partner-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      max-height: 250px;
-      overflow-y: auto;
-      margin-top: 10px;
-    }
-
-    .partner-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px;
-      border: 1px solid cyan;
-      border-radius: 8px;
-      cursor: pointer;
-
-      /* tambahan overlay */
-      position: relative;
-      overflow: hidden;
-    }
-
-    .partner-name {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.6);
-      font-size: 12px;
-      text-align: center;
-      padding: 2px;
-    }
-
-    .partner-item:hover {
-      background: rgba(126, 231, 255, 0.3);
-    }
-
-    .partner-item img {
-      width: 100%;
-      object-fit: cover;
-      margin-bottom: 5px;
-    }
-
-    /* equipment list */
-    .equipment-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      max-height: 250px;
-      overflow-y: auto;
-      margin-top: 10px;
-    }
-
-    .equipment-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px;
-      border: 1px solid cyan;
-      border-radius: 8px;
-      cursor: pointer;
-
-      /* tambahan overlay */
-      position: relative;
-      overflow: hidden;
-    }
-
-    .equipment-name {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.6);
-      font-size: 12px;
-      text-align: center;
-      padding: 2px;
-    }
-
-    .equipment-item:hover {
-      background: rgba(126, 231, 255, 0.3);
-    }
-
-    .equipment-item img {
-      width: 100%;
-      object-fit: cover;
-      margin-bottom: 5px;
-    }
-
-    /* mobile */
-    @media (max-width: 768px) {
-      .game-ui {
-        aspect-ratio: 9 / 16;
-        min-height: 100vh;
-        width: unset;
-      }
-
-      .content-row {
-        margin: 0px 5px;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      /* Party Members tetap lebar besar */
-      .content-row > .column:nth-child(1) {
-        width: calc(100% - 140px);
-      }
-
-      .column{
-        align-items: center;
-      }
-
-      .members-panel {
-        width: 100%;
-        gap: 8px;
-      }
-
-      .member-card {
-        width: calc(50% - 4px);
-        height: auto;
-      }
-
-      /* Partners di samping party */
-      .content-row > .column:nth-child(2) {
-        width: 128px;
-      }
-
-      .partners-panel {
-        width: 100%;
-      }
-
-      .partner-image {
-        height: 100px;
-      }
-
-      /* Equipments turun ke bawah full row */
-      .content-row > .column:nth-child(3) {
-        width: 100%;
-      }
-
-      .equipments-panel {
-        width: 70%;
-        gap: 10px;
-      }
-
-
-      /* Weapon ada di bawah equipments */
-      .bottom-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-        margin-top: 12px;
-      }
-
-      .weapon-section {
-        width: 100%;
-      }
-
-      .weapon-panel {
-        width: 100%;
-      }
-
-      .weapon-box {
-        width: 100%;
-      }
-
-      .save-btn {
-        width: 100%;
-        height: 56px;
-      }
-
-      .title {
-        font-size: 20px;
-        gap: 8px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/css/party.css">
 </head>
 <body>
   <div class="game-ui">
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div>Loading Assets...</div>
+        <div class="loading-bar-container">
+            <div id="loading-bar" class="loading-bar"></div>
+        </div>
+    </div>
     <img src="/img/aincard.png" class="bg-image" alt="Aincrad" />
     <div class="top-bar">
       <div class="top-left">
@@ -591,9 +36,9 @@
         <div class="panel members-panel">
 
           <div class="member-card">
-            <div class="member-name">Aleyna</div>
+            <div class="member-name">Player 1</div>
             <div class="member-image">
-              <img src="https://via.placeholder.com/120x140" alt="Aleyna">
+              <img src="img/default-nodata.png" alt="Aleyna">
             </div>
             <div class="member-bottom">
               <div class="member-role">
@@ -601,23 +46,23 @@
                 <span>Lv.100</span>
               </div>
               <div class="member-weapon">
-                <img src="https://via.placeholder.com/70x14" alt="weapon">
+                <img src="img/nobadge.png" alt="weapon">
               </div>
             </div>
           </div>
 
           <div class="member-card">
-            <div class="member-name">Arjuna</div>
+            <div class="member-name">Player 2</div>
             <div class="member-image">
-              <img src="https://via.placeholder.com/120x140" alt="Arjuna">
+              <img src="img/default-nodata.png" alt="Arjuna">
             </div>
             <div class="member-bottom">
               <div class="member-role">
-                <span>Skill Record</span>
+                <span>Partners</span>
                 <span>Lv.100</span>
               </div>
               <div class="member-weapon">
-                <img src="https://via.placeholder.com/70x14" alt="weapon">
+                <img src="img/nobadge.png" alt="weapon">
               </div>
             </div>
           </div>
@@ -631,22 +76,28 @@
           
 
           <div class="partner-card">
-            <div class="partner-image">
-              <img src="https://via.placeholder.com/150x70" alt="Partner 1">
+            <div class="partner-image" id="slot-1-partner">
+              <img src="img/default-nodata.png" alt="Partner 1">
             </div>
             <div class="partner-info">
-              <div class="partner-badge"></div>
+              <p id="partner-1-name">ABC</p>
               <div class="stars">★★★★★</div>
+              <button id="partner-1-skill-btn" class="skill-btn">
+                  Pilih Skill
+              </button>
             </div>
           </div>
 
           <div class="partner-card">
-            <div class="partner-image">
-              <img src="https://via.placeholder.com/150x70" alt="Partner 2">
+            <div class="partner-image" id="slot-2-partner">
+              <img src="img/default-nodata.png" alt="Partner 2">
             </div>
             <div class="partner-info">
-              <div class="partner-badge"></div>
+              <p id="partner-2-name">ABC</p>
               <div class="stars">★★★★★</div>
+              <button id="partner-1-skill-btn" class="skill-btn">
+                  Pilih Skill
+              </button>
             </div>
           </div>
         </div>
@@ -657,28 +108,38 @@
         <div class="title"><span>Equipments</span><a href="#"><span id="edit-equipment">✎</span></a></div>
         <div class="panel equipments-panel">
 
-          <div class="equip-card">
-            <img src="https://via.placeholder.com/90x70" alt="Weapon">
+          <div class="equip-card" id="eq-right-arm">
+            <img src="img/default-nodata.png" alt="Weapon">
             <div class="equip-type">👕</div>
           </div>
 
-          <div class="equip-card">
-            <img src="https://via.placeholder.com/90x70" alt="Shield">
+          <div class="equip-card" id="eq-left-arm">
+            <img src="img/default-nodata.png" alt="Shield">
             <div class="equip-type">👖</div>
           </div>
 
-          <div class="equip-card">
-            <img src="https://via.placeholder.com/90x70" alt="Armor Top">
+          <div class="equip-card" id="eq-upper">
+            <img src="img/default-nodata.png" alt="Armor Top">
             <div class="equip-type">👕</div>
           </div>
 
-          <div class="equip-card">
-            <img src="https://via.placeholder.com/90x70" alt="Armor Bottom">
+          <div class="equip-card" id="eq-lower">
+            <img src="img/default-nodata.png" alt="Armor Bottom">
             <div class="equip-type">👖</div>
           </div>
         </div>
       </div>
     </div>
+    
+    <div id="skillModal" class="modal-overlay">
+      <div class="modal-box">
+          <h3>Pilih Skill</h3>
+
+          <div id="skill-options" class="party-options">
+          </div>
+      </div>
+    </div>
+
     <div id="partyModal" class="modal-overlay">
       <div class="modal-box">
         <button class="modal-close" id="closePartyModal">×</button>
@@ -689,7 +150,6 @@
         <div class="party-options">
           <button>Aleyna</button>
           <button>Arjuna</button>
-          <button>Empty Slot</button>
         </div>
       </div>
     </div>
@@ -736,7 +196,7 @@
 
     <div id="equipmentListModal" class="modal-overlay">
       <div class="modal-box">
-        <h3>Pilih Partner</h3>
+        <h3>Pilih Equipment</h3>
 
         <div class="equipment-list">
           
@@ -744,7 +204,15 @@
       </div>
     </div>
   </div>
-  <script>
+  <script type="module">
+    import { supabase } from "/js/supabaseClient.js";
+    import { requireLogin } from "/js/authGuard.js";
+
+    const overlay = document.getElementById("loading-overlay");
+    const bar = document.getElementById("loading-bar");
+
+    let progress = 0;
+
     function goBack() {
       window.history.back();
     }
@@ -755,6 +223,182 @@
     function saveChange() {
       alert("Changes saved!");
     }
+
+    window.goBack = goBack;
+    window.goHome = goHome;
+    window.saveChange = saveChange;
+
+    let playerPartners;
+    let playerEquipments;
+    let playerWeapons;
+    let playerLefts;
+    let playerUppers;
+    let playerLowers;
+    let playerEquipped;
+
+    let selectedPartnerSkillId = null;
+    let currentPartnerSkills = [];
+
+    async function loadData(session){
+      try {
+        setProgress(10);
+        
+        const reEquipped = await fetch(
+            `/api/player_data`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: "getEquipped",
+                    table: "player_equipped"
+                })
+            }
+        );
+        const EquppedRes = await reEquipped.json();
+        const equipped = EquppedRes.data.equipped;
+        const first_partner = equipped.first_partner;
+        const second_partner = equipped.second_partner;
+        const right_arm = equipped.right_arm;
+        const left_arm = equipped.left_arm;
+        const upper = equipped.upper;
+        const lower = equipped.lower;
+
+        document.querySelector("#slot-1-partner img").src = first_partner.catalog.link_ava;
+        document.querySelector("#slot-2-partner img").src = second_partner.catalog.link_ava;
+        document.getElementById("partner-1-name").innerText = first_partner.catalog.name + " Lv." + first_partner.level;
+        document.getElementById("partner-2-name").innerText = second_partner.catalog.name + " Lv." + second_partner.level;
+        currentPartnerSkills = first_partner.catalog.catalog_partner_skills;
+
+        selectedPartnerSkillId =
+            first_partner.equipped_partner_skill_id;
+
+        console.log("Selected Partner Skill ", selectedPartnerSkillId);
+
+        updateSkillButton();
+        setProgress(30);
+        document.querySelector("#eq-right-arm img").src = right_arm.catalog.link_photo;
+        document.querySelector("#eq-left-arm img").src = left_arm.catalog.link_photo;
+        document.querySelector("#eq-upper img").src = upper.catalog.link_photo;
+        document.querySelector("#eq-lower img").src = lower.catalog.link_photo;
+          
+
+        playerPartners = EquppedRes.data.partners;
+        playerEquipments = EquppedRes.data.equipments;
+        playerWeapons = playerEquipments.filter(row => row.catalog.position === "right-weapon");
+        playerLefts = playerEquipments.filter(row => row.catalog.position === "left-weapon");
+        playerUppers = playerEquipments.filter(row => row.catalog.position === "upper");
+        playerLowers = playerEquipments.filter(row => row.catalog.position === "lower");
+        setProgress(50);
+        await waitForImages();
+        setProgress(100);
+
+        setTimeout(hideLoading, 300);
+      } catch (err) {
+        console.error("Load error:", err);
+        hideLoading();
+      } 
+    }
+
+    function setProgress(value) {
+        progress = value;
+        bar.style.width = progress + "%";
+    }
+
+    function hideLoading() {
+        overlay.classList.add("fade-out");
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, 500);
+    }
+
+    function waitForImages() {
+        const images = document.querySelectorAll("img");
+        let loaded = 0;
+        const total = images.length;
+
+        if (total === 0) return Promise.resolve();
+
+        return new Promise((resolve) => {
+            images.forEach((img) => {
+            if (img.complete) {
+                loaded++;
+                update();
+            } else {
+                img.onload = () => {
+                loaded++;
+                update();
+                };
+                img.onerror = () => {
+                loaded++;
+                update();
+                };
+            }
+            });
+
+            function update() {
+            const percent = (loaded / total) * 50; // max 50%
+            setProgress(50 + percent);
+
+            if (loaded === total) resolve();
+            }
+        });
+    }
+
+    function updateSkillButton() {
+        const btn = document.getElementById("partner-1-skill-btn");
+        console.log("selected partner skill id ", selectedPartnerSkillId);
+        console.log("current partner skills ", currentPartnerSkills);
+        const catalogSkills = currentPartnerSkills.map(item => item.catalog_skills);
+        console.log("catalog skills ", catalogSkills);
+        const skill = catalogSkills.find(
+            s => s.id === selectedPartnerSkillId
+        );
+
+        console.log("Skill ", skill);
+
+        btn.innerText = skill
+            ? skill.name
+            : "Pilih Skill";
+    }
+
+    const skillModal = document.getElementById("skillModal");
+    const skillOptions = document.getElementById("skill-options");
+
+    function renderSkillModal() {
+      const catalogSkills = currentPartnerSkills.map(item => item.catalog_skills);
+        skillOptions.innerHTML = catalogSkills
+            .map(skill => `
+                <button
+                    class="skill-option"
+                    data-id="${skill.id}">
+                    ${skill.name}
+                </button>
+            `)
+            .join("");
+
+        document.querySelectorAll(".skill-option")
+            .forEach(btn => {
+                btn.onclick = () => {
+                    selectedPartnerSkillId =
+                        btn.dataset.id;
+
+                    updateSkillButton();
+
+                    skillModal.classList.remove("show");
+                };
+            });
+    }
+    document
+    .getElementById("partner-1-skill-btn")
+    .addEventListener("click", () => {
+
+        renderSkillModal();
+
+        skillModal.classList.add("show");
+    });
 
     const editPartyBtn = document.getElementById("edit-party");
     const partyModal = document.getElementById("partyModal");
@@ -786,22 +430,12 @@
     let selectedSlotIndex = null;
     let selectedPartners = [null, null]; // slot 1 & 2
 
-    /* 🔥 DATA PARTNER */
-    const partnerData = [
-      { name: "Kirito", img: "/img/kirito.png" },
-      { name: "Asuna", img: "/img/kirito.png" },
-      { name: "Sinon", img: "/img/kirito.png" },
-      { name: "Leafa", img: "/img/kirito.png" },
-      { name: "Alice", img: "/img/kirito.png" },
-      { name: "Eugeo", img: "/img/kirito.png" }
-    ];
-
     /* 🔧 RENDER LIST */
     function renderPartnerList() {
-      partnerList.innerHTML = partnerData.map((p, i) => `
+      partnerList.innerHTML = playerPartners.map((p, i) => `
         <div class="partner-item" data-index="${i}">
-          <img src="${p.img}">
-          <div class="partner-name">${p.name}</div>
+          <img src="${p.catalog.link_ava}">
+          <div class="partner-name">${p.catalog.name}</div>
         </div>
       `).join("");
 
@@ -811,7 +445,7 @@
       items.forEach(item => {
         item.onclick = () => {
           const index = item.dataset.index;
-          const data = partnerData[index];
+          const data = playerPartners[index];
 
           // ❌ CEK DUPLIKAT
           if (selectedPartners.includes(index)) {
@@ -826,7 +460,7 @@
             // update UI
             const card = partnerCards[selectedSlotIndex];
             const img = card.querySelector("img");
-            img.src = data.img;
+            img.src = data.catalog.link_ava;
           }
 
           partnerListModal.classList.remove("show");
@@ -850,12 +484,6 @@
       };
     });
 
-    /* klik luar modal */
-    window.onclick = (e) => {
-      if (e.target === partnerModal) partnerModal.classList.remove("show");
-      if (e.target === partnerListModal) partnerListModal.classList.remove("show");
-    };
-
     const editEquipmentBtn = document.getElementById("edit-equipment");
     const equipmentModal = document.getElementById("equipmentModal");
     const equipmentListModal = document.getElementById("equipmentListModal");
@@ -866,39 +494,11 @@
 
     let selectedEquipmentIndex = null;
 
-    /* 🔥 DATA PARTNER */
-    const equipmentData = [
-      { name: "Sword", img: "/img/kirito.png" },
-      { name: "Dagger", img: "/img/kirito.png" },
-      { name: "Rapier", img: "/img/kirito.png" },
-      { name: "Axe", img: "/img/kirito.png" },
-      { name: "Bow", img: "/img/kirito.png" },
-      { name: "Bow", img: "/img/kirito.png" }
-    ];
-
-    const weaponList = [
-      { name: "Sword", img: "/img/kirito.png" },
-      { name: "Axe", img: "/img/eq-1.png" }
-    ];
-
-    const shieldList = [
-      { name: "Shield", img: "/img/eq-2.png" },
-      { name: "Barrier", img: "/img/eq-2.png" }
-    ];
-
-    const armorTopList = [
-      { name: "Armor Top A", img: "/img/eq-3.png" }
-    ];
-
-    const armorBottomList = [
-      { name: "Armor Bottom A", img: "/img/eq-4.png" }
-    ];
-
     function getEquipmentListBySlot(slotIndex) {
-      if (slotIndex === 0) return weaponList;
-      if (slotIndex === 1) return shieldList;
-      if (slotIndex === 2) return armorTopList;
-      if (slotIndex === 3) return armorBottomList;
+      if (slotIndex === 0) return playerWeapons;
+      if (slotIndex === 1) return playerLefts;
+      if (slotIndex === 2) return playerUppers;
+      if (slotIndex === 3) return playerLowers;
       return [];
     }
 
@@ -908,8 +508,8 @@
 
       equipmentList.innerHTML = currentData.map((p, i) => `
         <div class="equipment-item" data-index="${i}">
-          <img src="${p.img}">
-          <div class="equipment-name">${p.name}</div>
+          <img src="${p.catalog.link_photo}">
+          <div class="equipment-name">${p.catalog.name}</div>
         </div>
       `).join("");
 
@@ -923,7 +523,7 @@
           if (selectedEquipmentIndex !== null) {
             const card = equipmentCards[selectedEquipmentIndex];
             const img = card.querySelector("img");
-            img.src = data.img;
+            img.src = data.catalog.link_photo;
           }
 
           equipmentListModal.classList.remove("show");
@@ -946,12 +546,28 @@
         equipmentListModal.classList.add("show");
       };
     });
+    document.querySelectorAll(".modal-overlay").forEach(modal => {
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.classList.remove("show");
+            }
+        });
+    });
 
-    /* klik luar modal */
-    window.onclick = (e) => {
-      if (e.target === equipmentModal) equipmentModal.classList.remove("show");
-      if (e.target === equipmentListModal) equipmentListModal.classList.remove("show");
-    };
+    async function init() {
+      try {
+        const session = await requireLogin();
+        if (!session) return; // ✅ sekarang valid
+
+        await loadData(session);
+        setTimeout(hideLoading, 500);
+
+      } catch (err) {
+        console.error("Loading error:", err);
+      }
+    }
+
+    init();
   </script>
 </body>
 </html>
