@@ -332,16 +332,29 @@
         const stars = "★".repeat(data.star);
 
         container.innerHTML = `
-            <div class="detail-partner">
+            <div class="name-section">
                 <div>
-                    <div class="name-section">
-                        <div>
-                            <h3>${data.partner.name}</h3>
-                        </div>
+                    <h3>${data.partner.name}</h3>
+                </div>
 
-                        <div class="levelup-partner">
-                            <h3>Lv. ${data.level}</h3>
-                            <button id="openLevelupButton">
+                <div class="levelup-partner">
+                    <h3>Lv. ${data.level}</h3>
+                    <button id="openLevelupButton">
+                        <img
+                            src="/img/black-plus.png"
+                            style="width:25px;height:25px"
+                        >
+                    </button>
+                </div>
+            </div>
+            <div class="partner-info" style="display:flex;min-height: 75%;">
+                <div class="detail-partner">
+                    <div>
+
+                        <div class="stars-partner"
+                            style="display:flex;gap:10px">
+                            <div class="stars" style="font-size: 25px;">${stars}</div>
+                            <button id="openStarUpButton" style="margin-top: 5px;">
                                 <img
                                     src="/img/black-plus.png"
                                     style="width:25px;height:25px"
@@ -350,63 +363,52 @@
                         </div>
                     </div>
 
-                    <div class="stars-partner"
-                        style="display:flex;gap:10px">
-                        <div class="stars" style="font-size: 25px;">${stars}</div>
-                        <button id="openStarUpButton" style="margin-top: 5px;">
-                            <img
-                                src="/img/black-plus.png"
-                                style="width:25px;height:25px"
-                            >
-                        </button>
+                    <div class="stat-partner">
+                        <div class="stat-item">
+                            <div class="stat-label">
+                                ATK (${data.cur_atk})
+                            </div>
+                            <div class="stat-bar">
+                                <div
+                                    class="stat-fill"
+                                    style="width:${Math.min(data.cur_atk * 2, 100)}%"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">
+                                DEF (${data.cur_def})
+                            </div>
+                            <div class="stat-bar">
+                                <div
+                                    class="stat-fill"
+                                    style="width:${Math.min(data.cur_def * 2, 100)}%"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">
+                                HP (${data.cur_max_hp})
+                            </div>
+                            <div class="stat-bar">
+                                <div
+                                    class="stat-fill"
+                                    style="width:${Math.min(data.cur_max_hp, 100)}%"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skills-partner">
+                        ${skillsHtml}
                     </div>
                 </div>
 
-                <div class="stat-partner">
-                    <div class="stat-item">
-                        <div class="stat-label">
-                            ATK (${data.cur_atk})
-                        </div>
-                        <div class="stat-bar">
-                            <div
-                                class="stat-fill"
-                                style="width:${Math.min(data.cur_atk * 2, 100)}%"
-                            ></div>
-                        </div>
-                    </div>
-
-                    <div class="stat-item">
-                        <div class="stat-label">
-                            DEF (${data.cur_def})
-                        </div>
-                        <div class="stat-bar">
-                            <div
-                                class="stat-fill"
-                                style="width:${Math.min(data.cur_def * 2, 100)}%"
-                            ></div>
-                        </div>
-                    </div>
-
-                    <div class="stat-item">
-                        <div class="stat-label">
-                            HP (${data.cur_max_hp})
-                        </div>
-                        <div class="stat-bar">
-                            <div
-                                class="stat-fill"
-                                style="width:${Math.min(data.cur_max_hp, 100)}%"
-                            ></div>
-                        </div>
-                    </div>
+                <div class="foto-partner">
+                    <img src="${data.partner.link_photo}">
                 </div>
-
-                <div class="skills-partner">
-                    ${skillsHtml}
-                </div>
-            </div>
-
-            <div class="foto-partner">
-                <img src="${data.partner.link_photo}">
             </div>
         `;
 
