@@ -693,6 +693,20 @@ export default async function handler(req, res) {
 
         return res.status(200).json({ success: true, message: "Data inserted successfully" });
     }
+
+    else if(action == "levelUpPartner"){
+        // naikkin level partner
+        // butuh id partnernya
+
+        // hapus itemnya
+        // butuh id itemnya? atau nama itemnya
+    }
+    else if(action == "starUpPartner"){
+        // naikkin star partner
+
+
+        // hapus itemnya
+    }
   } catch (error) {
     console.error("Error in player_data API:", error);
     return res.status(500).json({ error: "Internal Server Error" });

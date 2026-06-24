@@ -713,10 +713,15 @@
             message.textContent = `Jumlah item tidak cukup. Butuh ${requiredQty} ${selectedItem.catalog?.name} untuk naik ${amount} level.`;
             return;
         }
+        
+        // try 
+        // kasih loading 
+        // api > ganti level dari partner, hapus item sesuai amount
+        // finally baru closeUpModal dan renderPartnerDetail lgi
 
         selectedItem.quantity -= requiredQty;
         currentPartner.level += amount;
-
+        
         renderPartnerDetail(currentPartner);
         closeLevelUpModal();
 
