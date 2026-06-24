@@ -54,15 +54,15 @@
     // LOAD TEXTURES
     //
     const textures = {
-        idle_down: await Assets.load('/img/player/idle_down.png'),
-        idle_up: await Assets.load('/img/player/idle_up.png'),
-        idle_left: await Assets.load('/img/player/idle_left.png'),
-        idle_right: await Assets.load('/img/player/idle_right.png'),
+        idle_down: await Assets.load('/player/idle_down.png'),
+        idle_up: await Assets.load('/player/idle_up.png'),
+        idle_left: await Assets.load('/player/idle_left.png'),
+        idle_right: await Assets.load('/player/idle_right.png'),
 
-        walk_down: await Assets.load('/img/player/walk_down.png'),
-        walk_up: await Assets.load('/img/player/walk_up.png'),
-        walk_left: await Assets.load('/img/player/walk_left.png'),
-        walk_right: await Assets.load('/img/player/walk_right.png'),
+        walk_down: await Assets.load('/player/walk_down.png'),
+        walk_up: await Assets.load('/player/walk_up.png'),
+        walk_left: await Assets.load('/player/walk_left.png'),
+        walk_right: await Assets.load('/player/walk_right.png'),
     }
 
     //
