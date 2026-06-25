@@ -121,30 +121,6 @@
 
     app.stage.addChild(player)
 
-    //
-    // PLAYER SCALE
-    //
-    function updatePlayerScale() {
-
-        const scale = Math.min(
-            app.screen.width / 900,
-            app.screen.height / 700
-        )
-
-        const playerSize = 2
-        const enemySize = 2
-
-        player.scale.set(
-            Math.max(scale, 1) * playerSize
-        )
-
-        enemy.scale.set(
-            Math.max(scale, 1) * enemySize
-        )
-    }
-
-    updatePlayerScale()
-
     // ENEMY
     const enemy = new AnimatedSprite(
         enemyAnimations.idle
@@ -168,6 +144,30 @@
     }
 
     const enemySpeed = 100
+
+    //
+    // PLAYER SCALE
+    //
+    function updatePlayerScale() {
+
+        const scale = Math.min(
+            app.screen.width / 900,
+            app.screen.height / 700
+        )
+
+        const playerSize = 2
+        const enemySize = 2
+
+        player.scale.set(
+            Math.max(scale, 1) * playerSize
+        )
+
+        enemy.scale.set(
+            Math.max(scale, 1) * enemySize
+        )
+    }
+
+    updatePlayerScale()
 
     //
     // JOYSTICK
