@@ -29,7 +29,9 @@
 
     const playerStats = {
         hp: 100,
-        maxHp: 100
+        maxHp: 100,
+        mp: 100,
+        maxMp: 100
     }
 
     const enemyStats = {
@@ -38,6 +40,25 @@
     }
 
     const attackRange = 90
+    const playerAttackPower = 20
+    const skillAttackPower = 40
+    const healAmount = 30
+    const buffDuration = 4 * 60
+    const buffMultiplier = 1.5
+    const attackMpGain = 8
+    const skillMpCost = {
+        attack: 20,
+        heal: 25,
+        buff: 18
+    }
+
+    let playerAttackBuff = false
+    let buffTimer = 0
+    let skillCooldowns = {
+        attack: 0,
+        heal: 0,
+        buff: 0
+    }
 
     const hpBarWidth = 80
     const hpBarHeight = 10
@@ -50,6 +71,15 @@
     playerHpBarFill.rect(0, 0, hpBarWidth, hpBarHeight).fill(0x00cc66)
     playerHpBar.addChild(playerHpBarBg, playerHpBarFill)
     ui.addChild(playerHpBar)
+
+    const playerMpBar = new Container()
+    const playerMpBarBg = new Graphics()
+    playerMpBarBg.rect(0, 0, hpBarWidth, hpBarHeight).fill(0x222222)
+    playerMpBarBg.stroke({ color: 0xffffff, width: 1 })
+    const playerMpBarFill = new Graphics()
+    playerMpBarFill.rect(0, 0, hpBarWidth, hpBarHeight).fill(0x3399ff)
+    playerMpBar.addChild(playerMpBarBg, playerMpBarFill)
+    ui.addChild(playerMpBar)
 
     const enemyHpBar = new Container()
     const enemyHpBarBg = new Graphics()
@@ -65,6 +95,10 @@
         playerHpBarFill.clear()
         playerHpBarFill.rect(0, 0, hpBarWidth * Math.max(playerRatio, 0), hpBarHeight).fill(0x00cc66)
 
+        const playerMpRatio = playerStats.mp / playerStats.maxMp
+        playerMpBarFill.clear()
+        playerMpBarFill.rect(0, 0, hpBarWidth * Math.max(playerMpRatio, 0), hpBarHeight).fill(0x3399ff)
+
         const enemyRatio = enemyStats.hp / enemyStats.maxHp
         enemyHpBarFill.clear()
         enemyHpBarFill.rect(0, 0, hpBarWidth * Math.max(enemyRatio, 0), hpBarHeight).fill(0xff4d4d)
@@ -72,12 +106,18 @@
 
     updateHealthBars()
 
+    const controls = document.createElement('div')
+    controls.style.position = 'fixed'
+    controls.style.right = '20px'
+    controls.style.bottom = '20px'
+    controls.style.display = 'flex'
+    controls.style.flexDirection = 'column'
+    controls.style.gap = '10px'
+    controls.style.zIndex = '1000'
+    document.body.appendChild(controls)
+
     const attackButton = document.createElement('button')
     attackButton.textContent = 'Attack'
-    attackButton.style.position = 'fixed'
-    attackButton.style.right = '20px'
-    attackButton.style.bottom = '20px'
-    attackButton.style.zIndex = '1000'
     attackButton.style.padding = '10px 16px'
     attackButton.style.border = 'none'
     attackButton.style.borderRadius = '10px'
@@ -86,7 +126,29 @@
     attackButton.style.fontWeight = '700'
     attackButton.style.cursor = 'pointer'
     attackButton.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)'
-    document.body.appendChild(attackButton)
+    controls.appendChild(attackButton)
+
+    const skillButtons = {
+        attack: document.createElement('button'),
+        heal: document.createElement('button'),
+        buff: document.createElement('button')
+    }
+
+    skillButtons.attack.textContent = 'Skill Attack'
+    skillButtons.heal.textContent = 'Skill Heal'
+    skillButtons.buff.textContent = 'Skill Buff'
+
+    Object.values(skillButtons).forEach((button) => {
+        button.style.padding = '10px 16px'
+        button.style.border = 'none'
+        button.style.borderRadius = '10px'
+        button.style.background = '#4a90e2'
+        button.style.color = '#fff'
+        button.style.fontWeight = '700'
+        button.style.cursor = 'pointer'
+        button.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)'
+        controls.appendChild(button)
+    })
 
     function playAttackAnimation() {
         let attackName = 'attack_down'
@@ -128,7 +190,9 @@
         }
 
         playAttackAnimation()
-        enemyStats.hp = Math.max(0, enemyStats.hp - 20)
+        const damage = playerAttackBuff ? playerAttackPower * buffMultiplier : playerAttackPower
+        enemyStats.hp = Math.max(0, enemyStats.hp - damage)
+        playerStats.mp = Math.min(playerStats.maxMp, playerStats.mp + attackMpGain)
         updateHealthBars()
 
         if (enemyStats.hp <= 0) {
@@ -137,9 +201,66 @@
         }
     }
 
+    function useSkill(skillName) {
+        if (skillCooldowns[skillName] > 0) {
+            return
+        }
+
+        if (skillName === 'attack') {
+            if (playerStats.mp < skillMpCost.attack) {
+                return
+            }
+
+            if (!enemy.visible || enemyStats.hp <= 0) {
+                return
+            }
+
+            const distance = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+            if (distance > attackRange) {
+                return
+            }
+
+            playAttackAnimation()
+            enemyStats.hp = Math.max(0, enemyStats.hp - skillAttackPower)
+            playerStats.mp = Math.max(0, playerStats.mp - skillMpCost.attack)
+            updateHealthBars()
+            if (enemyStats.hp <= 0) {
+                enemy.visible = false
+                enemyHpBar.visible = false
+            }
+            skillCooldowns.attack = 4 * 60
+        }
+
+        if (skillName === 'heal') {
+            if (playerStats.mp < skillMpCost.heal) {
+                return
+            }
+
+            playerStats.mp = Math.max(0, playerStats.mp - skillMpCost.heal)
+            playerStats.hp = Math.min(playerStats.maxHp, playerStats.hp + healAmount)
+            updateHealthBars()
+            skillCooldowns.heal = 6 * 60
+        }
+
+        if (skillName === 'buff') {
+            if (playerStats.mp < skillMpCost.buff) {
+                return
+            }
+
+            playerStats.mp = Math.max(0, playerStats.mp - skillMpCost.buff)
+            playerAttackBuff = true
+            buffTimer = buffDuration
+            skillCooldowns.buff = 8 * 60
+        }
+    }
+
     attackButton.addEventListener('click', () => {
         handleAttack()
     })
+
+    skillButtons.attack.addEventListener('click', () => useSkill('attack'))
+    skillButtons.heal.addEventListener('click', () => useSkill('heal'))
+    skillButtons.buff.addEventListener('click', () => useSkill('buff'))
 
     //
     // CREATE FRAMES
@@ -263,6 +384,11 @@
     }
 
     const enemySpeed = 100
+    const enemyChaseRange = 250
+    const enemyAttackRange = 70
+    const enemyAttackDamage = 10
+    const enemyAttackCooldown = 1.2 * 60
+    let enemyAttackTimer = 0
 
     //
     // PLAYER SCALE
@@ -521,43 +647,93 @@
             )
         )
 
-        enemyAI.timer -= delta
+        const enemyAlive = enemy.visible && enemyStats.hp > 0
 
-        if (enemyAI.timer <= 0) {
-
-            enemyAI.timer = 60 + Math.random() * 120
-
-            enemyAI.dx = Math.floor(Math.random() * 3) - 1
-            enemyAI.dy = Math.floor(Math.random() * 3) - 1
-        }
-
-        enemy.x += enemyAI.dx * enemySpeed * delta
-        enemy.y += enemyAI.dy * enemySpeed * delta
-
-        enemy.x = Math.max(
-            enemy.width / 2,
-            Math.min(
-                app.screen.width - enemy.width / 2,
-                enemy.x
-            )
-        )
-
-        enemy.y = Math.max(
-            enemy.height / 2,
-            Math.min(
-                app.screen.height - enemy.height / 2,
-                enemy.y
-            )
-        )
-
-        if (enemyAI.dx !== 0 || enemyAI.dy !== 0) {
-            setEnemyAnimation('walk')
-        } else {
+        if (!enemyAlive) {
+            enemyAI.dx = 0
+            enemyAI.dy = 0
+            enemyAttackTimer = 0
             setEnemyAnimation('idle')
+        } else {
+            const distanceToPlayer = Math.hypot(
+                player.x - enemy.x,
+                player.y - enemy.y
+            )
+
+            if (distanceToPlayer < enemyChaseRange) {
+                const chaseDx = player.x - enemy.x
+                const chaseDy = player.y - enemy.y
+                const chaseDistance = Math.hypot(chaseDx, chaseDy) || 1
+
+                enemyAI.dx = chaseDx / chaseDistance
+                enemyAI.dy = chaseDy / chaseDistance
+                enemyAI.timer = 0
+            } else {
+                enemyAI.timer -= delta
+
+                if (enemyAI.timer <= 0) {
+                    enemyAI.timer = 60 + Math.random() * 120
+
+                    enemyAI.dx = Math.floor(Math.random() * 3) - 1
+                    enemyAI.dy = Math.floor(Math.random() * 3) - 1
+                }
+            }
+
+            enemy.x += enemyAI.dx * enemySpeed * delta
+            enemy.y += enemyAI.dy * enemySpeed * delta
+
+            enemy.x = Math.max(
+                enemy.width / 2,
+                Math.min(
+                    app.screen.width - enemy.width / 2,
+                    enemy.x
+                )
+            )
+
+            enemy.y = Math.max(
+                enemy.height / 2,
+                Math.min(
+                    app.screen.height - enemy.height / 2,
+                    enemy.y
+                )
+            )
+
+            if (enemyAI.dx !== 0 || enemyAI.dy !== 0) {
+                setEnemyAnimation('walk')
+            } else {
+                setEnemyAnimation('idle')
+            }
+
+            if (distanceToPlayer <= enemyAttackRange) {
+                enemyAttackTimer -= delta
+
+                if (enemyAttackTimer <= 0) {
+                    playerStats.hp = Math.max(0, playerStats.hp - enemyAttackDamage)
+                    updateHealthBars()
+                    enemyAttackTimer = enemyAttackCooldown
+                }
+            } else {
+                enemyAttackTimer = 0
+            }
         }
+
+        if (buffTimer > 0) {
+            buffTimer -= delta
+            if (buffTimer <= 0) {
+                playerAttackBuff = false
+            }
+        }
+
+        Object.entries(skillCooldowns).forEach(([key, value]) => {
+            if (value > 0) {
+                skillCooldowns[key] = Math.max(0, value - delta)
+            }
+        })
 
         playerHpBar.x = player.x - hpBarWidth / 2
         playerHpBar.y = player.y - player.height / 2 - 22
+        playerMpBar.x = player.x - hpBarWidth / 2
+        playerMpBar.y = player.y - player.height / 2 - 8
 
         if (enemy.visible) {
             enemyHpBar.visible = true
