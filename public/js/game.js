@@ -138,9 +138,7 @@
     //
     function updateUI() {
 
-        const isMobile = window.innerWidth < 768
-
-        ui.visible = isMobile
+        ui.visible = true
 
         joystickBase.x = 80
         joystickBase.y = app.screen.height - 80
@@ -172,9 +170,6 @@
     // JOYSTICK TOUCH
     //
     app.stage.on('pointerdown', (e) => {
-
-        if (window.innerWidth >= 768)
-            return
 
         const pos = e.global
 
