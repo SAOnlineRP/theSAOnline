@@ -30,18 +30,23 @@
     //
     // CREATE FRAMES
     //
-    function createFrames(texture) {
+    function createFrames(
+        texture,
+        frameWidth,
+        frameHeight,
+        totalFrames
+    ) {
         const frames = []
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < totalFrames; i++) {
             frames.push(
                 new Texture({
                     source: texture.source,
                     frame: new Rectangle(
-                        i * 96,
+                        i * frameWidth,
                         0,
-                        96,
-                        80
+                        frameWidth,
+                        frameHeight
                     )
                 })
             )
@@ -65,13 +70,38 @@
         walk_right: await Assets.load('/player/walk_right.png'),
     }
 
+    const enemyTextures = {
+        idle: await Assets.load('/enemy/Mushroom-Idle.png'),
+        walk: await Assets.load('/enemy/Mushroom-Run.png'),
+    }
     //
     // ANIMATIONS
     //
     const animations = {}
 
     for (const key in textures) {
-        animations[key] = createFrames(textures[key])
+        animations[key] = createFrames(
+            textures[key],
+            96,
+            80,
+            8
+        )
+    }
+
+    const enemyAnimations = {
+        idle: createFrames(
+            enemyTextures.idle,
+            80,
+            64,
+            7
+        ),
+
+        walk: createFrames(
+            enemyTextures.walk,
+            80,
+            64,
+            8
+        )
     }
 
     //
@@ -102,13 +132,42 @@
         )
 
         const playerSize = 2
+        const enemySize = 2
 
         player.scale.set(
             Math.max(scale, 1) * playerSize
         )
+
+        enemy.scale.set(
+            Math.max(scale, 1) * enemySize
+        )
     }
 
     updatePlayerScale()
+
+    // ENEMY
+    const enemy = new AnimatedSprite(
+        enemyAnimations.idle
+    )
+
+    enemy.anchor.set(0.5)
+    enemy.animationSpeed = 0.12
+    enemy.play()
+
+    enemy.scale.set(2)
+
+    enemy.x = 300
+    enemy.y = 200
+
+    app.stage.addChild(enemy)
+
+    const enemyAI = {
+        dx: 0,
+        dy: 0,
+        timer: 0
+    }
+
+    const enemySpeed = 100
 
     //
     // JOYSTICK
@@ -241,6 +300,23 @@
     }
 
     //
+    // ENEMY ANIMATION
+    //
+    let enemyAnimation = 'idle'
+
+    function setEnemyAnimation(name) {
+
+        if (enemyAnimation === name)
+            return
+
+        enemyAnimation = name
+
+        enemy.textures = enemyAnimations[name]
+
+        enemy.play()
+    }
+
+    //
     // SPEED
     //
     const speed = 250
@@ -325,6 +401,50 @@
                 player.y
             )
         )
+
+        enemyAI.timer -= delta
+
+        if (enemyAI.timer <= 0) {
+
+            enemyAI.timer = 60 + Math.random() * 120
+
+            enemyAI.dx = Math.floor(Math.random() * 3) - 1
+            enemyAI.dy = Math.floor(Math.random() * 3) - 1
+        }
+
+        enemy.x += enemyAI.dx * enemySpeed * delta
+        enemy.y += enemyAI.dy * enemySpeed * delta
+
+        enemy.x = Math.max(
+            enemy.width / 2,
+            Math.min(
+                app.screen.width - enemy.width / 2,
+                enemy.x
+            )
+        )
+
+        enemy.y = Math.max(
+            enemy.height / 2,
+            Math.min(
+                app.screen.height - enemy.height / 2,
+                enemy.y
+            )
+        )
+
+        if (enemyAI.dx !== 0 || enemyAI.dy !== 0) {
+            setEnemyAnimation('walk')
+        } else {
+            setEnemyAnimation('idle')
+        }
+
+        const distance = Math.hypot(
+            player.x - enemy.x,
+            player.y - enemy.y
+        )
+
+        if (distance < 70) {
+            console.log('hit!')
+        }
     })
 
 })();
