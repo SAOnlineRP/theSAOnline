@@ -101,8 +101,10 @@
             app.screen.height / 700
         )
 
+        const playerSize = 2
+
         player.scale.set(
-            Math.max(scale, 1)
+            Math.max(scale, 1) * playerSize
         )
     }
 
@@ -140,8 +142,8 @@
 
         ui.visible = true
 
-        joystickBase.x = 80
-        joystickBase.y = app.screen.height - 80
+        joystickBase.x = 100
+        joystickBase.y = app.screen.height - 100
 
         joystickKnob.x = joystickBase.x
         joystickKnob.y = joystickBase.y
