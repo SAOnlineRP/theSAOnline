@@ -115,7 +115,7 @@
         active: false,
         dx: 0,
         dy: 0,
-        radius: 45
+        radius: 65
     }
 
     const joystickBase = new Graphics()
@@ -126,7 +126,7 @@
 
     const joystickKnob = new Graphics()
 
-    joystickKnob.circle(0, 0, 20)
+    joystickKnob.circle(0, 0, 30)
     joystickKnob.fill(0xffffff)
     joystickKnob.alpha = 0.6
 
