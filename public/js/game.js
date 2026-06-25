@@ -27,6 +27,120 @@
     const ui = new Container()
     app.stage.addChild(ui)
 
+    const playerStats = {
+        hp: 100,
+        maxHp: 100
+    }
+
+    const enemyStats = {
+        hp: 100,
+        maxHp: 100
+    }
+
+    const attackRange = 90
+
+    const hpBarWidth = 80
+    const hpBarHeight = 10
+
+    const playerHpBar = new Container()
+    const playerHpBarBg = new Graphics()
+    playerHpBarBg.rect(0, 0, hpBarWidth, hpBarHeight).fill(0x222222)
+    playerHpBarBg.stroke({ color: 0xffffff, width: 1 })
+    const playerHpBarFill = new Graphics()
+    playerHpBarFill.rect(0, 0, hpBarWidth, hpBarHeight).fill(0x00cc66)
+    playerHpBar.addChild(playerHpBarBg, playerHpBarFill)
+    ui.addChild(playerHpBar)
+
+    const enemyHpBar = new Container()
+    const enemyHpBarBg = new Graphics()
+    enemyHpBarBg.rect(0, 0, hpBarWidth, hpBarHeight).fill(0x222222)
+    enemyHpBarBg.stroke({ color: 0xffffff, width: 1 })
+    const enemyHpBarFill = new Graphics()
+    enemyHpBarFill.rect(0, 0, hpBarWidth, hpBarHeight).fill(0xff4d4d)
+    enemyHpBar.addChild(enemyHpBarBg, enemyHpBarFill)
+    ui.addChild(enemyHpBar)
+
+    function updateHealthBars() {
+        const playerRatio = playerStats.hp / playerStats.maxHp
+        playerHpBarFill.clear()
+        playerHpBarFill.rect(0, 0, hpBarWidth * Math.max(playerRatio, 0), hpBarHeight).fill(0x00cc66)
+
+        const enemyRatio = enemyStats.hp / enemyStats.maxHp
+        enemyHpBarFill.clear()
+        enemyHpBarFill.rect(0, 0, hpBarWidth * Math.max(enemyRatio, 0), hpBarHeight).fill(0xff4d4d)
+    }
+
+    updateHealthBars()
+
+    const attackButton = document.createElement('button')
+    attackButton.textContent = 'Attack'
+    attackButton.style.position = 'fixed'
+    attackButton.style.right = '20px'
+    attackButton.style.bottom = '20px'
+    attackButton.style.zIndex = '1000'
+    attackButton.style.padding = '10px 16px'
+    attackButton.style.border = 'none'
+    attackButton.style.borderRadius = '10px'
+    attackButton.style.background = '#ff6b6b'
+    attackButton.style.color = '#fff'
+    attackButton.style.fontWeight = '700'
+    attackButton.style.cursor = 'pointer'
+    attackButton.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)'
+    document.body.appendChild(attackButton)
+
+    function playAttackAnimation() {
+        let attackName = 'attack_down'
+
+        if (currentAnimation === 'walk_left' || currentAnimation === 'idle_left') {
+            attackName = 'attack_left'
+        } else if (currentAnimation === 'walk_right' || currentAnimation === 'idle_right') {
+            attackName = 'attack_right'
+        } else if (currentAnimation === 'walk_up' || currentAnimation === 'idle_up') {
+            attackName = 'attack_up'
+        }
+
+        player.textures = animations[attackName]
+        player.loop = false
+        player.play()
+        player.onComplete = () => {
+            player.loop = true
+            if (currentAnimation === 'walk_left' || currentAnimation === 'idle_left') {
+                setAnimation('idle_left')
+            } else if (currentAnimation === 'walk_right' || currentAnimation === 'idle_right') {
+                setAnimation('idle_right')
+            } else if (currentAnimation === 'walk_up' || currentAnimation === 'idle_up') {
+                setAnimation('idle_up')
+            } else {
+                setAnimation('idle_down')
+            }
+        }
+    }
+
+    function handleAttack() {
+        if (!enemy.visible || enemyStats.hp <= 0) {
+            return
+        }
+
+        const distance = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+
+        if (distance > attackRange) {
+            return
+        }
+
+        playAttackAnimation()
+        enemyStats.hp = Math.max(0, enemyStats.hp - 20)
+        updateHealthBars()
+
+        if (enemyStats.hp <= 0) {
+            enemy.visible = false
+            enemyHpBar.visible = false
+        }
+    }
+
+    attackButton.addEventListener('click', () => {
+        handleAttack()
+    })
+
     //
     // CREATE FRAMES
     //
@@ -68,6 +182,11 @@
         walk_up: await Assets.load('/player/walk_up.png'),
         walk_left: await Assets.load('/player/walk_left.png'),
         walk_right: await Assets.load('/player/walk_right.png'),
+
+        attack_down: await Assets.load('/player/attack_down.png'),
+        attack_up: await Assets.load('/player/attack_up.png'),
+        attack_left: await Assets.load('/player/attack_left.png'),
+        attack_right: await Assets.load('/player/attack_right.png'),
     }
 
     const enemyTextures = {
@@ -437,13 +556,15 @@
             setEnemyAnimation('idle')
         }
 
-        const distance = Math.hypot(
-            player.x - enemy.x,
-            player.y - enemy.y
-        )
+        playerHpBar.x = player.x - hpBarWidth / 2
+        playerHpBar.y = player.y - player.height / 2 - 22
 
-        if (distance < 70) {
-            console.log('hit!')
+        if (enemy.visible) {
+            enemyHpBar.visible = true
+            enemyHpBar.x = enemy.x - hpBarWidth / 2
+            enemyHpBar.y = enemy.y - enemy.height / 2 - 22
+        } else {
+            enemyHpBar.visible = false
         }
     })
 
