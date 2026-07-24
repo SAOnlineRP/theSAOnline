@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAO Futuristic Menu UI</title>
+  <title>Menu - theSAOnline</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -214,44 +214,7 @@
         </div>
 
         <div class="modal-body" id="claim-gift-list">
-          <div class="gift-item">
 
-            <div class="gift-info">
-
-                <div class="gift-title">
-                    Daily Login Reward
-                </div>
-
-                <div class="gift-desc">
-                    Login hari ini untuk mendapatkan hadiah harian.
-                </div>
-
-                <div class="gift-rewards">
-
-                    <div class="gift-reward">
-                        <img src="img/gems.png">
-                        <span>x100</span>
-                    </div>
-
-                    <div class="gift-reward">
-                        <img src="img/col.png">
-                        <span>x5000</span>
-                    </div>
-
-                    <div class="gift-reward">
-                        <img src="img/meat.png">
-                        <span>x5</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <button class="gift-btn">
-                CLAIM
-            </button>
-
-        </div>
         </div>
 
         
@@ -260,6 +223,19 @@
             <button class="sao-btn">
                 CLAIM ALL
             </button>
+        </div>
+      </div>
+    </div>
+    <!-- GIFT HISTORY MODAL -->
+    <div id="modal-history" class="modal-overlay hidden">
+      <div class="gift-modal">
+        <div class="modal-header">
+            <span>GIFT HISTORY</span>
+            <button onclick="closeModalHistory()">✕</button>
+        </div>
+
+        <div class="modal-body" id="history-gift-list">
+            
         </div>
       </div>
     </div>
@@ -487,7 +463,7 @@
       if (type === "gift") {
           html = `
               <div class="popup-item" onclick="closePopup(); openModalClaim()">Claim Gift</div>
-              <div class="popup-item">Gift History</div>
+              <div class="popup-item" onclick="closePopup(); openModalHistory()">Gift History</div>
           `;
       }
 
@@ -527,7 +503,7 @@
             id: 1,
             title: "Daily Login Reward",
             desc: "Login hari ini untuk mendapatkan hadiah harian.",
-            rewards: [
+            data: [
                 { icon: "img/gems.png", amount: 100 },
                 { icon: "img/col.png", amount: 5000 },
                 { icon: "img/meat.png", amount: 5 }
@@ -537,7 +513,7 @@
             id: 2,
             title: "Maintenance Compensation",
             desc: "Kompensasi maintenance server.",
-            rewards: [
+            data: [
                 { icon: "img/gems.png", amount: 300 }
             ]
         },
@@ -545,7 +521,7 @@
             id: 3,
             title: "Welcome Gift",
             desc: "Terima kasih telah bergabung di THE SAONLINE.",
-            rewards: [
+            data: [
                 { icon: "img/gems.png", amount: 1000 },
                 { icon: "img/col.png", amount: 10000 }
             ]
@@ -554,7 +530,7 @@
             id: 4,
             title: "Welcome Gift",
             desc: "Terima kasih telah bergabung di THE SAONLINE.",
-            rewards: [
+            data: [
                 { icon: "img/gems.png", amount: 1000 },
                 { icon: "img/col.png", amount: 10000 }
             ]
@@ -564,11 +540,33 @@
     async function loadClaimGiftList() {
         // fetch pending gifts
         //claimGifts = result.data;
+        const session = await requireLogin();
+        const response = await fetch(
+            `/api/player_data`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                    action: "getDataPlayer",
+                    table: "player_gifts"
+                })
+            }
+        );
 
-        renderClaimGiftList();
+        const giftResult = await response.json();
+
+        if (!response.ok) throw new Error(giftResult.error);
+
+        const gifts = giftResult.data;
+
+        renderClaimGiftList(gifts);
     }
 
-    function renderClaimGiftList() {
+    function renderClaimGiftList(gifts) {
+    console.log(gifts);
       const container = document.getElementById("claim-gift-list");
 
       container.innerHTML = claimGifts.map(gift => `
@@ -585,7 +583,7 @@
                   </div>
 
                   <div class="gift-rewards">
-                      ${gift.rewards.map(reward => `
+                      ${gift.data.map(reward => `
                           <div class="gift-reward">
                               <img src="${reward.icon}">
                               <span>x${reward.amount}</span>
@@ -612,6 +610,90 @@
 
         await loadClaimGiftList();
 
+    }
+
+    let historyGifts = [
+        {
+            id: 1,
+            title: "Daily Login Reward",
+            desc: "Login hari ini untuk mendapatkan hadiah harian.",
+            data: [
+                { icon: "img/gems.png", amount: 100 },
+                { icon: "img/col.png", amount: 5000 },
+                { icon: "img/meat.png", amount: 5 }
+            ]
+        },
+        {
+            id: 2,
+            title: "Maintenance Compensation",
+            desc: "Kompensasi maintenance server.",
+            data: [
+                { icon: "img/gems.png", amount: 300 }
+            ]
+        },
+        {
+            id: 3,
+            title: "Welcome Gift",
+            desc: "Terima kasih telah bergabung di THE SAONLINE.",
+            data: [
+                { icon: "img/gems.png", amount: 1000 },
+                { icon: "img/col.png", amount: 10000 }
+            ]
+        },
+        {
+            id: 4,
+            title: "Welcome Gift",
+            desc: "Terima kasih telah bergabung di THE SAONLINE.",
+            data: [
+                { icon: "img/gems.png", amount: 1000 },
+                { icon: "img/col.png", amount: 10000 }
+            ]
+        }
+    ];
+
+    async function loadHistoryGiftList() {
+        // fetch pending gifts
+        //historyGifts = result.data;
+
+        renderHistoryGiftList();
+    }
+
+    function renderHistoryGiftList() {
+      const container = document.getElementById("history-gift-list");
+
+      container.innerHTML = historyGifts.map(gift => `
+          <div class="gift-item">
+
+              <div class="gift-info">
+
+                  <div class="gift-title">
+                      ${gift.title}
+                  </div>
+
+                  <div class="gift-desc">
+                      ${gift.desc}
+                  </div>
+
+                  <div class="gift-rewards">
+                      ${gift.data.map(reward => `
+                          <div class="gift-reward">
+                              <img src="${reward.icon}">
+                              <span>x${reward.amount}</span>
+                          </div>
+                      `).join("")}
+                  </div>
+
+              </div>
+
+              <button
+                  class="gift-btn"
+                  onclick="claimGift(${gift.id})"
+              >
+                  CLAIMED
+              </button>
+
+          </div>
+      `).join("");
     }
 
     function openModal() {
@@ -654,6 +736,22 @@
             .classList.add("hidden");
     }
 
+    async function openModalHistory() {
+
+        document
+            .getElementById("modal-history")
+            .classList.remove("hidden");
+
+        await loadHistoryGiftList();
+
+    }
+
+    function closeModalHistory() {
+        document
+            .getElementById("modal-history")
+            .classList.add("hidden");
+    }
+
     window.goToQuest = goToQuest;
     window.goToParty = goToParty;
     window.goToSummon = goToSummon;
@@ -675,6 +773,8 @@
     window.closeModalWeekly  = closeModalWeekly;
     window.openModalClaim = openModalClaim;
     window.closeModalClaim = closeModalClaim;
+    window.openModalHistory = openModalHistory;
+    window.closeModalHistory = closeModalHistory;
 
     async function init() {
       try {
