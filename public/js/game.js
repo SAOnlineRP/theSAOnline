@@ -47,7 +47,7 @@
     const playerAttackPower = 20
     const skillAttackPower = 40
     const healAmount = 30
-    const buffDuration = 4 * 60
+    const buffDuration = 4
     const buffMultiplier = 1.5
     const attackMpGain = 8
     const skillMpCost = {
@@ -216,6 +216,7 @@
         playAttackAnimation()
         const damage = playerAttackBuff ? playerAttackPower * buffMultiplier : playerAttackPower
         enemyStats.hp = Math.max(0, enemyStats.hp - damage)
+        showFloatingText(damage, enemy)
         playerStats.mp = Math.min(playerStats.maxMp, playerStats.mp + attackMpGain)
         updateHealthBars()
 
@@ -227,11 +228,14 @@
 
     function useSkill(skillName) {
         if (skillCooldowns[skillName] > 0) {
+            const seconds = Math.ceil(skillCooldowns[skillName])
+            showFloatingText('CD ' + seconds + 's', player, { color: 0x999999, fontSize: 18, offsetY: 40 })
             return
         }
 
         if (skillName === 'attack') {
             if (playerStats.mp < skillMpCost.attack) {
+                showFloatingText('No MP', player, { color: 0xffcc00, fontSize: 18, offsetY: 40 })
                 return
             }
 
@@ -241,40 +245,47 @@
 
             const distance = Math.hypot(player.x - enemy.x, player.y - enemy.y)
             if (distance > attackRange) {
+                showFloatingText('Too Far', player, { color: 0xffff66, fontSize: 18, offsetY: 40 })
                 return
             }
 
             playAttackAnimation()
             enemyStats.hp = Math.max(0, enemyStats.hp - skillAttackPower)
+            showFloatingText(skillAttackPower, enemy)
             playerStats.mp = Math.max(0, playerStats.mp - skillMpCost.attack)
             updateHealthBars()
             if (enemyStats.hp <= 0) {
                 enemy.visible = false
                 enemyHpBar.visible = false
             }
-            skillCooldowns.attack = 4 * 60
+            skillCooldowns.attack = 4
         }
 
         if (skillName === 'heal') {
             if (playerStats.mp < skillMpCost.heal) {
+                showFloatingText('No MP', player, { color: 0xffcc00, fontSize: 18, offsetY: 40 })
                 return
             }
 
             playerStats.mp = Math.max(0, playerStats.mp - skillMpCost.heal)
             playerStats.hp = Math.min(playerStats.maxHp, playerStats.hp + healAmount)
+            showFloatingText(healAmount, player, { color: 0x33cc33, prefix: '+', offsetY: 40 })
             updateHealthBars()
-            skillCooldowns.heal = 6 * 60
+            skillCooldowns.heal = 6
         }
 
         if (skillName === 'buff') {
             if (playerStats.mp < skillMpCost.buff) {
+                showFloatingText('No MP', player, { color: 0xffcc00, fontSize: 18, offsetY: 40 })
                 return
             }
 
             playerStats.mp = Math.max(0, playerStats.mp - skillMpCost.buff)
             playerAttackBuff = true
             buffTimer = buffDuration
-            skillCooldowns.buff = 8 * 60
+            const increase = Math.floor(playerAttackPower * (buffMultiplier - 1))
+            showFloatingText('ATK +' + increase, player, { color: 0x3399ff, offsetY: 40, fontSize: 22 })
+            skillCooldowns.buff = 8
         }
     }
 
@@ -401,6 +412,31 @@
 
     app.stage.addChild(enemy)
 
+    // Container for floating damage/heal texts
+    const damageContainer = new Container()
+    app.stage.addChild(damageContainer)
+
+    const floatingTexts = []
+
+    function showFloatingText(amount, target, opts = {}) {
+        const label = (opts.prefix || '') + (typeof amount === 'number' ? Math.floor(amount) : amount)
+        const style = new PIXI.TextStyle({
+            fill: opts.color || 0xff4d4d,
+            fontSize: opts.fontSize || 28,
+            fontWeight: '700',
+            stroke: '#000000',
+            strokeThickness: 3
+        })
+        const txt = new PIXI.Text(label, style)
+        txt.anchor.set(0.5)
+        txt.x = target.x + (opts.offsetX || 0)
+        txt.y = target.y - (target.height / 2) - (opts.offsetY || 10)
+        damageContainer.addChild(txt)
+
+        const totalLife = opts.life || 60
+        floatingTexts.push({ text: txt, life: totalLife, totalLife, vy: opts.vy || -80 })
+    }
+
     const enemyAI = {
         dx: 0,
         dy: 0,
@@ -411,7 +447,7 @@
     const enemyChaseRange = 250
     const enemyAttackRange = 70
     const enemyAttackDamage = 10
-    const enemyAttackCooldown = 1.2 * 60
+    const enemyAttackCooldown = 1.2
     let enemyAttackTimer = 0
 
     //
@@ -617,6 +653,19 @@
     app.ticker.add((ticker) => {
 
         const delta = ticker.deltaTime / 60
+
+        // update floating damage/heal texts
+        for (let i = floatingTexts.length - 1; i >= 0; i--) {
+            const ft = floatingTexts[i]
+            ft.life -= delta
+            const alpha = Math.max(0, ft.life / ft.totalLife)
+            ft.text.y += ft.vy * delta
+            ft.text.alpha = alpha
+            if (ft.life <= 0) {
+                damageContainer.removeChild(ft.text)
+                floatingTexts.splice(i, 1)
+            }
+        }
 
         let moving = false
 
