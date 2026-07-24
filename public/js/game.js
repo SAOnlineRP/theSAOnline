@@ -414,6 +414,10 @@
 
     updatePlayerScale()
 
+    const isMobile = window.innerWidth <= 768
+    const joystickRadius = isMobile ? 150 : 65
+    const knobRadius = isMobile ? 70 : 30
+
     //
     // JOYSTICK
     //
@@ -421,7 +425,7 @@
         active: false,
         dx: 0,
         dy: 0,
-        radius: 65
+        radius: joystickRadius
     }
 
     const joystickBase = new Graphics()
@@ -432,7 +436,7 @@
 
     const joystickKnob = new Graphics()
 
-    joystickKnob.circle(0, 0, 30)
+    joystickKnob.circle(0, 0, knobRadius)
     joystickKnob.fill(0xffffff)
     joystickKnob.alpha = 0.6
 
