@@ -31,91 +31,40 @@
         <div class="hexagon"></div>
         <div class="hexagon"></div>
       </div>      
-      
-    </div>
-    <div>
-      <h2 class="register-title">ACCOUNT REGISTER</h2>
-      <div class="register-modal">
-        <div class="register-panel">
-          <div class="sao-overlay"></div>
+      <div>
+        <!-- <h2 class="register-title">ACCOUNT REGISTER</h2> -->
+        <div class="register-modal">
+          <div class="register-panel">
+            <div class="sao-overlay"></div>
 
-          <div class="register-corners" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="character-selector">
-              <button type="button" class="char-nav" id="prevChar">
-                  ◀
-              </button>
-
-              <img
-                  id="characterImage"
-                  src="img/characters/cewek1.png"
-                  alt="Character"
-                  class="character-image"
-              >
-
-              <button type="button" class="char-nav" id="nextChar">
-                  ▶
-              </button>
-          </div>
-        </div>
-        <div class="register-panel">
-          <div class="sao-overlay"></div>
-
-          <div class="register-corners" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <form class="register-form" id="registerForm">
-            <input type="text" id="username" placeholder="USERNAME" required />
-            <input type="password" id="password" placeholder="PASSWORD" required />
-
-            <div class="register-actions">
-              <button type="submit" class="register-btn">REGISTER</button>
+            <div class="register-corners" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
 
-            <div class="register-status" id="registerStatus"></div>
-          </form>
+            <form class="register-form" id="registerForm">
+              <h2 class="register-title">REGISTER</h2>
+              <input type="text" id="username" placeholder="USERNAME" required />
+              <input type="number" id="code" placeholder="CODE" required />
+              <input type="password" id="password" placeholder="PASSWORD" required />
+
+              <div class="register-actions">
+                <button type="submit" class="register-btn">CREATE MY ACCOUNT</button>
+              </div>
+
+              <div class="register-status" id="registerStatus"></div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
+    
   </main>
 
-  <script type="module">
-    const characters = [
-        "img/characters/cewek1.png",
-        "img/characters/cewek2.png",
-        "img/characters/cowok1.png",
-        "img/characters/cowok2.png"
-    ];
-
-    let currentIndex = 0;
-
-    const image = document.getElementById("characterImage");
-    const prevBtn = document.getElementById("prevChar");
-    const nextBtn = document.getElementById("nextChar");
-
-    function updateCharacter() {
-        image.src = characters[currentIndex];
-    }
-
-    nextBtn.addEventListener("click", () => {
-        currentIndex = (currentIndex + 1) % characters.length;
-        updateCharacter();
-    });
-
-    prevBtn.addEventListener("click", () => {
-        currentIndex =
-            (currentIndex - 1 + characters.length) % characters.length;
-        updateCharacter();
-    });
+  <script>
+    
   </script>
 </body>
 </html>

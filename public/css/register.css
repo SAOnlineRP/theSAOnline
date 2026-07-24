@@ -344,9 +344,6 @@ input {
     justify-content: center;
     align-items: center;
     padding: 24px;
-    background: rgba(2, 8, 19, 0.45);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     z-index: 50;
     opacity: 1;
     visibility: visible;
@@ -426,6 +423,7 @@ input {
     gap: 14px;
     position: relative;
     z-index: 2;
+    width: 100%;
 }
 
 .register-form input {

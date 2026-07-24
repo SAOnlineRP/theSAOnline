@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Character</title>
+    <link rel="stylesheet" href="/css/contoh.css">
+</head>
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+    <div class="preview-card">
+
+        <div class="character-image">
+            <img id="characterImage"
+                src="https://via.placeholder.com/260x380?text=Character">
+        </div>
+
+        <h2 id="previewName">Unnamed Hero</h2>
+
+        <span id="previewClass" class="badge">Warrior</span>
+
+        <div class="summary">
+            <div>HP <span id="sumHP">150</span></div>
+            <div>ATK <span id="sumATK">20</span></div>
+            <div>DEF <span id="sumDEF">15</span></div>
+            <div>SPD <span id="sumSPD">10</span></div>
+        </div>
+
+    </div>
+
+    <div class="form-card">
+
+        <h1>Create Character</h1>
+
+        <label>Character Name</label>
+        <input
+            id="charName"
+            type="text"
+            maxlength="20"
+            placeholder="Enter your name">
+
+        <label>Gender</label>
+
+        <div class="gender">
+            <button class="gender-btn active">Male</button>
+            <button class="gender-btn">Female</button>
+        </div>
+
+        <label>Class</label>
+
+        <select id="classSelect">
+            <option>Warrior</option>
+            <option>Mage</option>
+            <option>Archer</option>
+            <option>Assassin</option>
+        </select>
+
+        <h3>Distribute Stats</h3>
+
+        <div class="points">
+            Remaining Points
+            <span id="remaining">10</span>
+        </div>
+
+        <div id="stats"></div>
+
+        <button id="createBtn" disabled>
+            Spend All Points
+        </button>
+
+    </div>
+
+</div>
+
+<script src="/js/contoh.js"></script>
+
+</body>
+</html>
