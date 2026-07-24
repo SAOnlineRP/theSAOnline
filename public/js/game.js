@@ -19,6 +19,10 @@
 
     document.body.appendChild(app.canvas)
 
+    app.canvas.style.touchAction = 'none'
+    app.canvas.style.webkitTouchCallout = 'none'
+    app.canvas.style.userSelect = 'none'
+
     app.stage.eventMode = 'static'
 
     //
