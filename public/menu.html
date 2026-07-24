@@ -205,6 +205,64 @@
           </div>
       </div>
     </div>
+    <!-- CLAIM GIFT MODAL -->
+    <div id="modal-gift" class="modal-overlay hidden">
+      <div class="gift-modal">
+        <div class="modal-header">
+            <span>YOUR GIFTS</span>
+            <button onclick="closeModalClaim()">✕</button>
+        </div>
+
+        <div class="modal-body" id="claim-gift-list">
+          <div class="gift-item">
+
+            <div class="gift-info">
+
+                <div class="gift-title">
+                    Daily Login Reward
+                </div>
+
+                <div class="gift-desc">
+                    Login hari ini untuk mendapatkan hadiah harian.
+                </div>
+
+                <div class="gift-rewards">
+
+                    <div class="gift-reward">
+                        <img src="img/gems.png">
+                        <span>x100</span>
+                    </div>
+
+                    <div class="gift-reward">
+                        <img src="img/col.png">
+                        <span>x5000</span>
+                    </div>
+
+                    <div class="gift-reward">
+                        <img src="img/meat.png">
+                        <span>x5</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button class="gift-btn">
+                CLAIM
+            </button>
+
+        </div>
+        </div>
+
+        
+
+        <div class="modal-footer">
+            <button class="sao-btn">
+                CLAIM ALL
+            </button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script type="module">
@@ -428,7 +486,7 @@
 
       if (type === "gift") {
           html = `
-              <div class="popup-item">Claim Gift</div>
+              <div class="popup-item" onclick="closePopup(); openModalClaim()">Claim Gift</div>
               <div class="popup-item">Gift History</div>
           `;
       }
@@ -464,6 +522,97 @@
           popup.classList.add("show");
       }, 10);
     }
+    let claimGifts = [
+        {
+            id: 1,
+            title: "Daily Login Reward",
+            desc: "Login hari ini untuk mendapatkan hadiah harian.",
+            rewards: [
+                { icon: "img/gems.png", amount: 100 },
+                { icon: "img/col.png", amount: 5000 },
+                { icon: "img/meat.png", amount: 5 }
+            ]
+        },
+        {
+            id: 2,
+            title: "Maintenance Compensation",
+            desc: "Kompensasi maintenance server.",
+            rewards: [
+                { icon: "img/gems.png", amount: 300 }
+            ]
+        },
+        {
+            id: 3,
+            title: "Welcome Gift",
+            desc: "Terima kasih telah bergabung di THE SAONLINE.",
+            rewards: [
+                { icon: "img/gems.png", amount: 1000 },
+                { icon: "img/col.png", amount: 10000 }
+            ]
+        },
+        {
+            id: 4,
+            title: "Welcome Gift",
+            desc: "Terima kasih telah bergabung di THE SAONLINE.",
+            rewards: [
+                { icon: "img/gems.png", amount: 1000 },
+                { icon: "img/col.png", amount: 10000 }
+            ]
+        }
+    ];
+
+    async function loadClaimGiftList() {
+        // fetch pending gifts
+        //claimGifts = result.data;
+
+        renderClaimGiftList();
+    }
+
+    function renderClaimGiftList() {
+      const container = document.getElementById("claim-gift-list");
+
+      container.innerHTML = claimGifts.map(gift => `
+          <div class="gift-item">
+
+              <div class="gift-info">
+
+                  <div class="gift-title">
+                      ${gift.title}
+                  </div>
+
+                  <div class="gift-desc">
+                      ${gift.desc}
+                  </div>
+
+                  <div class="gift-rewards">
+                      ${gift.rewards.map(reward => `
+                          <div class="gift-reward">
+                              <img src="${reward.icon}">
+                              <span>x${reward.amount}</span>
+                          </div>
+                      `).join("")}
+                  </div>
+
+              </div>
+
+              <button
+                  class="gift-btn"
+                  onclick="claimGift(${gift.id})"
+              >
+                  CLAIM
+              </button>
+
+          </div>
+      `).join("");
+    }
+
+    async function claimGift(id){
+
+        // POST API
+
+        await loadClaimGiftList();
+
+    }
 
     function openModal() {
         document
@@ -489,6 +638,22 @@
             .classList.add("hidden");
     }
 
+    async function openModalClaim() {
+
+        document
+            .getElementById("modal-gift")
+            .classList.remove("hidden");
+
+        await loadClaimGiftList();
+
+    }
+
+    function closeModalClaim() {
+        document
+            .getElementById("modal-gift")
+            .classList.add("hidden");
+    }
+
     window.goToQuest = goToQuest;
     window.goToParty = goToParty;
     window.goToSummon = goToSummon;
@@ -508,6 +673,8 @@
     window.closeModal = closeModal;
     window.openModalWeekly = openModalWeekly;
     window.closeModalWeekly  = closeModalWeekly;
+    window.openModalClaim = openModalClaim;
+    window.closeModalClaim = closeModalClaim;
 
     async function init() {
       try {
