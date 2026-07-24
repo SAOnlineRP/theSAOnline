@@ -116,6 +116,23 @@
     controls.style.zIndex = '1000'
     document.body.appendChild(controls)
 
+    function updateControlButtons() {
+        const isMobile = window.innerWidth <= 900 || navigator.maxTouchPoints > 0
+        const padding = isMobile ? '14px 20px' : '10px 16px'
+        const fontSize = isMobile ? '40px' : '14px'
+        const minWidth = isMobile ? '150px' : 'auto'
+
+        attackButton.style.padding = padding
+        attackButton.style.fontSize = fontSize
+        attackButton.style.minWidth = minWidth
+
+        Object.values(skillButtons).forEach((button) => {
+            button.style.padding = padding
+            button.style.fontSize = fontSize
+            button.style.minWidth = minWidth
+        })
+    }
+
     const attackButton = document.createElement('button')
     attackButton.textContent = 'Attack'
     attackButton.style.padding = '10px 16px'
@@ -149,6 +166,9 @@
         button.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)'
         controls.appendChild(button)
     })
+
+    updateControlButtons()
+    window.addEventListener('resize', updateControlButtons)
 
     function playAttackAnimation() {
         let attackName = 'attack_down'
@@ -414,9 +434,15 @@
 
     updatePlayerScale()
 
-    const isMobile = window.innerWidth <= 768
-    const joystickRadius = isMobile ? 150 : 65
-    const knobRadius = isMobile ? 70 : 30
+    function getJoystickConfig() {
+        const useLarge = window.innerWidth <= 900 || navigator.maxTouchPoints > 0
+        return {
+            radius: useLarge ? 140 : 65,
+            knobRadius: useLarge ? 60 : 30,
+            x: useLarge ? 200 : 100,
+            y: app.screen.height - (useLarge ? 200 : 100)
+        }
+    }
 
     //
     // JOYSTICK
@@ -425,20 +451,29 @@
         active: false,
         dx: 0,
         dy: 0,
-        radius: joystickRadius
+        radius: 65
     }
 
     const joystickBase = new Graphics()
-
-    joystickBase.circle(0, 0, joystick.radius)
-    joystickBase.fill(0x444444)
-    joystickBase.alpha = 0.35
-
     const joystickKnob = new Graphics()
 
-    joystickKnob.circle(0, 0, knobRadius)
-    joystickKnob.fill(0xffffff)
-    joystickKnob.alpha = 0.6
+    function updateJoystickSize() {
+        const config = getJoystickConfig()
+
+        joystick.radius = config.radius
+
+        joystickBase.clear()
+        joystickBase.circle(0, 0, joystick.radius)
+        joystickBase.fill(0x444444)
+        joystickBase.alpha = 0.35
+
+        joystickKnob.clear()
+        joystickKnob.circle(0, 0, config.knobRadius)
+        joystickKnob.fill(0xffffff)
+        joystickKnob.alpha = 0.6
+    }
+
+    updateJoystickSize()
 
     ui.addChild(joystickBase)
     ui.addChild(joystickKnob)
@@ -450,12 +485,14 @@
 
         ui.visible = true
 
-        joystickBase.x = 100
-        joystickBase.y = app.screen.height - 100
+        const config = getJoystickConfig()
+        joystickBase.x = config.x
+        joystickBase.y = config.y
 
         joystickKnob.x = joystickBase.x
         joystickKnob.y = joystickBase.y
 
+        updateJoystickSize()
         updatePlayerScale()
     }
 
