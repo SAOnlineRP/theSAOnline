@@ -31,69 +31,113 @@
         <div class="hexagon"></div>
         <div class="hexagon"></div>
       </div>      
-      
-    </div>
-    <div>
-      <h2 class="register-title">YOUR CHARACTER</h2>
-      <div class="register-modal">
-        <div class="register-panel">
-          <div class="sao-overlay"></div>
+      <div>
+        <h2 class="register-title">YOUR CHARACTER</h2>
+        <div class="register-modal">
+          <div class="register-panel">
+            <div class="sao-overlay"></div>
 
-          <div class="register-corners" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="character-selector">
-              <button type="button" class="char-nav" id="prevChar">
-                  ◀
-              </button>
-
-              <img
-                  id="characterImage"
-                  src="img/characters/cewek1.png"
-                  alt="Character"
-                  class="character-image"
-              >
-
-              <button type="button" class="char-nav" id="nextChar">
-                  ▶
-              </button>
-          </div>
-        </div>
-        <div class="register-panel">
-          <div class="sao-overlay"></div>
-
-          <div class="register-corners" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <form class="register-form" id="registerForm">
-            <input type="text" id="username" placeholder="USERNAME" required />
-            <input type="password" id="password" placeholder="PASSWORD" required />
-
-            <div class="register-actions">
-              <button type="submit" class="register-btn">REGISTER</button>
+            <div class="register-corners" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
 
-            <div class="register-status" id="registerStatus"></div>
-          </form>
+            <div class="character-selector">
+                <button type="button" class="char-nav" id="prevChar">
+                    ◀
+                </button>
+
+                <img
+                    id="characterImage"
+                    src="img/characters/cewek1.png"
+                    alt="Character"
+                    class="character-image"
+                >
+
+                <button type="button" class="char-nav" id="nextChar">
+                    ▶
+                </button>
+            </div>
+          </div>
+          <div class="register-panel">
+            <div class="sao-overlay"></div>
+
+            <div class="register-corners" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+
+            <div class="character-panel">
+              <h2 id="traitName"></h2>
+              <h4 id="traitQuote"></h4>
+
+              <div id="traitStats"></div>
+          </div>
+          </div>
         </div>
       </div>
     </div>
+    
   </main>
 
   <script type="module">
     const characters = [
-        "img/characters/cewek1.png",
-        "img/characters/cewek2.png",
-        "img/characters/cowok1.png",
-        "img/characters/cowok2.png"
+        {
+            image: "img/characters/cewek1.png",
+            name: "Asuna",
+            trait: "Courage",
+            quote: "Fear is temporary. Victory is eternal.",
+            stats: {
+                atk: 10,
+                def: 5,
+                hp: 120,
+                mp: 80,
+                crit: "8%"
+            }
+        },
+        {
+            image: "img/characters/cewek2.png",
+            name: "Alice",
+            trait: "Justice",
+            quote: "Protect those who cannot protect themselves.",
+            stats: {
+                atk: 8,
+                def: 9,
+                hp: 140,
+                mp: 70,
+                crit: "5%"
+            }
+        },
+        {
+            image: "img/characters/cowok1.png",
+            name: "Kirito",
+            trait: "Determination",
+            quote: "I'll keep moving forward.",
+            stats: {
+                atk: 12,
+                def: 4,
+                hp: 110,
+                mp: 90,
+                crit: "10%"
+            }
+        },
+        {
+            image: "img/characters/cowok2.png",
+            name: "Eugeo",
+            trait: "Loyalty",
+            quote: "A true swordsman never gives up.",
+            stats: {
+                atk: 9,
+                def: 7,
+                hp: 130,
+                mp: 75,
+                crit: "6%"
+            }
+        }
     ];
 
     let currentIndex = 0;
@@ -102,8 +146,26 @@
     const prevBtn = document.getElementById("prevChar");
     const nextBtn = document.getElementById("nextChar");
 
+    const traitName = document.getElementById("traitName");
+    const traitQuote = document.getElementById("traitQuote");
+    const traitStats = document.getElementById("traitStats");
+
     function updateCharacter() {
-        image.src = characters[currentIndex];
+        const character = characters[currentIndex];
+
+        image.src = character.image;
+
+        traitName.textContent = character.trait;
+        traitQuote.textContent = character.quote;
+
+        traitStats.innerHTML = `
+            <strong>${character.name}</strong><br><br>
+            HP : ${character.stats.hp}<br>
+            MP : ${character.stats.mp}<br>
+            ATK : ${character.stats.atk}<br>
+            DEF : ${character.stats.def}<br>
+            Crit : ${character.stats.crit}
+        `;
     }
 
     nextBtn.addEventListener("click", () => {
